@@ -1,11 +1,11 @@
 from Word import Translation, Meaning, Word
-from utilities import UTF8_CHR, search, get_w_article
-import numpy as np
+from utilities import UTF8_CHR, search
+import random
 
 
 def save_dict_words(d):
-    abc = list('abcdefghijklmnoprstuvz') + \
-        [UTF8_CHR[:-2][l] for l in UTF8_CHR[:-2]]
+    abc = (list('abcdefghijklmnoprstuvz') +
+           [UTF8_CHR[l] for l in UTF8_CHR])[:-2]
 
     words = []
     for l in abc:
@@ -20,9 +20,9 @@ def save_dict_words(d):
                 lastword = w['term']
 
     with open(f"{d}_words.txt", "w", encoding="utf-8") as f:
-        for w in words:
-            f.write(w + '\n')
-    f.close()
+        for w in words[:-1]:
+            f.write(f"{w}\n")
+        f.write(f"{words[-1]}")
 
 
 def test_words(d):
@@ -30,8 +30,7 @@ def test_words(d):
         ws = [l.rstrip() for l in f]
         for w in ws:
             print(w, end='')
-            w_article = get_w_article(w)
-            word = Word(w_article, d[:3])
+            word = Word(w, d[:3])
             print(
                 f" ({word.meanings[0].pos}): \t{word.meanings[0].trs[0]}", end='')
             if word.meanings[0].trs[0].examples[0][0]:
@@ -39,13 +38,36 @@ def test_words(d):
                     f"\tex: '{word.meanings[0].trs[0].examples[0][0]}'='{word.meanings[0].trs[0].examples[0][1]}'")
             else:
                 print()
-    f.close()
 
 
-test_words('smenob')
+def random_word(d):
+    with open(f"{d}_words.txt", "r", encoding="utf-8") as f:
+        words = f.read().split('\n')
+    return random.choice(words)
 
-word_article = get_w_article('cakŋa')
-word = Word(word_article, 'sme')
+
+def blacklist(d, word):
+    with open(f"{d}_blacklist.txt", "w", encoding="utf-8") as f:
+        f.write(f"{word}\n")
+
+
+def word_of_the_day(d):
+    word = random_word(d)
+    with open(f"{d}_blacklist.txt", "r", encoding="utf-8") as f:
+        bl = f.read().split('\n')
+
+    while word in bl:
+        word = random_word(d)
+
+    blacklist(d, word)
+
+    wotd = Word(word, d[:3])
+    return wotd
+
+
+print(random_word("smenob"))
+
+word = Word('cakŋa', 'sme')
 print(word)
 
 for m in word.meanings:

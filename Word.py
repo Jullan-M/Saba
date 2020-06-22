@@ -1,4 +1,5 @@
 # Used for parsing word articles from UiT Divvun database
+from utilities import get_w_article
 
 
 class Translation:
@@ -48,8 +49,9 @@ def isValidLanguage(lang, d):
 
 
 class Word:
-    def __init__(self, w_article, lang):
-        self.word = w_article[0]['term']
+    def __init__(self, word, lang):
+        w_article = get_w_article(word)
+        self.word = word
         self.lang = lang
         self.meanings = self.find_meanings(w_article)
 
