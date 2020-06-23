@@ -12,7 +12,7 @@ class Translation:
 
     def find_examples(self, translation):
         if not ('xg' in translation):
-            return [['', '']]
+            return []
 
         if isinstance(translation['xg'], list):
             return [[ex['x'], ex['xt']] for ex in translation['xg']]

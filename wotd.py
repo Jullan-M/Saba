@@ -65,6 +65,7 @@ def word_of_the_day(d):
     return wotd
 
 
+'''
 print(random_word("smenob"))
 
 word = Word('cakŋa', 'sme')
@@ -76,4 +77,4 @@ for m in word.meanings:
         for ex in m.trs[0].examples:
             print(ex[0])
             print(ex[1])
-            print()
+            print()'''
