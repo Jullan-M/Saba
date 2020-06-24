@@ -5,6 +5,7 @@ import discord
 import datetime
 from discord.ext import tasks
 from dotenv import load_dotenv
+from googletrans import Translator
 from wotd import word_of_the_day
 from Word import Word, Meaning, Translation
 
@@ -21,8 +22,23 @@ FLAG = {'nb': '🇳🇴',
         'fi': '🇫🇮',
         'fin': '🇫🇮',
         'en': '🇬🇧',
-        'smn': '<:heillt:725006488476581950>',
-        'se': 'se'}
+        'smn': 'smn',
+        'sma': 'sma',
+        'smj': 'smj',
+        'sms': 'sms',
+        'se': 'se',
+        'lat': 'lat'}
+
+WORDCLASS = {'N': 'Substantiiva',
+             'V': 'Vearba',
+             'Adv': 'Advearba',
+             'A': 'Adjektiiva',
+             'Pron': 'Pronomen',
+             'CC': 'Konjunkšuvdna',
+             'Po': 'Postposišuvdna',
+             'Pr': 'Preposišuvdna'}
+
+SAMI_LANG = ['smn', 'sma', 'smj', 'sms', 'se']
 
 
 def waittime_from(time):
@@ -37,18 +53,52 @@ def waittime_from(time):
         return base - diff
 
 
+def underscore_word(string, word):
+    return string.replace(word.capitalize(), f'__{word.capitalize()}__').replace(word, f'__{word}__')
+
+
 def wotd_message(word):
-    intro = f"Otná sátni lea **{word}**!\n Sánis leat {len(word.meanings)} mearkkašumit:\n"
+    trns = Translator()
     main = ""
-    for i, m in enumerate(word.meanings):
-        main += f"\t__{i+1}. ({m.pos})__\n"
+    lastpos = ""
+    lastword = ""
+    lastdesc = ""
+    i = 0
+    for m in word.meanings:
+        if lastpos != m.pos:
+            i += 1
+            main += f"\t{i}. {WORDCLASS[m.pos]}\n"
+            lastpos = m.pos
+
         for tr in m.trs:
-            main += f"\t\t{FLAG[tr.lang]} {tr}\n"
-            for ex in tr.examples:
-                print(ex)
-                main += f"> *{ex[0]}*\n> *{ex[1]}*\n"
+            if tr.lang in SAMI_LANG or (lastword == str(tr) and lastdesc == tr.desc):
+                continue
+            lastword = str(tr)
+            lastdesc = tr.desc
+
+            if tr.lang in ['nob', 'nb']:
+                tr_en = trns.translate(str(tr), src='no', dest='en').text
+                desc_en = trns.translate(
+                    tr.desc, src='no', dest='en').text if tr.desc else ''
+                main += f"\t\t{FLAG[tr.lang]} {tr} {tr.desc}\t→\t{FLAG['en']} {tr_en} {desc_en}\n"
+                for n, ex in enumerate(tr.examples):
+                    ex_en = trns.translate(ex[1], src='no', dest='en').text
+                    main += f"> <:samiflag:725121267933511742> *{underscore_word(ex[0], str(word))}*\n"
+                    main += f"> {FLAG[tr.lang]} *{underscore_word(ex[1], str(tr))}*\n"
+                    main += f"> {FLAG['en']} *{underscore_word(ex_en, tr_en)}*\n"
+                    if (n != len(tr.examples)-1):
+                        main += "\n"
+            else:
+                main += f"\t\t{FLAG[tr.lang]} {tr}\n"
+
+    intro = f"<@&418533166878425103>, otná sátni lea **{word}**!\n Sánis lea"
+    intro = intro + \
+        f"t {i} mearkkašumit:\n" if (
+            i > 1) else intro + f" okta mearkkašupmi:\n"
     return intro + main
 
+
+#print(wotd_message(Word('áššáiguoskevaš', 'sme')))
 
 client = discord.Client()
 
@@ -61,8 +111,9 @@ async def called_once_a_day():
     print("Generating message...")
     wotd = wotd_message(word)
     message_channel = client.get_channel(CHANNEL_ID)
-    print(f"Got channel {message_channel}")
     await message_channel.send(wotd)
+
+    print(f"WOTD was sent to {message_channel}.\n")
 
 
 @called_once_a_day.before_loop

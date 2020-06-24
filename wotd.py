@@ -47,7 +47,7 @@ def random_word(d):
 
 
 def blacklist(d, word):
-    with open(f"{d}_blacklist.txt", "w", encoding="utf-8") as f:
+    with open(f"{d}_blacklist.txt", "a", encoding="utf-8") as f:
         f.write(f"{word}\n")
 
 
@@ -62,6 +62,8 @@ def word_of_the_day(d):
     blacklist(d, word)
 
     wotd = Word(word, d[:3])
+    if not wotd.meanings:
+        return word_of_the_day(d)
     return wotd
 
 
