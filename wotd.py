@@ -1,6 +1,31 @@
 from Word import Translation, Meaning, Word
 from utilities import UTF8_CHR, search
+from googletrans import Translator
 import random
+
+FLAG = {'nb': '🇳🇴',
+        'nob': '🇳🇴',
+        'sv': '🇸🇪',
+        'fi': '🇫🇮',
+        'fin': '🇫🇮',
+        'en': '🇬🇧',
+        'smn': 'smn',
+        'sma': 'sma',
+        'smj': 'smj',
+        'sms': 'sms',
+        'se': 'se',
+        'lat': 'lat'}
+
+WORDCLASS = {'N': 'Substantiiva',
+             'V': 'Vearba',
+             'Adv': 'Advearba',
+             'A': 'Adjektiiva',
+             'Pron': 'Pronomen',
+             'CC': 'Konjunkšuvdna',
+             'Po': 'Postposišuvdna',
+             'Pr': 'Preposišuvdna'}
+
+SAMI_LANG = ['smn', 'sma', 'smj', 'sms', 'se', 'nb']
 
 
 def save_dict_words(d):
@@ -47,7 +72,7 @@ def random_word(d):
 
 
 def blacklist(d, word):
-    with open(f"{d}_blacklist.txt", "w", encoding="utf-8") as f:
+    with open(f"{d}_blacklist.txt", "a", encoding="utf-8") as f:
         f.write(f"{word}\n")
 
 
@@ -62,7 +87,54 @@ def word_of_the_day(d):
     blacklist(d, word)
 
     wotd = Word(word, d[:3])
+    if not wotd.meanings:
+        return word_of_the_day(d)
     return wotd
+
+
+def underscore_word(string, word):
+    return string.replace(word.capitalize(), f'__{word.capitalize()}__').replace(word, f'__{word}__')
+
+
+def wotd_message(word):
+    trns = Translator()
+    main = ""
+    lastpos = ""
+    lastword = ""
+    lastdesc = ""
+    i = 0
+    for m in word.meanings:
+        if lastpos != m.pos:
+            i += 1
+            main += f"\t{i}. {WORDCLASS[m.pos]}\n"
+            lastpos = m.pos
+
+        for tr in m.trs:
+            if tr.lang in SAMI_LANG or (lastword == str(tr) and lastdesc == tr.desc):
+                continue
+            lastword = str(tr)
+            lastdesc = tr.desc
+
+            if tr.lang == 'nob':
+                tr_en = trns.translate(str(tr), src='no', dest='en').text
+                desc_en = trns.translate(
+                    tr.desc, src='no', dest='en').text if tr.desc else ''
+                main += f"\t\t{FLAG[tr.lang]} {tr} {tr.desc}\t→\t{FLAG['en']} {tr_en} {desc_en}\n"
+                for n, ex in enumerate(tr.examples):
+                    ex_en = trns.translate(ex[1], src='no', dest='en').text
+                    main += f"> <:samiflag:725121267933511742> *{underscore_word(ex[0], str(word))}*\n"
+                    main += f"> {FLAG[tr.lang]} *{underscore_word(ex[1], str(tr))}*\n"
+                    main += f"> {FLAG['en']} *{underscore_word(ex_en, tr_en)}*\n"
+                    if (n != len(tr.examples)-1):
+                        main += "\n"
+            else:
+                main += f"\t\t{FLAG[tr.lang]} {tr}\n"
+
+    intro = f"<@&418533166878425103>, otná sátni lea **{word}**!\n Sánis lea"
+    intro = intro + \
+        f"t {i} mearkkašumit:\n" if (
+            i > 1) else intro + f" okta mearkkašupmi:\n"
+    return intro + main
 
 
 '''

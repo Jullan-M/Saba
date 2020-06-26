@@ -8,6 +8,7 @@ class Translation:
             translation['t'], list) else translation['t']['#text']
         self.pos = self.find_pos(translation)
         self.lang = translation['xml:lang']
+        self.desc = f"({translation['re']})" if 're' in translation else ''
         self.examples = self.find_examples(translation)
 
     def find_examples(self, translation):
