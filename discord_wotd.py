@@ -26,7 +26,6 @@ def waittime_from(time):
         return base - diff
 
 
-#print(wotd_message(Word('áššáiguoskevaš', 'sme')))
 client = discord.Client()
 
 
