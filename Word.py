@@ -4,12 +4,21 @@ from utilities import get_w_article
 
 class Translation:
     def __init__(self, translation):
-        self.tword = translation['t'][0]['#text'] if isinstance(
-            translation['t'], list) else translation['t']['#text']
+        self.tword = self.find_twords(translation)
         self.pos = self.find_pos(translation)
         self.lang = translation['xml:lang']
         self.desc = f"({translation['re']})" if 're' in translation else ''
         self.examples = self.find_examples(translation)
+
+    def find_twords(self, translation):
+        tword = ""
+        if isinstance(translation['t'], list):
+            for w in translation['t'][:-1]:
+                tword += f"{w['#text']}, "
+            tword += translation['t'][-1]['#text']
+        else:
+            tword = translation['t']['#text']
+        return tword
 
     def find_examples(self, translation):
         if not ('xg' in translation):

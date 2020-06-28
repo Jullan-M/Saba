@@ -1,10 +1,10 @@
 from Word import Translation, Meaning, Word
 from utilities import UTF8_CHR, search
-from googletrans import Translator
 import random
 
 FLAG = {'nb': '🇳🇴',
         'nob': '🇳🇴',
+        'nn': '🇳🇴 (nynorsk)',
         'sv': '🇸🇪',
         'fi': '🇫🇮',
         'fin': '🇫🇮',
@@ -23,12 +23,18 @@ WORDCLASS = {'N': 'Substantiiva',
              'Pron': 'Pronomen',
              'CC': 'Konjunkšuvdna',
              'Po': 'Postposišuvdna',
-             'Pr': 'Preposišuvdna'}
+             'Pr': 'Preposišuvdna',
+             'Interj': 'Interjekšuvdna',
+             'Pcle': 'Pcle',
+             'mwe': 'Mwe'}
 
-SAMI_LANG = ['smn', 'sma', 'smj', 'sms', 'se', 'nb']
+EXCL_LANG = ['smn', 'sma', 'smj', 'sms', 'se', 'nb', 'fi']
 
 
 def save_dict_words(d):
+    # Iterates through every letter of the sami alphabet
+    # and finds every word in a given dictionary.
+    # The words are saved to a txt file, separated by \n.
     abc = (list('abcdefghijklmnoprstuvz') +
            [UTF8_CHR[l] for l in UTF8_CHR])[:-2]
 
@@ -44,13 +50,26 @@ def save_dict_words(d):
                 words.append(w['term'])
                 lastword = w['term']
 
-    with open(f"{d}_words.txt", "w", encoding="utf-8") as f:
+    with open(f"{d}_sorted.txt", "w", encoding="utf-8") as f:
         for w in words[:-1]:
             f.write(f"{w}\n")
+        # Write last word in list (without line change)
         f.write(f"{words[-1]}")
 
 
+def randomize_words(d):
+    # Randomize words in dictionary, to be used in WOTD.
+    with open(f"{d}_sorted.txt", "r", encoding="utf-8") as f:
+        ws = [l.rstrip() for l in f]
+    random.shuffle(ws)
+    with open(f"{d}_words.txt", "w", encoding="utf-8") as f:
+        for w in ws[:-1]:
+            f.write(f"{w}\n")
+        f.write(f"{ws[-1]}")
+
+
 def test_words(d):
+    # Tests if the dictionary words are parsed correctly,
     with open(f"{d}_words.txt", "r", encoding="utf-8") as f:
         ws = [l.rstrip() for l in f]
         for w in ws:
@@ -65,76 +84,53 @@ def test_words(d):
                 print()
 
 
-def random_word(d):
-    with open(f"{d}_words.txt", "r", encoding="utf-8") as f:
-        words = f.read().split('\n')
-    return random.choice(words)
+def get_wotd(d):
+    # Read WOTD from randomized word file, removes WOTD from file.
+    try:
+        with open(f"{d}_words.txt", "r", encoding="utf-8") as f:
+            head, tail = f.read().split('\n', 1)
+        with open(f"{d}_words.txt", "w", encoding="utf-8") as f:
+            f.write(tail)
+        return head
+    except ValueError:
+        with open(f"{d}_words.txt", "r", encoding="utf-8") as f:
+            word = f.read().split('\n')[0]
+        with open(f"{d}_words.txt", "w", encoding="utf-8") as f:
+            f.write('')
+        if word:
+            return word
+        raise Exception(f"{d}_words.txt is empty!")
 
 
 def blacklist(d, word):
+    # Appends word to a blacklist corresponding to the dictionary.
     with open(f"{d}_blacklist.txt", "a", encoding="utf-8") as f:
-        f.write(f"{word}\n")
+        f.write(f"\n{word}")
 
 
 def word_of_the_day(d):
-    word = random_word(d)
+    # Returns a Word object of WOTD found in a given dictionary.
+    # If the word is in blacklist or the word doesn't exist in dictionary,
+    # it will attempt to find a new word, and blacklist the word.
+    word = get_wotd(d)
     with open(f"{d}_blacklist.txt", "r", encoding="utf-8") as f:
         bl = f.read().split('\n')
 
     while word in bl:
-        word = random_word(d)
+        word = get_wotd(d)
 
-    blacklist(d, word)
+    try:
+        wotd = Word(word, d[:3])
+    except TypeError:
+        print(f"No article was found for the word: {word}.")
+        blacklist(d, word)
+        return word_of_the_day(d)
 
-    wotd = Word(word, d[:3])
     if not wotd.meanings:
+        print(f"No meanings were found for the word: {word}.")
+        blacklist(d, word)
         return word_of_the_day(d)
     return wotd
-
-
-def underscore_word(string, word):
-    return string.replace(word.capitalize(), f'__{word.capitalize()}__').replace(word, f'__{word}__')
-
-
-def wotd_message(word):
-    trns = Translator()
-    main = ""
-    lastpos = ""
-    lastword = ""
-    lastdesc = ""
-    i = 0
-    for m in word.meanings:
-        if lastpos != m.pos:
-            i += 1
-            main += f"\t{i}. {WORDCLASS[m.pos]}\n"
-            lastpos = m.pos
-
-        for tr in m.trs:
-            if tr.lang in SAMI_LANG or (lastword == str(tr) and lastdesc == tr.desc):
-                continue
-            lastword = str(tr)
-            lastdesc = tr.desc
-
-            if tr.lang == 'nob':
-                tr_en = trns.translate(str(tr), src='no', dest='en').text
-                desc_en = trns.translate(
-                    tr.desc, src='no', dest='en').text if tr.desc else ''
-                main += f"\t\t{FLAG[tr.lang]} {tr} {tr.desc}\t→\t{FLAG['en']} {tr_en} {desc_en}\n"
-                for n, ex in enumerate(tr.examples):
-                    ex_en = trns.translate(ex[1], src='no', dest='en').text
-                    main += f"> <:samiflag:725121267933511742> *{underscore_word(ex[0], str(word))}*\n"
-                    main += f"> {FLAG[tr.lang]} *{underscore_word(ex[1], str(tr))}*\n"
-                    main += f"> {FLAG['en']} *{underscore_word(ex_en, tr_en)}*\n"
-                    if (n != len(tr.examples)-1):
-                        main += "\n"
-            else:
-                main += f"\t\t{FLAG[tr.lang]} {tr}\n"
-
-    intro = f"<@&418533166878425103>, otná sátni lea **{word}**!\n Sánis lea"
-    intro = intro + \
-        f"t {i} mearkkašumit:\n" if (
-            i > 1) else intro + f" okta mearkkašupmi:\n"
-    return intro + main
 
 
 '''
