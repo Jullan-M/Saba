@@ -1,1 +1,1 @@
-# discord_wotd
+# sami_wotd
