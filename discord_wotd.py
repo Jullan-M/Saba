@@ -11,6 +11,7 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 CHANNEL_ID = int(os.getenv('CHANNEL_ID'))  # Target channel
 ROLE_ID = int(os.getenv('ROLE_ID'))
+SAMIFLAG_ID = int(os.getenv('SAMIFLAG_ID'))
 WOTD_H = int(os.getenv('WOTD_H'))
 WOTD_M = int(os.getenv('WOTD_M'))
 WOTD_S = int(os.getenv('WOTD_S'))
@@ -43,7 +44,7 @@ def wotd_message(word):
                 trs_text += f"\t\t{FLAG[tr.lang]} {tr} {tr.desc}\t→\t{FLAG['en']} {tr_en} {desc_en}\n"
                 for n, ex in enumerate(tr.examples):
                     ex_en = trns.translate(ex[1], src='no', dest='en').text
-                    trs_text += f"> <:samiflag:725121267933511742> *{underscore_word(ex[0], str(word))}*\n"
+                    trs_text += f"> <:samiflag:{SAMIFLAG_ID}> *{underscore_word(ex[0], str(word))}*\n"
                     trs_text += f"> {FLAG[tr.lang]} *{underscore_word(ex[1], str(tr))}*\n"
                     trs_text += f"> {FLAG['en']} *{underscore_word(ex_en, tr_en)}*\n"
                     if (n != len(tr.examples)-1):
@@ -99,8 +100,9 @@ async def before():
     now = datetime.datetime.now()
     print(f"Time is currently \t{now}.")
     sleeptime = waittime_from(now)
-    print(f"WOTD is scheduled at \t{WOTD_H}H {WOTD_M}M {WOTD_S}S.")
-    print(f"Sleeping for \t\t{datetime.timedelta(seconds=sleeptime)} HH:MM:SS")
+    print(
+        f"WOTD is scheduled at \t{WOTD_H}H {WOTD_M}M {WOTD_S}S to {client.get_channel(CHANNEL_ID)}, and will tag {ROLE_ID}.")
+    print(f"Sleeptime: \t\t{datetime.timedelta(seconds=sleeptime)}")
     await asyncio.sleep(sleeptime)
 
 called_once_a_day.start()
