@@ -18,6 +18,21 @@ WOTD_S = int(os.getenv('WOTD_S'))
 
 
 def underscore_word(string, word):
+    if ', ' in word:
+        words = word.split(', ')
+        sentence = string
+        for w in words:
+            sentence = sentence.replace(
+                w.capitalize(), f'__{w.capitalize()}__').replace(w, f'__{w}__')
+        return sentence
+    elif ' ' in word:
+        words = word.split(' ')
+        sentence = string
+        for w in words:
+            sentence = sentence.replace(
+                w.capitalize(), f'__{w.capitalize()}__').replace(w, f'__{w}__')
+        return sentence
+
     return string.replace(word.capitalize(), f'__{word.capitalize()}__').replace(word, f'__{word}__')
 
 
