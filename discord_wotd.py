@@ -6,6 +6,7 @@ from discord.ext import tasks
 from dotenv import load_dotenv
 from googletrans import Translator
 from wotd import word_of_the_day, FLAG, WORDCLASS, EXCL_LANG
+from utilities import waittime_between
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -79,18 +80,6 @@ def wotd_message(word):
     return intro + main
 
 
-def waittime_from(time):
-    base = 86400
-    h = time.hour - WOTD_H
-    m = time.minute - WOTD_M
-    s = time.second - WOTD_S
-    diff = h * 3600 + m * 60 + s
-    if diff < 0:
-        return abs(diff)
-    else:
-        return base - diff
-
-
 client = discord.Client()
 
 
@@ -114,7 +103,7 @@ async def before():
     print(f'Finished waiting client. {client.user} has connected to Discord!')
     now = datetime.datetime.now()
     print(f"Time is currently \t{now}.")
-    sleeptime = waittime_from(now)
+    sleeptime = waittime_between(now, WOTD_H, WOTD_M, WOTD_s)
     print(
         f"WOTD is scheduled at \t{WOTD_H}H {WOTD_M}M {WOTD_S}S to {client.get_channel(CHANNEL_ID)}, and will tag {ROLE_ID}.")
     print(f"Sleeptime: \t\t{datetime.timedelta(seconds=sleeptime)}")

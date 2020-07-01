@@ -40,3 +40,15 @@ def get_w_article(term):
     article = web2json(
         'http://satni.uit.no:8080/exist/restxq/satni/article/' + utf8str)
     return article
+
+
+def waittime_between(time, hrs, mins, secs):
+    base = 86400
+    h = time.hour - hrs
+    m = time.minute - mins
+    s = time.second - secs
+    diff = h * 3600 + m * 60 + s
+    if diff < 0:
+        return abs(diff)
+    else:
+        return base - diff

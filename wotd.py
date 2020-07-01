@@ -4,7 +4,7 @@ import random
 
 FLAG = {'nb': '🇳🇴',
         'nob': '🇳🇴',
-        'nn': '🇳🇴 (nynorsk)',
+        'nn': '🇳🇴 (nn)',
         'sv': '🇸🇪',
         'fi': '🇫🇮',
         'fin': '🇫🇮',
@@ -28,7 +28,7 @@ WORDCLASS = {'N': 'Substantiiva',
              'Pcle': 'Pcle',
              'mwe': 'Mwe'}
 
-EXCL_LANG = ['smn', 'sma', 'smj', 'sms', 'se', 'nb', 'fi']
+EXCL_LANG = ['smn', 'sma', 'smj', 'sms', 'se', 'nb', 'fi', 'nn', 'lat']
 
 
 def save_dict_words(d):
