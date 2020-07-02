@@ -1,3 +1,4 @@
+import urllib
 import urllib.request
 import json
 
@@ -14,6 +15,7 @@ UTF8_CHR = {'á': '%C3%A1',
 
 
 def utf8ize(string):
+    # Deprecated function, replaced by urllib.parse.quote()
     utf8str = string
     for l in UTF8_CHR:
         utf8str = utf8str.replace(l, UTF8_CHR[l])
@@ -29,16 +31,16 @@ def web2json(url):
 
 
 def search(string):
-    utf8str = utf8ize(string)
+    perenc = urllib.parse.quote(string)  # utf8ize(string)
     results = web2json(
-        'http://satni.uit.no:8080/exist/restxq/satni/search?query=' + utf8str)
+        'http://satni.uit.no:8080/exist/restxq/satni/search?query=' + perenc)
     return results
 
 
 def get_w_article(term):
-    utf8str = utf8ize(term)
+    perenc = urllib.parse.quote(term)  # utf8ize(term)
     article = web2json(
-        'http://satni.uit.no:8080/exist/restxq/satni/article/' + utf8str)
+        'http://satni.uit.no:8080/exist/restxq/satni/article/' + perenc)
     return article
 
 

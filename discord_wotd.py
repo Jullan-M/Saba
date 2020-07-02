@@ -103,7 +103,7 @@ async def before():
     print(f'Finished waiting client. {client.user} has connected to Discord!')
     now = datetime.datetime.now()
     print(f"Time is currently \t{now}.")
-    sleeptime = waittime_between(now, WOTD_H, WOTD_M, WOTD_s)
+    sleeptime = waittime_between(now, WOTD_H, WOTD_M, WOTD_S)
     print(
         f"WOTD is scheduled at \t{WOTD_H}H {WOTD_M}M {WOTD_S}S to {client.get_channel(CHANNEL_ID)}, and will tag {ROLE_ID}.")
     print(f"Sleeptime: \t\t{datetime.timedelta(seconds=sleeptime)}")
