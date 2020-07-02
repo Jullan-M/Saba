@@ -6,10 +6,11 @@ from twython import Twython
 from dotenv import load_dotenv
 from googletrans import Translator
 from wotd import word_of_the_day, FLAG, WORDCLASS, EXCL_LANG
+from Word import Word
 from utilities import waittime_between
 from imutils import examples_img
 
-load_dotenv()
+load_dotenv(dotenv_path='wotd_twitter/.env')
 APP_KEY = os.getenv('APP_KEY')
 APP_SECRET = os.getenv('APP_SECRET')
 OAUTH_TOKEN = os.getenv('OAUTH_TOKEN')
@@ -67,7 +68,7 @@ def wotd_message(word):
     return intro + main, examples_img(str(word), examples)
 
 
-def run_twitter_bot(d):
+def run_twitter_bot(d, path):
     twitter = Twython(APP_KEY, APP_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
 
     now = datetime.datetime.now()
@@ -79,7 +80,7 @@ def run_twitter_bot(d):
     time.sleep(sleeptime)
 
     while True:
-        word = word_of_the_day(d)
+        word = word_of_the_day(d, path)
         print("Today's word is:", word)
         print("Generating message...")
         wotd, incExample = wotd_message(word)
@@ -102,4 +103,4 @@ def run_twitter_bot(d):
         time.sleep(waittime_between(now, WOTD_H, WOTD_M, WOTD_S))
 
 
-run_twitter_bot('smenob')
+run_twitter_bot('smenob', 'wotd_twitter/')

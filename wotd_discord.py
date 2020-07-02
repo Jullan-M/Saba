@@ -8,7 +8,7 @@ from googletrans import Translator
 from wotd import word_of_the_day, FLAG, WORDCLASS, EXCL_LANG
 from utilities import waittime_between
 
-load_dotenv()
+load_dotenv(dotenv_path='wotd_discord/.env')
 TOKEN = os.getenv('DISCORD_TOKEN')
 CHANNEL_ID = int(os.getenv('CHANNEL_ID'))  # Target channel
 ROLE_ID = int(os.getenv('ROLE_ID'))
@@ -87,7 +87,7 @@ client = discord.Client()
 async def called_once_a_day():
     now = datetime.datetime.now()
     print(f"Fetching word of the day for\t{now}")
-    word = word_of_the_day('smenob')
+    word = word_of_the_day('smenob', 'wotd_discord/')
     print("Today's word is:", word)
     print("Generating message...")
     wotd = wotd_message(word)

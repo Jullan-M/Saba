@@ -84,22 +84,22 @@ def test_words(d):
                 print()
 
 
-def get_wotd(d):
+def get_wotd(d, path):
     # Read WOTD from randomized word file, removes WOTD from file.
     try:
-        with open(f"{d}_words.txt", "r", encoding="utf-8") as f:
+        with open(f"{path}{d}_words.txt", "r", encoding="utf-8") as f:
             head, tail = f.read().split('\n', 1)
-        with open(f"{d}_words.txt", "w", encoding="utf-8") as f:
+        with open(f"{path}{d}_words.txt", "w", encoding="utf-8") as f:
             f.write(tail)
         return head
     except ValueError:
-        with open(f"{d}_words.txt", "r", encoding="utf-8") as f:
+        with open(f"{path}{d}_words.txt", "r", encoding="utf-8") as f:
             word = f.read().split('\n')[0]
-        with open(f"{d}_words.txt", "w", encoding="utf-8") as f:
+        with open(f"{path}{d}_words.txt", "w", encoding="utf-8") as f:
             f.write('')
         if word:
             return word
-        raise Exception(f"{d}_words.txt is empty!")
+        raise Exception(f"{path}{d}_words.txt is empty!")
 
 
 def blacklist(d, word):
@@ -108,28 +108,28 @@ def blacklist(d, word):
         f.write(f"\n{word}")
 
 
-def word_of_the_day(d):
+def word_of_the_day(d, path):
     # Returns a Word object of WOTD found in a given dictionary.
     # If the word is in blacklist or the word doesn't exist in dictionary,
     # it will attempt to find a new word, and blacklist the word.
-    word = get_wotd(d)
+    word = get_wotd(d, path)
     with open(f"{d}_blacklist.txt", "r", encoding="utf-8") as f:
         bl = f.read().split('\n')
 
     while word in bl:
-        word = get_wotd(d)
+        word = get_wotd(d, path)
 
     try:
         wotd = Word(word, d[:3])
     except TypeError:
         print(f"No article was found for the word: {word}.")
         blacklist(d, word)
-        return word_of_the_day(d)
+        return word_of_the_day(d, path)
 
     if not wotd.meanings:
         print(f"No meanings were found for the word: {word}.")
         blacklist(d, word)
-        return word_of_the_day(d)
+        return word_of_the_day(d, path)
     return wotd
 
 

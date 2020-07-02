@@ -1,4 +1,4 @@
-*.env
+.env
 smenob_sorted.txt
 smenob_words*
 /__pycache__/*
