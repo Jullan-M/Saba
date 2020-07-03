@@ -6,6 +6,7 @@ FLAG = {'nb': '🇳🇴',
         'nob': '🇳🇴',
         'nn': '🇳🇴 (nn)',
         'sv': '🇸🇪',
+        'swe': '🇸🇪',
         'fi': '🇫🇮',
         'fin': '🇫🇮',
         'en': '🇬🇧',
@@ -28,15 +29,14 @@ WORDCLASS = {'N': 'Substantiiva',
              'Pcle': 'Pcle',
              'mwe': 'Mwe'}
 
-EXCL_LANG = ['smn', 'sma', 'smj', 'sms', 'se', 'nb', 'fi', 'nn', 'lat']
+EXCL_LANG = ['smn', 'sma', 'smj', 'sms', 'se', 'nb', 'fi', 'nn', 'lat', 'swe']
 
 
-def save_dict_words(d):
+def save_dict_words(d, abc):
     # Iterates through every letter of the sami alphabet
     # and finds every word in a given dictionary.
     # The words are saved to a txt file, separated by \n.
-    abc = (list('abcdefghijklmnoprstuvz') +
-           [UTF8_CHR[l] for l in UTF8_CHR])[:-2]
+    # abc = (list('abcdefghijklmnoprstuvz') +[UTF8_CHR[l] for l in UTF8_CHR])[:-2]
 
     words = []
     for l in abc:
