@@ -10,11 +10,11 @@ FLAG = {'nb': '🇳🇴',
         'fi': '🇫🇮',
         'fin': '🇫🇮',
         'en': '🇬🇧',
-        'smn': 'smn',
-        'sma': 'sma',
-        'smj': 'smj',
+        'smn': '<:samiflag:725121267933511742> (saI)',
+        'sma': '<:samiflag:725121267933511742> (saS)',
+        'smj': '<:samiflag:725121267933511742> (saJ)',
         'sms': 'sms',
-        'se': 'se',
+        'se': '<:samiflag:725121267933511742> (saN)',
         'lat': 'lat'}
 
 WORDCLASS = {'N': 'Substantiiva',
@@ -77,9 +77,10 @@ def test_words(d):
             word = Word(w, d[:3])
             print(
                 f" ({word.meanings[0].pos}): \t{word.meanings[0].trs[0]}", end='')
-            if word.meanings[0].trs[0].examples[0][0]:
-                print(
-                    f"\tex: '{word.meanings[0].trs[0].examples[0][0]}'='{word.meanings[0].trs[0].examples[0][1]}'")
+            if word.meanings[0].trs[0].examples:
+                if word.meanings[0].trs[0].examples[0][0]:
+                    print(
+                        f"\tex: '{word.meanings[0].trs[0].examples[0][0]}'='{word.meanings[0].trs[0].examples[0][1]}'")
             else:
                 print()
 

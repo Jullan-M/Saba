@@ -1,0 +1,34 @@
+{
+  "sme": {
+    "excl_lang": ["sma", "smj", "sms", "se", "nb", "fi", "nn", "lat", "swe"],
+    "wordclass": {
+      "N": "Substantiiva",
+      "V": "Vearba",
+      "Adv": "Advearba",
+      "A": "Adjektiiva",
+      "Pron": "Pronomen",
+      "CC": "Konjunkšuvdna",
+      "Po": "Postposišuvdna",
+      "Pr": "Preposišuvdna",
+      "Interj": "Interjekšuvdna",
+      "Pcle": "Pcle",
+      "mwe": "Mwe"
+    }
+  },
+  "sma": {
+    "excl_lang": ["smn", "sma", "smj", "sms", "nb", "fi", "nn", "lat"],
+    "wordclass": {
+      "N": "Substantijve",
+      "V": "Verbe",
+      "Adv": "Adverbe",
+      "A": "Adjektijve",
+      "Pron": "Pronovmene",
+      "CC": "Konjunksjovne",
+      "Po": "Postposisjovne",
+      "Pr": "Preposisjovne",
+      "Interj": "Interjeksjovne",
+      "Pcle": "Pcle",
+      "mwe": "Mwe"
+    }
+  }
+}
