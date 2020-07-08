@@ -23,8 +23,7 @@ def utf8ize(string):
 
 
 def web2json(url):
-    data = urllib.request.urlopen(
-        url).read()
+    data = urllib.request.urlopen(url).read()
     if (data[0] == 123 and data[2] == 123):  # 123 in ASCII corresponds to {
         return [json.loads(data[1:len(data)-1])]
     return json.loads(data)
@@ -42,6 +41,14 @@ def get_w_article(term):
     article = web2json(
         'http://satni.uit.no:8080/exist/restxq/satni/article/' + perenc)
     return article
+
+
+def get_p_article(term, dictname, lang, pos=""):
+    perenc = urllib.parse.quote(term)
+    postxt = "" if pos else f"&pos={pos}"
+    data = urllib.request.urlopen(
+        f"https://{dictname}.oahpa.no/lookup/{lang}/nob/?lookup={perenc}{postxt}").read()
+    return json.loads(data)
 
 
 def waittime_between(time, hrs, mins, secs):

@@ -1,5 +1,8 @@
 # Used for parsing word articles from UiT Divvun database
-from utilities import get_w_article
+from utilities import get_w_article, get_p_article
+
+DICTNAMES = {"sme": "sanit",
+             "sma": "baakoeh"}
 
 
 class Translation:
@@ -74,3 +77,18 @@ class Word:
 
     def __str__(self):
         return self.word
+
+
+class Paradigm:
+    def __init__(self, word, lang):
+        p_article = get_p_article(word, DICTNAMES[lang], lang)
+        self.word = word
+        self.lang = lang
+        self.paradigms = [self.parse_paradigm(
+            p) for p in p_article["paradigms"]]
+
+    def parse_paradigm(self, p):
+        paradigm = {}
+        for e in p:
+            paradigm[e[3]] = e[0]
+        return paradigm

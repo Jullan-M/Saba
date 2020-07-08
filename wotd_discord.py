@@ -6,7 +6,7 @@ from discord.ext import tasks
 import json
 from dotenv import load_dotenv
 from googletrans import Translator
-from wotd import word_of_the_day, FLAG, WORDCLASS, EXCL_LANG
+from wotd import word_of_the_day, WotdManager, FLAG, WORDCLASS, EXCL_LANG
 from utilities import waittime_between
 
 load_dotenv(dotenv_path='wotd_discord/.env')
@@ -36,14 +36,9 @@ def underscore_word(string, word):
     return string.replace(word.capitalize(), f'__{word.capitalize()}__').replace(word, f'__{word}__')
 
 
-class WotdManager:
-    def __init__(self, d):
-        self.lang = d[:3]
-        self.dict = d
-        with open("language_conf.json", "r") as f:
-            lang_conf = json.load(f)[self.lang]
-        self.excl_lang = lang_conf["excl_lang"]
-        self.wordclass = lang_conf["wordclass"]
+class WotdManagerDiscord(WotdManager):
+    def __init__(self, d, path='wotd_discord/'):
+        super().__init__(d, path)
         self.cha_id = int(os.getenv(f'{self.lang}_CHANNEL_ID'))
         self.role_id = int(os.getenv(f'{self.lang}_ROLE_ID'))
 
@@ -61,9 +56,6 @@ class WotdManager:
                 f"t {count} mearkkašumit:\n" if (
                     count > 1) else intro + f" okta mearkkašupmi:\n"
             return intro
-
-    def get_wotd(self):
-        return word_of_the_day(self.dict, 'wotd_discord/')
 
     def wotd_message(self, word):
 
@@ -104,7 +96,7 @@ class WotdManager:
         return intro + main
 
 
-wotd_m = [WotdManager(d) for d in ['smenob', 'smanob']]
+wotd_m = [WotdManagerDiscord(d) for d in ['smenob', 'smanob']]
 client = discord.Client()
 
 

@@ -1,6 +1,8 @@
+import random
+import json
 from Word import Translation, Meaning, Word
 from utilities import UTF8_CHR, search
-import random
+
 
 FLAG = {'nb': '🇳🇴',
         'nob': '🇳🇴',
@@ -132,6 +134,26 @@ def word_of_the_day(d, path):
         blacklist(d, word)
         return word_of_the_day(d, path)
     return wotd
+
+
+class WotdManager:
+    def __init__(self, d, path):
+        self.lang = d[:3]
+        self.dict = d
+        with open("language_conf.json", "r") as f:
+            lang_conf = json.load(f)[self.lang]
+        self.excl_lang = lang_conf["excl_lang"]
+        self.wordclass = lang_conf["wordclass"]
+        self.path = path
+
+    def get_wotd(self):
+        return word_of_the_day(self.dict, self.path)
+
+    def get_intro_message(self, word, count):
+        return ""
+
+    def wotd_message(self, word):
+        return ""
 
 
 '''
