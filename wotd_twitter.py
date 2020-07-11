@@ -118,7 +118,7 @@ def run_twitter_bot(wotd_manager):
             print(f"WOTD was sent to Twitter.\n")
 
         now = datetime.datetime.now()
-        time.sleep(waittime_between(now, WOTD_H, WOTD_M, WOTD_S))
+        time.sleep(waittime_between(now, WOTD_H, WOTD_M - 1, WOTD_S))
 
 
 wotd_m = WotdManagerTwitter('smenob')

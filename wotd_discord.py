@@ -89,6 +89,8 @@ class WotdManagerDiscord(WotdManager):
                             trs_text += "\n"
                 else:
                     trs_text += f"\t\t{FLAG[tr.lang]} {tr}\n"
+                    trs_text = trs_text.replace(
+                        "<SFLAG>", f"<:samiflag:{SAMIFLAG_ID}>")
             if lastpos != m.pos and trs_text:
                 i += 1
                 main += f"\t{i}. {wordclass[m.pos]}\n"
@@ -144,7 +146,8 @@ async def paradigm(ctx, lang, word, pos=""):
     if message:
         await ctx.send(f"<@{ctx.author.id}>, paradigm for **{word}**:\n{message}")
     else:
-        await ctx.send(f"<@{ctx.author.id}>, I couldn't find any paradigm for `{word}` of the wordclass `{pos}`.")
+        end = f" in the wordclass {pos}." if pos else "."
+        await ctx.send(f"<@{ctx.author.id}>, I couldn't find any paradigm for `{word}`{end}")
 
 
 @bot.command(name='word', help="Finds all possible translations for the given word and provides examples (if any).")
