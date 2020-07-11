@@ -1,4 +1,6 @@
 .env
-smenob_sorted.txt
+*nob_sorted.txt
 smenob_words*
+smanob_words*
 /__pycache__/*
+app_credentials.json
