@@ -43,11 +43,11 @@ def get_w_article(term):
     return article
 
 
-def get_p_article(term, dictname, lang, pos=""):
+def get_p_article(term, dictname, src_lang, dest_lang, pos=""):
     perenc = urllib.parse.quote(term)
-    postxt = "" if pos else f"&pos={pos}"
+    postxt = "" if pos else f"?pos={pos}"
     data = urllib.request.urlopen(
-        f"https://{dictname}.oahpa.no/lookup/{lang}/nob/?lookup={perenc}{postxt}").read()
+        f"https://{dictname}.oahpa.no/paradigm/{src_lang}/{dest_lang}/{perenc}/{postxt}").read()
     return json.loads(data)
 
 

@@ -2,7 +2,14 @@
 from utilities import get_w_article, get_p_article
 
 DICTNAMES = {"sme": "sanit",
-             "sma": "baakoeh"}
+             "sma": "baakoeh",
+             "sms": "saan",
+             "smn": "saanih"}
+
+PREF_DEST = {"sme": "nob",
+             "sma": "nob",
+             "sms": "nob",
+             "smn": "sme"}
 
 
 class Translation:
@@ -81,7 +88,7 @@ class Word:
 
 class Paradigm:
     def __init__(self, word, lang):
-        p_article = get_p_article(word, DICTNAMES[lang], lang)
+        p_article = get_p_article(word, DICTNAMES[lang], lang, PREF_DEST[lang])
         self.word = word
         self.lang = lang
         self.paradigms = [self.parse_paradigm(
