@@ -41,7 +41,7 @@ FONT_IT = "Helvetica Neue LT 46 Light Italic.ttf"
 MAX_FSIZE = 72
 
 
-def examples_img(word, examples):
+def examples_img(lang, word, examples):
     # examples: Array of strings
     if not examples[0]:
         return False
@@ -51,7 +51,7 @@ def examples_img(word, examples):
     rn_color = random.choice(TW_COLORS)
     d.text((20, HEIGHT - 90), f"{word}", font=ImageFont.truetype(
         FONT, size=72), fill=rn_color)
-    d.text((780, HEIGHT - 45), "@WOTD_sme", font=ImageFont.truetype(
+    d.text((780, HEIGHT - 45), f"@WOTD_{lang}", font=ImageFont.truetype(
         FONT, size=46), fill=rn_color)
 
     for i, fl in enumerate(FLAG_IMGS):
@@ -70,5 +70,5 @@ def examples_img(word, examples):
         d.text((282, 20 + 200 * i), text_wrapped,
                font=text_font, fill=(255, 255, 255), spacing=10)
 
-    img.save('media/examples.png')
+    img.save(f'media/examples_{lang}.png')
     return True
