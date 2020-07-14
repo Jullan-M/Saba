@@ -182,14 +182,14 @@ async def word(ctx, lang : str, word : str):
     intro = intro + "meanings:\n" if i > 1 else intro + "meaning:\n"
     await ctx.send(intro + main)
 
-@bot.command(name='satni', help="An alias for ]word sme <word> (look-up in Northern Sami dictionaries).")
-async def satni(ctx, word : str):
-    word(ctx, 'sme', word)
+@bot.command(name='sátni', help="An alias for ]word sme <word> (look-up in Northern Sami dictionaries).")
+async def satni(ctx, term : str):
+    await word(ctx, 'sme', term)
 
 
 @bot.command(name='baakoe', help="An alias for ]word sma <word> (look-up in Southern Sami dictionaries).")
-async def baakoe(ctx, word : str):
-    word(ctx, 'sma', word) 
+async def baakoe(ctx, term : str):
+    await word(ctx, 'sma', term) 
 
 
 @tasks.loop(hours=24)
