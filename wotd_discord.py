@@ -178,9 +178,18 @@ async def word(ctx, lang, word):
         main, i = wotd_m[0].get_translation(w, en_wc)
     elif lang == 'sma':
         main, i = wotd_m[1].get_translation(w, en_wc)
-    intro = f"<@{ctx.author.id}>, the word **{word}** has {i} "
+    intro = f"<@{ctx.author.id}>, **{word}** has {i} "
     intro = intro + "meanings:\n" if i > 1 else intro + "meaning:\n"
     await ctx.send(intro + main)
+
+@bot.command(name='satni', help="An alias for ]word sme <word> (look-up in Northern Sami dictionaries).")
+async def satni(ctx, word):
+    word(ctx, 'sme', word)
+
+
+@bot.command(name='baakoe', help="An alias for ]word sma <word> (look-up in Southern Sami dictionaries).")
+async def baakoe(ctx, word):
+    word(ctx, 'sma', word) 
 
 
 @tasks.loop(hours=24)
