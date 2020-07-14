@@ -117,7 +117,7 @@ with open("language_conf.json", "r") as f:
 
 
 @bot.command(name='paradigm', help="Shows the paradigm of a given word.")
-async def paradigm(ctx, lang, word, pos=""):
+async def paradigm(ctx, lang : str, word : str, pos=""):
     if ctx.channel.id != SPAM_CHANNEL_ID:
         await ctx.author.send(f"❌ You can only use that command in <#{SPAM_CHANNEL_ID}>.")
         return
@@ -157,7 +157,7 @@ async def paradigm(ctx, lang, word, pos=""):
 
 
 @bot.command(name='word', help="Finds all possible translations for the given word and provides examples (if any).")
-async def word(ctx, lang, word):
+async def word(ctx, lang : str, word : str):
     if ctx.channel.id != SPAM_CHANNEL_ID:
         await ctx.author.send(f"❌ You can only use that command in <#{SPAM_CHANNEL_ID}>.")
         return
@@ -183,12 +183,12 @@ async def word(ctx, lang, word):
     await ctx.send(intro + main)
 
 @bot.command(name='satni', help="An alias for ]word sme <word> (look-up in Northern Sami dictionaries).")
-async def satni(ctx, word):
+async def satni(ctx, word : str):
     word(ctx, 'sme', word)
 
 
 @bot.command(name='baakoe', help="An alias for ]word sma <word> (look-up in Southern Sami dictionaries).")
-async def baakoe(ctx, word):
+async def baakoe(ctx, word : str):
     word(ctx, 'sma', word) 
 
 
