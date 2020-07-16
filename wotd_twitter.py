@@ -42,7 +42,7 @@ class WotdManagerTwitter(WotdManager):
             return intro
 
         elif self.lang == 'sma':
-            intro = f"Dan biejjie baakoe lea {word}!\nBaakoen lea"
+            intro = f"Daen biejjien baakoe lea {word}!\nBaakoen lea"
             intro = intro + \
                 f"h {count} goerkesimmieh:\n" if (
                     count > 1) else intro + f" akte goerkesimmie:\n"

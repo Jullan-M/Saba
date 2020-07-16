@@ -54,7 +54,7 @@ class WotdManagerDiscord(WotdManager):
             return intro
 
         elif self.lang == 'sma':
-            intro = f"<@&{self.role_id}>, dan biejjie baakoe lea **{word}**!\n Baakoen lea"
+            intro = f"<@&{self.role_id}>, daen biejjien baakoe lea **{word}**!\n Baakoen lea"
             intro = intro + \
                 f"h {count} goerkesimmieh:\n" if (
                     count > 1) else intro + f" akte goerkesimmie:\n"
