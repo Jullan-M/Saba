@@ -54,10 +54,10 @@ class WotdManagerDiscord(WotdManager):
             return intro
 
         elif self.lang == 'sma':
-            intro = f"<@&{self.role_id}>, dan biejjie baakoe lea **{word}**!\n Baakosne lea"
+            intro = f"<@&{self.role_id}>, dan biejjie baakoe lea **{word}**!\n Baakoen lea"
             intro = intro + \
-                f"h {count} ulmieh:\n" if (
-                    count > 1) else intro + f" akte ulmie:\n"
+                f"h {count} goerkesimmieh:\n" if (
+                    count > 1) else intro + f" akte goerkesimmie:\n"
             return intro
 
     def get_translation(self, word, wordclass):
@@ -81,7 +81,7 @@ class WotdManagerDiscord(WotdManager):
                         tr_en = ", ".join([w.text for w in trns.translate(str(tr).split(", "), src='no', dest='en')])
                     else:
                         # Add "å" prefix to verbs in order to enhance translation
-                        tr_en = ", ".join([w.text.replace("to ", "") for w in trns.translate(["å " + v for v in str(tr).split(", ")], src='no', dest='en')])
+                        tr_en = ", ".join([w.text[3:] for w in trns.translate(["å " + v for v in str(tr).split(", ")], src='no', dest='en')])
                     desc_en = trns.translate(tr.desc, src='no', dest='en').text if tr.desc else ''
                     trs_text += f"\t\t{FLAG[tr.lang]} {tr} {tr.desc}\t→\t{FLAG['en']} {tr_en} {desc_en}\n"
                     for n, ex in enumerate(tr.examples):

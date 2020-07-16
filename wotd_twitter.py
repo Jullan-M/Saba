@@ -42,10 +42,10 @@ class WotdManagerTwitter(WotdManager):
             return intro
 
         elif self.lang == 'sma':
-            intro = f"Dan biejjie baakoe lea {word}!\nSánis lea"
+            intro = f"Dan biejjie baakoe lea {word}!\nBaakoen lea"
             intro = intro + \
-                f"t {count} mearkkašumit:\n" if (
-                    count > 1) else intro + f" okta mearkkašupmi:\n"
+                f"h {count} goerkesimmieh:\n" if (
+                    count > 1) else intro + f" akte goerkesimmie:\n"
             return intro
 
     def wotd_message(self, word):
@@ -70,7 +70,7 @@ class WotdManagerTwitter(WotdManager):
                         tr_en = ", ".join([w.text for w in trns.translate(str(tr).split(", "), src='no', dest='en')])
                     else:
                         # Add "å" prefix to verbs in order to enhance translation
-                        tr_en = ", ".join([w.text.replace("to ", "") for w in trns.translate(["å " + v for v in str(tr).split(", ")], src='no', dest='en')])
+                        tr_en = ", ".join([w.text[3:] for w in trns.translate(["å " + v for v in str(tr).split(", ")], src='no', dest='en')])
                     desc_en = trns.translate(
                         tr.desc, src='no', dest='en').text if tr.desc else ''
                     trs_text += f" {FLAG[tr.lang]} {tr} {tr.desc}  →  {FLAG['en']} {tr_en} {desc_en}\n"
