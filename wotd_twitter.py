@@ -65,7 +65,8 @@ class WotdManagerTwitter(WotdManager):
                 lastdesc = tr.desc
 
                 if tr.lang == 'nob':
-                    tr_en = trns.translate(str(tr), src='no', dest='en').text
+                    tr_en = ", ".join([w.text for w in trns.translate(
+                            str(tr).split(", "), src='no', dest='en')])
                     desc_en = trns.translate(
                         tr.desc, src='no', dest='en').text if tr.desc else ''
                     trs_text += f" {FLAG[tr.lang]} {tr} {tr.desc}  →  {FLAG['en']} {tr_en} {desc_en}\n"
