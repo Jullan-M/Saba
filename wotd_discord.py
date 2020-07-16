@@ -76,13 +76,13 @@ class WotdManagerDiscord(WotdManager):
                 lastdesc = tr.desc
 
                 if tr.lang == 'nob':
-                    tr_en = trns.translate(str(tr), src='no', dest='en').text
+                    tr_en = ", ".join([w.text for w in trns.translate(
+                            str(tr).split(", "), src='no', dest='en')])
                     desc_en = trns.translate(
                         tr.desc, src='no', dest='en').text if tr.desc else ''
                     trs_text += f"\t\t{FLAG[tr.lang]} {tr} {tr.desc}\t→\t{FLAG['en']} {tr_en} {desc_en}\n"
                     for n, ex in enumerate(tr.examples):
-                        ex_en = ", ".join([w.text for w in trns.translate(
-                            ex[1].split(", "), src='no', dest='en')])
+                        ex_en = trns.translate(ex[1], src='no', dest='en').text
                         trs_text += f"> <:samiflag:{SAMIFLAG_ID}> *{underscore_word(ex[0], str(word))}*\n"
                         trs_text += f"> {FLAG[tr.lang]} *{underscore_word(ex[1], str(tr))}*\n"
                         trs_text += f"> {FLAG['en']} *{underscore_word(ex_en, tr_en)}*\n"
