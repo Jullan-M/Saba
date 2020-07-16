@@ -81,7 +81,8 @@ class WotdManagerDiscord(WotdManager):
                         tr.desc, src='no', dest='en').text if tr.desc else ''
                     trs_text += f"\t\t{FLAG[tr.lang]} {tr} {tr.desc}\t→\t{FLAG['en']} {tr_en} {desc_en}\n"
                     for n, ex in enumerate(tr.examples):
-                        ex_en = trns.translate(ex[1], src='no', dest='en').text
+                        ex_en = ", ".join([w.text for w in trns.translate(
+                            ex[1].split(", "), src='no', dest='en')])
                         trs_text += f"> <:samiflag:{SAMIFLAG_ID}> *{underscore_word(ex[0], str(word))}*\n"
                         trs_text += f"> {FLAG[tr.lang]} *{underscore_word(ex[1], str(tr))}*\n"
                         trs_text += f"> {FLAG['en']} *{underscore_word(ex_en, tr_en)}*\n"
@@ -117,7 +118,7 @@ with open("language_conf.json", "r") as f:
 
 
 @bot.command(name='paradigm', help="Shows the paradigm of a given word.")
-async def paradigm(ctx, lang : str, word : str, pos=""):
+async def paradigm(ctx, lang: str, word: str, pos=""):
     if ctx.channel.id != SPAM_CHANNEL_ID:
         await ctx.author.send(f"❌ You can only use that command in <#{SPAM_CHANNEL_ID}>.")
         return
@@ -157,7 +158,7 @@ async def paradigm(ctx, lang : str, word : str, pos=""):
 
 
 @bot.command(name='word', help="Finds all possible translations for the given word and provides examples (if any).")
-async def word(ctx, lang : str, word : str):
+async def word(ctx, lang: str, word: str):
     if ctx.channel.id != SPAM_CHANNEL_ID:
         await ctx.author.send(f"❌ You can only use that command in <#{SPAM_CHANNEL_ID}>.")
         return
@@ -182,14 +183,15 @@ async def word(ctx, lang : str, word : str):
     intro = intro + "meanings:\n" if i > 1 else intro + "meaning:\n"
     await ctx.send(intro + main)
 
+
 @bot.command(name='sátni', help="An alias for ]word sme <word> (look-up in Northern Sami dictionaries).")
-async def satni(ctx, term : str):
+async def satni(ctx, term: str):
     await word(ctx, 'sme', term)
 
 
 @bot.command(name='baakoe', help="An alias for ]word sma <word> (look-up in Southern Sami dictionaries).")
-async def baakoe(ctx, term : str):
-    await word(ctx, 'sma', term) 
+async def baakoe(ctx, term: str):
+    await word(ctx, 'sma', term)
 
 
 @tasks.loop(hours=24)
