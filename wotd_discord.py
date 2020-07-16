@@ -76,10 +76,13 @@ class WotdManagerDiscord(WotdManager):
                 lastdesc = tr.desc
 
                 if tr.lang == 'nob':
-                    tr_en = ", ".join([w.text for w in trns.translate(
-                            str(tr).split(", "), src='no', dest='en')])
-                    desc_en = trns.translate(
-                        tr.desc, src='no', dest='en').text if tr.desc else ''
+                    tr_en = ""
+                    if m.pos != "V":
+                        tr_en = ", ".join([w.text for w in trns.translate(str(tr).split(", "), src='no', dest='en')])
+                    else:
+                        # Add "å" prefix to verbs in order to enhance translation
+                        tr_en = ", ".join([w.text.replace("to ", "") for w in trns.translate(["å " + v for v in str(tr).split(", ")], src='no', dest='en')])
+                    desc_en = trns.translate(tr.desc, src='no', dest='en').text if tr.desc else ''
                     trs_text += f"\t\t{FLAG[tr.lang]} {tr} {tr.desc}\t→\t{FLAG['en']} {tr_en} {desc_en}\n"
                     for n, ex in enumerate(tr.examples):
                         ex_en = trns.translate(ex[1], src='no', dest='en').text
