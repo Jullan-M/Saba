@@ -1,0 +1,104 @@
+{
+  "0602": {
+    "sme": {
+      "w": ["álbmotbeaivi"],
+      "pic": true
+    },
+    "sma": {
+      "w": ["åålmegebiejjie"],
+      "pic": true
+    }
+  },
+  "0104": {
+    "sme": {
+      "w": ["cuoŋu", "cuoŋomuohta"],
+      "pic": true
+    }
+  },
+  "0504": {
+    "sme": {
+      "w": [
+        "beassášmárkan",
+        "beassášdoalut",
+        "beassážat",
+        "beassášfestivála",
+        "beassášruohtta"
+      ],
+      "pic": true
+    }
+  },
+  "2006": {
+    "sma": {
+      "w": ["Åanghkerenjeeruve"],
+      "pic": false
+    }
+  },
+  "0607": {
+    "sme": {
+      "w": ["riddu"],
+      "pic": true
+    }
+  },
+  "1007": {
+    "sme": {
+      "w": ["riđđu"],
+      "pic": true
+    }
+  },
+  "1707": {
+    "sme": {
+      "w": ["geahččalit"],
+      "pic": false
+    },
+    "sma": {
+      "w": ["aatskadidh"],
+      "pic": false
+    }
+  },
+  "0108": {
+    "sme": {
+      "w": ["borgádit"],
+      "pic": true
+    }
+  },
+  "0111": {
+    "sme": {
+      "w": ["skábma"],
+      "pic": false
+    }
+  },
+  "2011": {
+    "sme": {
+      "w": ["riegádanbeaivi", "riegádanbeaivedearvvuođat"],
+      "pic": false
+    }
+  },
+  "2911": {
+    "sme": {
+      "w": ["leavgabeaivi"],
+      "pic": true
+    },
+    "sma": {
+      "w": ["saevegebiejjie"],
+      "pic": true
+    }
+  },
+  "1212": {
+    "sme": {
+      "w": ["juovlabádji", "juovlabeavdi"],
+      "pic": false
+    }
+  },
+  "2412": {
+    "sme": {
+      "w": ["juovlaskeaŋka", "juovlanigá", "juovlastállu"],
+      "pic": true
+    }
+  },
+  "3112": {
+    "sme": {
+      "w": ["ođđajageruohtta"],
+      "pic": false
+    }
+  }
+}

@@ -8,7 +8,7 @@ import json
 from dotenv import load_dotenv
 from googletrans import Translator
 from Word import Word, Paradigm, PREF_DEST
-from wotd import word_of_the_day, WotdManager, FLAG, WORDCLASS, EXCL_LANG
+from wotd import word_of_the_day, check_special_wotd, WotdManager, FLAG
 from utilities import waittime_between
 
 load_dotenv(dotenv_path='wotd_discord/.env')
@@ -78,11 +78,14 @@ class WotdManagerDiscord(WotdManager):
                 if tr.lang == 'nob':
                     tr_en = ""
                     if m.pos != "V":
-                        tr_en = ", ".join([w.text for w in trns.translate(str(tr).split(", "), src='no', dest='en')])
+                        tr_en = ", ".join([w.text for w in trns.translate(
+                            str(tr).split(", "), src='no', dest='en')])
                     else:
                         # Add "å" prefix to verbs in order to enhance translation
-                        tr_en = ", ".join([w.text[3:] for w in trns.translate(["å " + v for v in str(tr).split(", ")], src='no', dest='en')])
-                    desc_en = trns.translate(tr.desc, src='no', dest='en').text if tr.desc else ''
+                        tr_en = ", ".join([w.text[3:] for w in trns.translate(
+                            ["å " + v for v in str(tr).split(", ")], src='no', dest='en')])
+                    desc_en = trns.translate(
+                        tr.desc, src='no', dest='en').text if tr.desc else ''
                     trs_text += f"\t\t{FLAG[tr.lang]} {tr} {tr.desc}\t→\t{FLAG['en']} {tr_en} {desc_en}\n"
                     for n, ex in enumerate(tr.examples):
                         ex_en = trns.translate(ex[1], src='no', dest='en').text
@@ -202,12 +205,23 @@ async def called_once_a_day():
     now = datetime.datetime.now()
     print(f"Fetching wotds for\t{now}")
     for m in wotd_m:
-        word = m.get_wotd()
-        print(f"{m.lang}-wotd: {word}", end="\t")
-        wotd = m.wotd_message(word)
-        message_channel = bot.get_channel(m.cha_id)
-        await message_channel.send(wotd)
-        print(f"Sent to {message_channel}!")
+        wotd = ""
+        spec_word, pic = check_special_wotd(now.strftime("%d%m"), m.lang)
+        if spec_word:
+            wotd = m.wotd_message(Word(spec_word, m.lang))
+            print(f"{m.lang}-wotd (SPECIAL): {spec_word}", end="\t")
+        else:
+            word = m.get_wotd()
+            print(f"{m.lang}-wotd: {word}", end="\t")
+            wotd = m.wotd_message(word)
+
+        if pic:
+            pass
+            print(f"Sent to {message_channel} with pic!")
+        else:
+            message_channel = bot.get_channel(m.cha_id)
+            await message_channel.send(wotd)
+            print(f"Sent to {message_channel}!")
     print("Sleeping for 24h\n")
 
 

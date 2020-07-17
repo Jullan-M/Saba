@@ -88,7 +88,7 @@ def test_words(d):
                 print()
 
 
-def get_wotd(d, path):
+def next_wotd(d, path):
     # Read WOTD from randomized word file, removes WOTD from file.
     try:
         with open(f"{path}{d}_words.txt", "r", encoding="utf-8") as f:
@@ -112,16 +112,30 @@ def blacklist(d, word):
         f.write(f"\n{word}")
 
 
+def check_special_wotd(date, lang):
+    # Given a date and language, returns a special word and if it has a picture.
+    spec_word = ""
+    pic = False
+    with open("special_words.json", "r", encoding="utf-8") as f:
+        sp_ws = json.load(f)
+        if date in sp_ws:
+            if lang in sp_ws[date]:
+                spec_day = sp_ws[date][lang]
+                spec_word = random.choice(spec_day["w"])
+                pic = spec_day["pic"]
+    return spec_word, pic
+
+
 def word_of_the_day(d, path):
     # Returns a Word object of WOTD found in a given dictionary.
     # If the word is in blacklist or the word doesn't exist in dictionary,
     # it will attempt to find a new word, and blacklist the word.
-    word = get_wotd(d, path)
+    word = next_wotd(d, path)
     with open(f"{d}_blacklist.txt", "r", encoding="utf-8") as f:
         bl = f.read().split('\n')
 
     while word in bl:
-        word = get_wotd(d, path)
+        word = next_wotd(d, path)
 
     try:
         wotd = Word(word, d[:3])
