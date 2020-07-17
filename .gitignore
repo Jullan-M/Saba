@@ -4,3 +4,4 @@ smenob_words*
 smanob_words*
 /__pycache__/*
 app_credentials.json
+*.png
