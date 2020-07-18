@@ -35,14 +35,14 @@ class WotdManagerTwitter(WotdManager):
 
     def get_intro_message(self, word, count):
         if self.lang == 'sme':
-            intro = f"Otná sátni lea {word}!\nSánis lea"
+            intro = f"Otná sátni lea #{word}!\nSánis lea"
             intro = intro + \
                 f"t {count} mearkkašumit:\n" if (
                     count > 1) else intro + f" okta mearkkašupmi:\n"
             return intro
 
         elif self.lang == 'sma':
-            intro = f"Daen biejjien baakoe lea {word}!\nBaakoen lea"
+            intro = f"Daen biejjien baakoe lea #{word}!\nBaakoen lea"
             intro = intro + \
                 f"h {count} goerkesimmieh:\n" if (
                     count > 1) else intro + f" akte goerkesimmie:\n"
@@ -67,10 +67,12 @@ class WotdManagerTwitter(WotdManager):
                 if tr.lang == 'nob':
                     tr_en = ""
                     if m.pos != "V":
-                        tr_en = ", ".join([w.text for w in trns.translate(str(tr).split(", "), src='no', dest='en')])
+                        tr_en = ", ".join([w.text for w in trns.translate(
+                            str(tr).split(", "), src='no', dest='en')])
                     else:
                         # Add "å" prefix to verbs in order to enhance translation
-                        tr_en = ", ".join([w.text[3:] for w in trns.translate(["å " + v for v in str(tr).split(", ")], src='no', dest='en')])
+                        tr_en = ", ".join([w.text[3:] for w in trns.translate(
+                            ["å " + v for v in str(tr).split(", ")], src='no', dest='en')])
                     desc_en = trns.translate(
                         tr.desc, src='no', dest='en').text if tr.desc else ''
                     trs_text += f" {FLAG[tr.lang]} {tr} {tr.desc}  →  {FLAG['en']} {tr_en} {desc_en}\n"
