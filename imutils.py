@@ -36,8 +36,8 @@ WIDTH = 1080
 HEIGHT = 710
 
 # Twitter font: https://www.cufonfonts.com/font/helvetica-neue-lt
-FONT = "Helvetica Neue LT 55 Roman.ttf"
-FONT_IT = "Helvetica Neue LT 46 Light Italic.ttf"
+FONT = "tahoma.ttf"
+FONT_IT = "Tahoma W01 Italic.ttf"
 MAX_FSIZE = 72
 
 
