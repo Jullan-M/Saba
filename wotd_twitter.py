@@ -116,6 +116,8 @@ def run_twitter_bot(wotd_manager):
             word = word_of_the_day(w.dict, w.path)
             print(f"{w.lang}-WOTD: {word}")
             w.wotd, w.incExample = w.wotd_message(word)
+        if len(w.wotd) + 11 > 280:
+            w.wotd += "#sami #wotd"
         now = datetime.datetime.now()
         print(f"Finished generating WOTDs at {now}")
         sleeptime = waittime_between(now, WOTD_H, WOTD_M, WOTD_S)
