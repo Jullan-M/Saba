@@ -145,16 +145,22 @@ async def paradigm(ctx, lang: str, word: str, pos=""):
         if not p:
             continue
         wc = next(iter(p)).split("+")[0]  # Wordclass of paradigm element
+        # Numbering (Sg, Du, Pl), only used for pronouns
+        num = next(iter(p)).split("+")[2]
+        table = [[k.replace("+", " "), i] for k, i in p.items()]
         if pos:
             if wc == pos:
-                table = [[k.replace("+", " "), i] for k, i in p.items()]
+                if pos != "Pron":
+                    message += f"```{tabulate(table, headers=['Word class.', 'Inflexion'])}```"
+                    break
+                else:
+                    message += f"*Pronoun ({num})*\n```{tabulate(table, headers=['Word class.', 'Inflexion'])}```"
+        else:
+            if wc != "Pron":
                 message += f"```{tabulate(table, headers=['Word class.', 'Inflexion'])}```"
                 break
-            continue
-        else:
-            table = [[k.replace("+", " "), i] for k, i in p.items()]
-            message += f"```{tabulate(table, headers=['Word class.', 'Inflexion'])}```"
-            break
+            else:
+                message += f"*Pronoun ({num})*\n```{tabulate(table, headers=['Word class.', 'Inflexion'])}```"
 
     if message:
         await ctx.send(f"<@{ctx.author.id}>, paradigm for **{word}**:\n{message}")
