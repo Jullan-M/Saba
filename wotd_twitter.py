@@ -20,6 +20,10 @@ WOTD_S = int(os.getenv('WOTD_S'))
 class WotdManagerTwitter(WotdManager):
     def __init__(self, d, path='wotd_twitter/'):
         super().__init__(d, path)
+        with open("language_conf.json", "r") as f:
+            lang_conf = json.load(f)[self.lang]
+        self.tags = lang_conf["tags"]
+
         self.excl_lang.append("smn")
         self.excl_lang.append("swe")
 
@@ -94,7 +98,14 @@ class WotdManagerTwitter(WotdManager):
                 if ex[-1] == "\n":
                     examples[n] = ex[:-1]
 
+        if main[-1] == "\n":
+            main = main[:-1]
+
         intro = self.get_intro_message(word, i)
+
+        tgs = "\n" + " ".join(self.tags)
+        if len(main) + len(tgs) < 280:
+            main += tgs
 
         return intro + main, examples_img(self.lang, str(word), examples)
 
@@ -116,8 +127,7 @@ def run_twitter_bot(wotd_manager):
             word = word_of_the_day(w.dict, w.path)
             print(f"{w.lang}-WOTD: {word}")
             w.wotd, w.incExample = w.wotd_message(word)
-        if len(w.wotd) + 12 < 280:
-            w.wotd += "\n#sami #wotd"
+
         now = datetime.datetime.now()
         print(f"Finished generating WOTDs at {now}")
         sleeptime = waittime_between(now, WOTD_H, WOTD_M, WOTD_S)
