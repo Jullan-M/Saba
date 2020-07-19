@@ -13,7 +13,8 @@
       "Interj": "Interjekšuvdna",
       "Pcle": "Partihkal",
       "mwe": "Mwe"
-    }
+    },
+    "tags": ["#NorthernSámi", "#WOTD"]
   },
   "sma": {
     "excl_lang": ["smn", "sma", "smj", "sms", "nb", "fi", "nn", "lat"],
@@ -29,7 +30,8 @@
       "Interj": "Interjeksjovne",
       "Pcle": "Partikkel",
       "mwe": "Mwe"
-    }
+    },
+    "tags": ["#SouthernSámi", "#WOTD"]
   },
   "en": {
     "excl_lang": ["nb", "fi", "nn", "lat"],
