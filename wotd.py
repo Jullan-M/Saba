@@ -114,16 +114,12 @@ def blacklist(d, word):
 
 def check_special_wotd(date, lang):
     # Given a date and language, returns a special word and if it has a picture.
-    spec_word = ""
-    pic = False
     with open("special_words.json", "r", encoding="utf-8") as f:
         sp_ws = json.load(f)
         if date in sp_ws:
             if lang in sp_ws[date]:
-                spec_day = sp_ws[date][lang]
-                spec_word = random.choice(spec_day["w"])
-                pic = spec_day["pic"]
-    return spec_word, pic
+                return sp_ws[date][lang]
+    return {}
 
 
 def word_of_the_day(d, path):
