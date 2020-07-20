@@ -146,7 +146,7 @@ async def paradigm(ctx, lang: str, word: str, pos=""):
             continue
         wc = next(iter(p)).split("+")[0]  # Wordclass of paradigm element
         # Numbering (Sg, Du, Pl), only used for pronouns
-        num = next(iter(p)).split("+")[2]
+        num = next(iter(p)).split("+")[2] if wc == "Pron" else ""
         table = [[k.replace("+", " "), i] for k, i in p.items()]
         if pos:
             if wc == pos:
