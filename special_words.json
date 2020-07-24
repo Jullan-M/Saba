@@ -48,13 +48,15 @@
   "0108": {
     "sme": {
       "w": ["borgádit"],
-      "pic": true
+      "pic": true,
+      "intro": "Otne lea borgemánu vuosttaš beaivi, ja dasto lea otná sátni <WORD>!"
     }
   },
   "0111": {
     "sme": {
       "w": ["skábma"],
-      "pic": false
+      "pic": false,
+      "intro": "Don vávjját ahte beaivváš illá veadjá albmeravdda badjel čuoččastit ja ijat šaddet dušše guhkibut ja guhkibut. Dál lea gusto <WORD>."
     }
   },
   "2011": {

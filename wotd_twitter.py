@@ -20,7 +20,7 @@ WOTD_S = int(os.getenv('WOTD_S'))
 class WotdManagerTwitter(WotdManager):
     def __init__(self, d, path='wotd_twitter/'):
         super().__init__(d, path)
-        with open("language_conf.json", "r") as f:
+        with open("language_conf.json", "r", encoding="utf-8") as f:
             lang_conf = json.load(f)[self.lang]
         self.tags = lang_conf["tags"]
 
@@ -37,16 +37,23 @@ class WotdManagerTwitter(WotdManager):
         self.wotd = ""
         self.incExample = False
 
-    def get_intro_message(self, word, count):
+    def get_intro_message(self, word, count, spec=""):
+
+        intro = spec.replace("<WORD>", f"#{word}")
+
         if self.lang == 'sme':
-            intro = f"Otná sátni lea #{word}!\nSánis lea"
+            if not intro:
+                intro = f"Otná sátni lea #{word}!"
+            intro += "\nSánis lea"
             intro = intro + \
                 f"t {count} mearkkašumit:\n" if (
                     count > 1) else intro + f" okta mearkkašupmi:\n"
             return intro
 
         elif self.lang == 'sma':
-            intro = f"Daen biejjien baakoe lea #{word}!\nBaakoen lea"
+            if not intro:
+                intro = f"Daen biejjien baakoe lea #{word}!"
+            intro += "\nBaakoen lea"
             intro = intro + \
                 f"h {count} goerkesimmieh:\n" if (
                     count > 1) else intro + f" akte goerkesimmie:\n"

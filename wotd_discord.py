@@ -2,6 +2,7 @@ import os
 import asyncio
 import discord
 import datetime
+import random
 from tabulate import tabulate
 from discord.ext import tasks, commands
 import json
@@ -45,16 +46,25 @@ class WotdManagerDiscord(WotdManager):
         self.cha_id = int(os.getenv(f'{self.lang}_CHANNEL_ID'))
         self.role_id = int(os.getenv(f'{self.lang}_ROLE_ID'))
 
-    def get_intro_message(self, word, count):
+    def get_intro_message(self, word, count, spec=""):
+        intro = spec.replace("<WORD>", f"**{word}**")
         if self.lang == 'sme':
-            intro = f"<@&{self.role_id}>, otná sátni lea **{word}**!\n Sánis lea"
+            if not intro:
+                intro = f"<@&{self.role_id}>, otná sátni lea **{word}**!"
+            else:
+                intro = f"<@&{self.role_id}> " + intro
+            intro += "\nSánis lea"
             intro = intro + \
                 f"t {count} mearkkašumit:\n" if (
                     count > 1) else intro + f" okta mearkkašupmi:\n"
             return intro
 
         elif self.lang == 'sma':
-            intro = f"<@&{self.role_id}>, daen biejjien baakoe lea **{word}**!\n Baakoen lea"
+            if not intro:
+                intro = f"<@&{self.role_id}>, daen biejjien baakoe lea **{word}**!"
+            else:
+                intro = f"<@&{self.role_id}> " + intro
+            intro += "\nBaakoen lea"
             intro = intro + \
                 f"h {count} goerkesimmieh:\n" if (
                     count > 1) else intro + f" akte goerkesimmie:\n"
@@ -111,9 +121,10 @@ class WotdManagerDiscord(WotdManager):
             main += trs_text
         return main, i
 
-    def wotd_message(self, word):
+    def wotd_message(self, word, spec=""):
         main, i = self.get_translation(word, self.wordclass)
-        intro = self.get_intro_message(word, i)
+
+        intro = self.get_intro_message(word, i, spec=spec)
         return intro + main
 
 
@@ -232,9 +243,14 @@ async def called_once_a_day():
     print(f"Fetching wotds for\t{now}")
     for m in wotd_m:
         wotd = ""
-        spec_word, pic = check_special_wotd(now.strftime("%d%m"), m.lang)
-        if spec_word:
-            wotd = m.wotd_message(Word(spec_word, m.lang))
+        spec_day = check_special_wotd(now.strftime("%d%m"), m.lang)
+        pic = False
+
+        if spec_day:
+            spec_word = random.choice(spec_day["w"])
+            pic = spec_day["pic"]
+            wotd = m.wotd_message(
+                Word(spec_word, m.lang), spec=spec_day["intro"])
             print(f"{m.lang}-wotd (SPECIAL): {spec_word}", end="\t")
         else:
             word = m.get_wotd()

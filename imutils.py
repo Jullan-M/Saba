@@ -51,7 +51,7 @@ def examples_img(lang, word, examples):
     rn_color = random.choice(TW_COLORS)
     d.text((20, HEIGHT - 90), f"{word}", font=ImageFont.truetype(
         FONT, size=72), fill=rn_color)
-    d.text((780, HEIGHT - 45), f"@WOTD_{lang}", font=ImageFont.truetype(
+    d.text((780, HEIGHT - 60), f"@WOTD_{lang}", font=ImageFont.truetype(
         FONT, size=46), fill=rn_color)
 
     for i, fl in enumerate(FLAG_IMGS):
