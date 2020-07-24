@@ -1,5 +1,5 @@
 # Used for parsing word articles from UiT Divvun database
-from utilities import get_w_article, get_p_article
+from utilities import get_w_article, get_p_article, get_e_article
 
 DICTNAMES = {"sme": "sanit",
              "sma": "baakoeh",
@@ -99,3 +99,20 @@ class Paradigm:
         for e in p:
             paradigm[e[3]] = e[0]
         return paradigm
+
+class Inflection:
+    def __init__(self, word, lang):
+        e_article = get_e_article(word, DICTNAMES[lang], lang, PREF_DEST[lang])
+        self.word = word 
+        self.lang = lang
+        self.inflections = self.parse_inflections(e_article)
+    
+    def parse_inflections(self, e_article):
+        inflections = []
+        for inf in e_article["tags"]:
+            entry = [inf[0], inf[1].replace(f"{inf[0]} ", "")]
+            if entry not in inflections:
+                inflections.append(entry)
+        return inflections
+
+
