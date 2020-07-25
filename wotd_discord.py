@@ -133,37 +133,41 @@ bot = commands.Bot(command_prefix=']')
 with open("language_conf.json", "r") as f:
     en_wc = json.load(f)["en"]["wordclass"]
 
-@bot.command(name='examine', help="Shows recursively the morphological tags and lemma for a given word. Explanation for the tags can be found here: https://giellalt.uit.no/lang/sme/docu-mini-smi-grammartags.html")
-async def examine(ctx, lang: str, word: str):
+async def correct_channel(ctx):
     if ctx.channel.id != SPAM_CHANNEL_ID:
         await ctx.author.send(f"❌ You can only use that command in <#{SPAM_CHANNEL_ID}>.")
-        return
-    
+        return False
+    return True
+
+async def supported_lang(ctx, lang):
     if not (lang in PREF_DEST):
         supported = "```sme\tNorthern Saami\nsma\tSouthern Saami\nsms\tSkolt Saami\nsmn\tInari Saami```"
-        await ctx.send(f"<@{ctx.author.id}>, `{lang}` is not a supported language for the examine command. Currently, the following languages are supported:\n{supported}")
-        return
+        await ctx.send(f"<@{ctx.author.id}>, `{lang}` is not a supported language for this command. Currently, the following languages are supported:\n{supported}")
+        return False
+    return True
+
+
+@bot.command(name='examine', help="Shows recursively the morphological tags and lemma for a given word. Explanation for the tags can be found here: https://giellalt.uit.no/lang/sme/docu-mini-smi-grammartags.html")
+async def examine(ctx, lang: str, word: str):
+    if not await correct_channel(ctx): return
+    
+    if not await supported_lang(ctx, lang): return
 
     inf = Inflection(word, lang)
     if not inf.inflections:
         await ctx.send(f"<@{ctx.author.id}>, no details were found for `{word}` in the language `{lang}`. Are you sure that the word is spelled right?")
         return
     
-    message = f"```{tabulate(inf.inflections, headers=['Lemma.', 'Morph. Tags'])}```"
-    await ctx.send(f"<@{ctx.author.id}>, morphological details for the word **{word}**:\n{message}")
+    message = f"```{tabulate(inf.inflections, headers=['Lemma', 'Morph. Tags'])}```"
+    await ctx.send(f"<@{ctx.author.id}>, morphological analysis for the word **{word}**:\n{message}")
 
 
 
 @bot.command(name='paradigm', help="Shows the paradigm of a given word.")
 async def paradigm(ctx, lang: str, word: str, pos=""):
-    if ctx.channel.id != SPAM_CHANNEL_ID:
-        await ctx.author.send(f"❌ You can only use that command in <#{SPAM_CHANNEL_ID}>.")
-        return
-
-    if not (lang in PREF_DEST):
-        supported = "```sme\tNorthern Saami\nsma\tSouthern Saami\nsms\tSkolt Saami\nsmn\tInari Saami```"
-        await ctx.send(f"<@{ctx.author.id}>, `{lang}` is not a supported language in paradigm search. Currently, the following languages are supported:\n{supported}")
-        return
+    if not await correct_channel(ctx): return
+    
+    if not await supported_lang(ctx, lang): return
 
     ps = Paradigm(word, lang)
     if not ps.paradigms:
@@ -202,9 +206,7 @@ async def paradigm(ctx, lang: str, word: str, pos=""):
 
 @bot.command(name='word', help="Finds all possible translations for the given word and provides examples (if any).")
 async def word(ctx, lang: str, word: str):
-    if ctx.channel.id != SPAM_CHANNEL_ID:
-        await ctx.author.send(f"❌ You can only use that command in <#{SPAM_CHANNEL_ID}>.")
-        return
+    if not await correct_channel(ctx): return
 
     if not (lang in ['sme', 'sma']):
         supported = "```sme\tNorthern Saami\nsma\tSouthern Saami```"
