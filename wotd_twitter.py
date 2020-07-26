@@ -3,7 +3,7 @@ import time
 import datetime
 import json
 
-from twython import Twython
+from twython import Twython, TwythonError
 from dotenv import load_dotenv
 from googletrans import Translator
 from wotd import word_of_the_day, WotdManager, FLAG, WORDCLASS, EXCL_LANG
@@ -141,15 +141,21 @@ def run_twitter_bot(wotd_manager):
         print(f"sleeping for {sleeptime}s...")
         time.sleep(sleeptime)
         for w in wotd_manager:
-            if w.incExample:
-                example_file = open(f'media/examples_{w.lang}.png', 'rb')
-                response = w.tw.upload_media(media=example_file)
-                w.tw.update_status(status=w.wotd, media_ids=[
-                    response['media_id']])
-                print(f"{w.lang}-WOTD was sent to Twitter with example.\n")
-            else:
-                w.tw.update_status(status=w.wotd)
-                print(f"{w.lang}-WOTD was sent to Twitter.\n")
+            while True:
+                try:
+                    if w.incExample:
+                        example_file = open(f'media/examples_{w.lang}.png', 'rb')
+                        response = w.tw.upload_media(media=example_file)
+                        w.tw.update_status(status=w.wotd, media_ids=[
+                            response['media_id']])
+                        print(f"{w.lang}-WOTD was sent to Twitter with example.\n")
+                    else:
+                        w.tw.update_status(status=w.wotd)
+                        print(f"{w.lang}-WOTD was sent to Twitter.\n")
+                    break
+                except TwythonError:
+                    # If status update fails, try again in 30 sec.
+                    time.sleep(30)
 
         now = datetime.datetime.now()
         time.sleep(waittime_between(now, WOTD_H, WOTD_M - 1, WOTD_S))

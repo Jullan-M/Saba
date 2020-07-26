@@ -35,7 +35,6 @@ TW_COLORS = [(29, 161, 242),
 WIDTH = 1080
 HEIGHT = 710
 
-# Twitter font: https://www.cufonfonts.com/font/helvetica-neue-lt
 FONT = "tahoma.ttf"
 FONT_IT = "Tahoma W01 Italic.ttf"
 MAX_FSIZE = 72
@@ -60,12 +59,12 @@ def examples_img(lang, word, examples):
 
         font_size = MAX_FSIZE
         text_font = ImageFont.truetype(FONT_IT, size=font_size)
-        text_wrapped = text_wrap(examples[i], text_font, d, 778, 180)
+        text_wrapped = text_wrap(examples[i], text_font, d, 778, 130)
 
         while not text_wrapped:
             font_size -= 4
             text_font = ImageFont.truetype(FONT_IT, size=font_size)
-            text_wrapped = text_wrap(examples[i], text_font, d, 778, 180)
+            text_wrapped = text_wrap(examples[i], text_font, d, 778, 130)
 
         d.text((282, 20 + 200 * i), text_wrapped,
                font=text_font, fill=(255, 255, 255), spacing=10)
