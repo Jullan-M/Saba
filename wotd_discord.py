@@ -129,9 +129,11 @@ class WotdManagerDiscord(WotdManager):
 
 
 wotd_m = [WotdManagerDiscord(d) for d in ['smenob', 'smanob']]
-bot = commands.Bot(command_prefix=']')
+bot = commands.Bot(command_prefix=commands.when_mentioned_or(']'))
 with open("language_conf.json", "r") as f:
     en_wc = json.load(f)["en"]["wordclass"]
+with open("wotd_discord/bot_responses.json", "r", encoding="utf-8") as f:
+    botres = json.load(f)
 
 async def correct_channel(ctx):
     if ctx.channel.id != SPAM_CHANNEL_ID:
@@ -238,6 +240,33 @@ async def satni(ctx, term: str):
 async def baakoe(ctx, term: str):
     await word(ctx, 'sma', term)
 
+@bot.event
+async def on_message(msg):
+    await bot.process_commands(msg)
+
+    if msg.content[0] == bot.command_prefix:
+        return
+    
+    if len(msg.content) > 200:
+        return
+
+    if msg.author == bot.user:
+        return
+    
+    message = msg.content.lower()
+    now = datetime.datetime.now().time()
+    for call in botres:
+        if call in message:
+            from_hr = datetime.time(botres[call]["int"][0])
+            to_hr = datetime.time(botres[call]["int"][1])
+            diff = to_hr.hour - from_hr.hour
+
+            if ( (diff > 0 and (now >= from_hr and now <= to_hr)) or 
+            (diff < 0 and (now >= from_hr or now <= to_hr)) or 
+            diff == 0):
+                await msg.channel.send(random.choice(botres[call]["res"]))
+                break
+
 
 @tasks.loop(hours=24)
 async def called_once_a_day():
@@ -272,6 +301,7 @@ async def called_once_a_day():
 @called_once_a_day.before_loop
 async def before():
     await bot.wait_until_ready()
+    await bot.change_presence(activity=discord.Game(name=f"with {random.choice(['nouns. 🖊️', 'verbs. ✎', 'adjectives. 🖋️', 'possessive suffixes. ✍️', 'Finno-Ugric languages. 📝'])}"))
     print(f'Finished waiting bot. {bot.user} has connected to Discord!')
     now = datetime.datetime.now()
     print(f"Time is currently \t{now}.")
