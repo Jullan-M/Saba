@@ -261,6 +261,9 @@ async def bahko(ctx, word: str):
 async def on_message(msg):
     await bot.process_commands(msg)
 
+    if not msg.content:
+        return
+
     if msg.content[0] == bot.command_prefix:
         return
     
