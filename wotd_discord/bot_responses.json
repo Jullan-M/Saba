@@ -7,12 +7,22 @@
         "res": ["Ipmel atti! Movt manná? 😎", "Buoris! 🤝", "Buerie biejjie! 🌞"],
         "int": [11, 17]
     },
+    "buorre eahket": {
+        "res": ["Ipmel atti! 🍻", "Buoris! 🍺", "Buerie iehkede! 🌟"],
+        "int": [17, 21]
+    },
     "buorre idja": {
         "res": ["Oađe njálgát! 😴💤", "Gulahallat ihtin! 🌃", "Giitu otnážis! 🌛", "Pyeri eehid! 🌝", "Buerie jïjje! <:aurora:675788627044990990>"],
         "int": [21, 4]
     },
     "i enjoy skiing in shorts": {
-        "res": ["<:samiflag:650487218984714251> Bures boahtin!"],
+        "res": ["I personally find boxers to be more comfortable, but you do you. Bures boahtin! <:samiflag:650487218984714251>", "Seems like we have something in common, you and I. Buorre boahtem! <:sami_heart:656285100316557333>", "Don't we all? Buerie båeteme! <:samiFlag2:709530070221586493>", "Damn right you do! 😏 Tiervâ!", "Duly noted. Pyereest puáttim! <:sami_heart:656285100316557333>", "Yeah, you'll fit right in. Tiõrv pueʹttem! <:samiflaground:650968790699606037>"],
         "int": [0, 0]
+    },
+    "]saba": {
+        "res": ["You know they say that I died in 1921, but actually Jullan keeps me in a jar in his basement.", 
+            "Here's my favourite drink, usually the crowning touch on my intoxication. Thread carefully with it: ```fix\n_____ Minttu Kakáo _____\n- 3 cl Minttu (Peppermint or Black Mint)\n- 2 cl Disaronno Amaretto (this makes the drink fancier than it has any right to be)\n- 1 bag of Rett i Koppen Sjokoladedrikk\n- 2 dl boiling water\n- 0.5 tsp cinnamon\n- 0.25 tsp cardamom\nPut everything in a large Moomins™ cup in the given order and continuously mix with a teaspoon. Drink it while it's hot!```",
+            ],
+        "int": [0, 4]
     }
 }

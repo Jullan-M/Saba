@@ -232,13 +232,30 @@ async def word(ctx, lang: str, word: str):
 
 
 @bot.command(name='sátni', help="An alias for ]word sme <word> (look-up in Northern Sami dictionaries).")
-async def satni(ctx, term: str):
-    await word(ctx, 'sme', term)
+async def satni(ctx, word: str):
+    await word(ctx, 'sme', word)
 
 
 @bot.command(name='baakoe', help="An alias for ]word sma <word> (look-up in Southern Sami dictionaries).")
-async def baakoe(ctx, term: str):
-    await word(ctx, 'sma', term)
+async def baakoe(ctx, word: str):
+    await word(ctx, 'sma', word)
+'''
+@bot.command(name='báhko', help="Lule-Sami to Norwegian dictionary look-up.")
+async def bahko(ctx, word: str):
+    if not await correct_channel(ctx): return
+
+    rslts = []
+    with open("smjnob_words.txt", "r") as f:
+        for line in f:
+            for w in line.split(" "):
+                if word in line:
+                    rslts.append(line)
+    
+    if len(rslts):
+        await ctx.send(f"No result were found for {word}. Are you sure the word is spelled right")
+'''
+
+
 
 @bot.event
 async def on_message(msg):
@@ -261,11 +278,13 @@ async def on_message(msg):
             to_hr = datetime.time(botres[call]["int"][1])
             diff = to_hr.hour - from_hr.hour
 
-            if ( (diff > 0 and (now >= from_hr and now <= to_hr)) or 
-            (diff < 0 and (now >= from_hr or now <= to_hr)) or 
+            if ( (diff > 0 and (now >= from_hr and now < to_hr)) or 
+            (diff < 0 and (now >= from_hr or now < to_hr)) or 
             diff == 0):
                 await msg.channel.send(random.choice(botres[call]["res"]))
-                break
+                return
+    
+
 
 
 @tasks.loop(hours=24)
