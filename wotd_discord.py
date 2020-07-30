@@ -253,6 +253,7 @@ async def bahko(ctx, word: str):
                 rslts.append(entry)
                 break
         if not rslts:
+            f.seek(0)
             for line in f:
                 entry = line.replace("\n", "")
                 for w in entry.split(" "):
