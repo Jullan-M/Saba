@@ -12,9 +12,9 @@ for l in abc:
         o_entry = o.text.split("\n")
         e_entry = e.text.split("\n")
         if o_entry[1]:
-            smj_dict[o_entry[1]] = o_entry[2]
+            smj_dict[o_entry[1][:-1]] = o_entry[2]
         if e_entry[1]:
-            smj_dict[e_entry[1]] = e_entry[2]
+            smj_dict[e_entry[1][:-1]] = e_entry[2]
 
 with open("smjnob_dict.json", "w", encoding="utf-8") as f:
     json.dump(smj_dict, f, ensure_ascii=False)

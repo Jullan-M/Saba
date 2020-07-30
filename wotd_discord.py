@@ -239,22 +239,38 @@ async def satni(ctx, word: str):
 @bot.command(name='baakoe', help="An alias for ]word sma <word> (look-up in Southern Sami dictionaries).")
 async def baakoe(ctx, word: str):
     await word(ctx, 'sma', word)
-'''
+
 @bot.command(name='báhko', help="Lule-Sami to Norwegian dictionary look-up.")
 async def bahko(ctx, word: str):
     if not await correct_channel(ctx): return
 
     rslts = []
-    with open("smjnob_words.txt", "r") as f:
+    extra = []
+    with open("smjnob_words.txt", "r", encoding="utf-8") as f:
         for line in f:
-            for w in line.split(" "):
-                if word in line:
-                    rslts.append(line)
-    
-    if len(rslts):
-        await ctx.send(f"No result were found for {word}. Are you sure the word is spelled right")
-'''
-
+            entry = line.replace("\n", "")
+            if entry == word:
+                rslts.append(entry)
+                break
+        if not rslts:
+            for line in f:
+                entry = line.replace("\n", "")
+                for w in entry.split(" "):
+                    if w == word:
+                        rslts.append(entry)
+    if rslts:
+        if len(rslts) == 1:
+            with open("smjnob_dict.json", "r", encoding="utf-8") as f:
+                transl = json.load(f)[rslts[0]]
+            intro = f"<@{ctx.author.id}>, Lule-Sami dictionary entry for **{rslts[0]}**:"
+            main = f"```fix\n{transl}```"
+            await ctx.send(intro + main)
+        else:
+            intro = f"<@{ctx.author.id}>, the following was found in the Lule-Sami dictionary (please specify with qoutation marks):"
+            main = "```" + '\n'.join(rslts) + "```"
+            await ctx.send(intro + main)
+    else:
+        await ctx.send(f"<@{ctx.author.id}>, no dictonary entries were found.")                      
 
 
 @bot.event
