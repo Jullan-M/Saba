@@ -1,9 +1,9 @@
 import os
 import asyncio
-import discord
 import datetime
 import random
 import json
+import discord
 from tabulate import tabulate
 from discord.ext import tasks, commands
 from discord_server import sapmi_wc
@@ -300,7 +300,6 @@ async def wordcloud(ctx, source: int = 0, location: int = 0):
         return False
 
     async def all_messages(cha_history):
-        print("all_messages")
         nonlocal sample
         async for msg in cha_history:
             if (msg.content and not (msg.author.id in ignore_bots)):
@@ -309,7 +308,6 @@ async def wordcloud(ctx, source: int = 0, location: int = 0):
                 sample = sample + msg.content + "\n"
 
     async def user_messages(cha_history):
-        print("user_messages")
         nonlocal sample
         async for msg in cha_history:
             if (msg.content and msg.author.id == source):
@@ -318,7 +316,6 @@ async def wordcloud(ctx, source: int = 0, location: int = 0):
                 sample = sample + msg.content + "\n"
 
     async def channel_messages(cha_history):
-        print("channel_messages")
         nonlocal sample
         async for msg in cha_history:
             if (msg.content and not (msg.author.id in ignore_bots)):
@@ -327,13 +324,18 @@ async def wordcloud(ctx, source: int = 0, location: int = 0):
                 sample = sample + msg.content + "\n"
 
     async def user_cha_messages(cha_history):
-        print("user_cha_messages")
         nonlocal sample
         async for msg in cha_history:
             if (msg.content and msg.author.id == source):
                 if await ignorable(msg.content, ignore_words):
                     continue
                 sample = sample + msg.content + "\n"
+
+    async def fetch_messages(case_func, channel):
+        try:
+            await case_func(channel.history())
+        except discord.Forbidden:
+            print(f"Could not access channel #{channel}. Skipping.")
 
     server = ctx.guild
     '''
@@ -343,17 +345,18 @@ async def wordcloud(ctx, source: int = 0, location: int = 0):
 
     if location != 0:
         channel = bot.get_channel(location)
-        if source == 0:
-            await channel_messages(channel.history())
-        else:
-            await user_cha_messages(channel.history())
-    else:
-        for channel in server.text_channels:
 
-            if source == 0:
-                await all_messages(channel.history())
-            else:
-                await user_messages(channel.history())
+        if source == 0:
+            await fetch_messages(channel_messages, channel)
+        else:
+            await fetch_messages(user_cha_messages, channel)
+    else:
+        if source == 0:
+            for channel in server.text_channels:
+                await fetch_messages(all_messages, channel)
+        else:
+            for channel in server.text_channels:
+                await fetch_messages(user_messages, channel)
 
     sapmi_wc.reindeer_wc(sample)
 
