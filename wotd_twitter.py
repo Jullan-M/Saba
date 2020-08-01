@@ -11,14 +11,14 @@ from Word import Word
 from utilities import waittime_between
 from imutils import examples_img
 
-load_dotenv(dotenv_path='wotd_twitter/.env')
+load_dotenv(dotenv_path='twitter_bot/.env')
 WOTD_H = int(os.getenv('WOTD_H'))
 WOTD_M = int(os.getenv('WOTD_M'))
 WOTD_S = int(os.getenv('WOTD_S'))
 
 
 class WotdManagerTwitter(WotdManager):
-    def __init__(self, d, path='wotd_twitter/'):
+    def __init__(self, d, path='twitter_bot/'):
         super().__init__(d, path)
         with open("language_conf.json", "r", encoding="utf-8") as f:
             lang_conf = json.load(f)[self.lang]
@@ -144,11 +144,13 @@ def run_twitter_bot(wotd_manager):
             while True:
                 try:
                     if w.incExample:
-                        example_file = open(f'media/examples_{w.lang}.png', 'rb')
+                        example_file = open(
+                            f'media/examples_{w.lang}.png', 'rb')
                         response = w.tw.upload_media(media=example_file)
                         w.tw.update_status(status=w.wotd, media_ids=[
                             response['media_id']])
-                        print(f"{w.lang}-WOTD was sent to Twitter with example.\n")
+                        print(
+                            f"{w.lang}-WOTD was sent to Twitter with example.\n")
                     else:
                         w.tw.update_status(status=w.wotd)
                         print(f"{w.lang}-WOTD was sent to Twitter.\n")

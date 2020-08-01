@@ -3,16 +3,17 @@ import asyncio
 import discord
 import datetime
 import random
+import json
 from tabulate import tabulate
 from discord.ext import tasks, commands
-import json
+from discord_server import sapmi_wc
 from dotenv import load_dotenv
 from googletrans import Translator
 from Word import Word, Paradigm, Inflection, PREF_DEST
 from wotd import word_of_the_day, check_special_wotd, WotdManager, FLAG
 from utilities import waittime_between
 
-load_dotenv(dotenv_path='wotd_discord/.env')
+load_dotenv(dotenv_path='discord_server/.env')
 TOKEN = os.getenv('DISCORD_TOKEN')
 SAMIFLAG_ID = int(os.getenv('SAMIFLAG_ID'))
 SPAM_CHANNEL_ID = int(os.getenv('SPAM_CHANNEL_ID'))
@@ -41,7 +42,7 @@ def underscore_word(string, word):
 
 
 class WotdManagerDiscord(WotdManager):
-    def __init__(self, d, path='wotd_discord/'):
+    def __init__(self, d, path='discord_server/'):
         super().__init__(d, path)
         self.cha_id = int(os.getenv(f'{self.lang}_CHANNEL_ID'))
         self.role_id = int(os.getenv(f'{self.lang}_ROLE_ID'))
@@ -132,14 +133,16 @@ wotd_m = [WotdManagerDiscord(d) for d in ['smenob', 'smanob']]
 bot = commands.Bot(command_prefix=commands.when_mentioned_or(']'))
 with open("language_conf.json", "r") as f:
     en_wc = json.load(f)["en"]["wordclass"]
-with open("wotd_discord/bot_responses.json", "r", encoding="utf-8") as f:
+with open("discord_server/bot_responses.json", "r", encoding="utf-8") as f:
     botres = json.load(f)
+
 
 async def correct_channel(ctx):
     if ctx.channel.id != SPAM_CHANNEL_ID:
         await ctx.author.send(f"❌ You can only use that command in <#{SPAM_CHANNEL_ID}>.")
         return False
     return True
+
 
 async def supported_lang(ctx, lang):
     if not (lang in PREF_DEST):
@@ -151,25 +154,28 @@ async def supported_lang(ctx, lang):
 
 @bot.command(name='examine', help="Shows recursively the morphological tags and lemma for a given word. Explanation for the tags can be found here: https://giellalt.uit.no/lang/sme/docu-mini-smi-grammartags.html")
 async def examine(ctx, lang: str, word: str):
-    if not await correct_channel(ctx): return
-    
-    if not await supported_lang(ctx, lang): return
+    if not await correct_channel(ctx):
+        return
+
+    if not await supported_lang(ctx, lang):
+        return
 
     inf = Inflection(word, lang)
     if not inf.inflections:
         await ctx.send(f"<@{ctx.author.id}>, no details were found for `{word}` in the language `{lang}`. Are you sure that the word is spelled right?")
         return
-    
+
     message = f"```{tabulate(inf.inflections, headers=['Lemma', 'Morph. Tags'])}```"
     await ctx.send(f"<@{ctx.author.id}>, morphological analysis for the word **{word}**:\n{message}")
 
 
-
 @bot.command(name='paradigm', help="Shows the paradigm of a given word.")
 async def paradigm(ctx, lang: str, word: str, pos=""):
-    if not await correct_channel(ctx): return
-    
-    if not await supported_lang(ctx, lang): return
+    if not await correct_channel(ctx):
+        return
+
+    if not await supported_lang(ctx, lang):
+        return
 
     ps = Paradigm(word, lang)
     if not ps.paradigms:
@@ -208,7 +214,8 @@ async def paradigm(ctx, lang: str, word: str, pos=""):
 
 @bot.command(name='word', help="Finds all possible translations for the given word and provides examples (if any).")
 async def word(ctx, lang: str, word: str):
-    if not await correct_channel(ctx): return
+    if not await correct_channel(ctx):
+        return
 
     if not (lang in ['sme', 'sma']):
         supported = "```sme\tNorthern Saami\nsma\tSouthern Saami```"
@@ -232,17 +239,19 @@ async def word(ctx, lang: str, word: str):
 
 
 @bot.command(name='sátni', help="An alias for ]word sme <word> (look-up in Northern Sami dictionaries).")
-async def satni(ctx, word: str):
-    await word(ctx, 'sme', word)
+async def satni(ctx, term: str):
+    await word(ctx, 'sme', term)
 
 
 @bot.command(name='baakoe', help="An alias for ]word sma <word> (look-up in Southern Sami dictionaries).")
-async def baakoe(ctx, word: str):
-    await word(ctx, 'sma', word)
+async def baakoe(ctx, term: str):
+    await word(ctx, 'sma', term)
+
 
 @bot.command(name='báhko', help="Lule-Sami to Norwegian dictionary look-up.")
 async def bahko(ctx, word: str):
-    if not await correct_channel(ctx): return
+    if not await correct_channel(ctx):
+        return
 
     rslts = []
     extra = []
@@ -271,7 +280,82 @@ async def bahko(ctx, word: str):
             main = "```" + '\n'.join(rslts) + "```"
             await ctx.send(intro + main)
     else:
-        await ctx.send(f"<@{ctx.author.id}>, no dictonary entries were found.")                      
+        await ctx.send(f"<@{ctx.author.id}>, no dictonary entries were found.")
+
+
+@bot.command(name='secret', help="No spoilers ;)")
+# @bot.command(name='wordcloud', help="Generates a wordcloud for a given user or channel in the server. <source>: user/channel, <location>: channel (entire server if not specified)")
+async def wordcloud(ctx, source: int = 0, location: int = 0):
+    ignore_words = ["]paradigm", "]sátni", "]baakoe", "]báhko",
+                    "]word", "]examine", "]help", "!play", "!skip", "!p"]
+    ignore_bots = [302050872383242240, 159985870458322944,
+                   550613223733329920, 724693719013392456]
+
+    sample = ""
+
+    async def ignorable(message, ignores):
+        for excl in ignores:
+            if (excl in message):
+                return True
+        return False
+
+    async def all_messages(cha_history):
+        print("all_messages")
+        nonlocal sample
+        async for msg in cha_history:
+            if (msg.content and not (msg.author.id in ignore_bots)):
+                if await ignorable(msg.content, ignore_words):
+                    continue
+                sample = sample + msg.content + "\n"
+
+    async def user_messages(cha_history):
+        print("user_messages")
+        nonlocal sample
+        async for msg in cha_history:
+            if (msg.content and msg.author.id == source):
+                if await ignorable(msg.content, ignore_words):
+                    continue
+                sample = sample + msg.content + "\n"
+
+    async def channel_messages(cha_history):
+        print("channel_messages")
+        nonlocal sample
+        async for msg in cha_history:
+            if (msg.content and not (msg.author.id in ignore_bots)):
+                if await ignorable(msg.content, ignore_words):
+                    continue
+                sample = sample + msg.content + "\n"
+
+    async def user_cha_messages(cha_history):
+        print("user_cha_messages")
+        nonlocal sample
+        async for msg in cha_history:
+            if (msg.content and msg.author.id == source):
+                if await ignorable(msg.content, ignore_words):
+                    continue
+                sample = sample + msg.content + "\n"
+
+    server = ctx.guild
+    '''
+    if not (source in server.members):
+        # TODO: send message that member doesn't exist
+        return'''
+
+    if location != 0:
+        channel = bot.get_channel(location)
+        if source == 0:
+            await channel_messages(channel.history())
+        else:
+            await user_cha_messages(channel.history())
+    else:
+        for channel in server.text_channels:
+
+            if source == 0:
+                await all_messages(channel.history())
+            else:
+                await user_messages(channel.history())
+
+    sapmi_wc.reindeer_wc(sample)
 
 
 @bot.event
@@ -283,13 +367,13 @@ async def on_message(msg):
 
     if msg.content[0] == bot.command_prefix:
         return
-    
+
     if len(msg.content) > 200:
         return
 
     if msg.author == bot.user:
         return
-    
+
     message = msg.content.lower()
     now = datetime.datetime.now().time()
     for call in botres:
@@ -298,13 +382,11 @@ async def on_message(msg):
             to_hr = datetime.time(botres[call]["int"][1])
             diff = to_hr.hour - from_hr.hour
 
-            if ( (diff > 0 and (now >= from_hr and now < to_hr)) or 
-            (diff < 0 and (now >= from_hr or now < to_hr)) or 
-            diff == 0):
+            if ((diff > 0 and (now >= from_hr and now < to_hr)) or
+                    (diff < 0 and (now >= from_hr or now < to_hr)) or
+                    diff == 0):
                 await msg.channel.send(random.choice(botres[call]["res"]))
                 return
-    
-
 
 
 @tasks.loop(hours=24)

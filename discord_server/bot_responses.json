@@ -1,0 +1,52 @@
+{
+  "buorre iđit": {
+    "res": [
+      "Ipmel atti! 😊<:beaivvi:675788626919161857>",
+      "Iđit. Jo lea oktage gáfe vuoššan? ☕",
+      "Morá! <:gaffeblob:675788626411651094>",
+      "Buerie aerede! 🍵",
+      "Pyeri iiđeed! <:deadjablob:675788627111837716>",
+      "Ipmel atti! Miison otne galgá leat iđitborramuššan? 😋🍴🥞"
+    ],
+    "int": [6, 11]
+  },
+  "buorre beaivi": {
+    "res": ["Ipmel atti! 😎", "Buoris! 🤝", "Buerie biejjie! 🌞"],
+    "int": [11, 17]
+  },
+  "buorre eahket": {
+    "res": ["Ipmel atti! 🍻", "Buoris! 🍺", "Buerie iehkede! 🌟"],
+    "int": [17, 21]
+  },
+  "buorre idja": {
+    "res": [
+      "Oađe njálgát! 😴💤",
+      "Gulahallat ihtin! 🌃",
+      "Giitu otnážis! 🌛",
+      "Pyeri eehid! 🌝",
+      "Buerie jïjje! <:aurora:675788627044990990>"
+    ],
+    "int": [21, 4]
+  },
+  "i enjoy skiing in shorts": {
+    "res": [
+      "I personally find boxers to be more comfortable, but you do you. Bures boahtin! <:samiflag:650487218984714251>",
+      "Seems like we have something in common, you and I. Buorre boahtem! <:sami_heart:656285100316557333>",
+      "Don't we all? Buerie båeteme! <:samiFlag2:709530070221586493>",
+      "Damn right you do! 😏 Tiervâ! <:samiflaground:650968790699606037>",
+      "Duly noted. Pyereest puáttim! <:sami_heart:656285100316557333>",
+      "Yeah, you'll fit right in with this lot. Tiõrv pueʹttem! <:samiflaground:650968790699606037>"
+    ],
+    "int": [0, 0]
+  },
+  "]saba": {
+    "res": [
+      "You know they say that I died in 1921, but actually <@252228069434195968> keeps me alive in a jar of formaldehyde in his server basement.",
+      "Here's my favourite drink, usually the crowning touch on my intoxication. Thread carefully with it: ```fix\n_____ Minttu Kakáo _____\n- 3 cl Minttu (Peppermint or Black Mint)\n- 2 cl Disaronno Amaretto (this makes the drink fancier than it has any right to be)\n- 1 bag of Rett i Koppen Sjokoladedrikk\n- 2 dl boiling water\n- 0.5 tsp cinnamon\n- 0.25 tsp cardamom\nPut everything in a large Moomins™ cup in the given order and continuously mix with a teaspoon. Drink it while it's hot!```",
+      "I may or may not have had a crush for Elsa Laula Renberg before I met my wife.",
+      "I think fondly of the days when Anders Larsen and I collaborated as editors for *Sagai Muittalægje*. I wonder if people still remember that one musical composition I published in the April 1906 issue of that newspaper.",
+      "My contemporary, Anders Larsen, published a novel named *Bæivve-Alggo*. The book may on the surface appear like a cliché-ridden lovestory according to modern standards but its motif of trusting in ones self-worth with equanimity while being a member of discriminated minority-group makes it as timely today as it was back in 1912. A work of art that has grown out of necessity will forever remain good."
+    ],
+    "int": [0, 4]
+  }
+}
