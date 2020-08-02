@@ -21,10 +21,11 @@ def reindeer_wc(text):
     
     # create coloring from image
     im_colors = ImageColorGenerator(reindeer_mask)
-    wc.recolor(color_func=im_colors)
+    
 
     # generate word cloud
     wc.generate(text)
+    wc.recolor(color_func=im_colors)
 
     # store to file
     wc.to_file(path.join(d, "final_wc.png"))
