@@ -3,7 +3,7 @@ from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-from wordcloud import WordCloud, STOPWORDS
+from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 
 
 def reindeer_wc(text):
@@ -18,6 +18,10 @@ def reindeer_wc(text):
 
     wc = WordCloud(background_color="black", max_words=3000, mask=reindeer_mask,
                    stopwords=stopwords)
+    
+    # create coloring from image
+    im_colors = ImageColorGenerator(reindeer_mask)
+    wc.recolor(color_func=im_colors)
 
     # generate word cloud
     wc.generate(text)
