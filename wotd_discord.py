@@ -284,7 +284,6 @@ async def bahko(ctx, word: str):
         await ctx.send(f"<@{ctx.author.id}>, no dictonary entries were found.")
 
 
-
 @bot.command(name='wordcloud', help="Generates a word cloud for a given user or channel in the server. <source>: user/channel (everyone and every channel if not specified), <location>: channel (every channel if not specified)")
 async def wordcloud(ctx, source: typing.Union[discord.TextChannel, discord.Member, int] = 0, location: typing.Union[discord.TextChannel, int] = 0):
     ignore_words = ["]paradigm", "]sátni", "]baakoe", "]báhko",
@@ -344,38 +343,36 @@ async def wordcloud(ctx, source: typing.Union[discord.TextChannel, discord.Membe
     context = ""
     if (type(source) == discord.TextChannel or type(location) == discord.TextChannel):
         if type(source) == discord.TextChannel:
-            try:
-                source.history()
-                await start.edit(f"Generating a word cloud of the messages in #{location.name}.")
-                context = f"{ctx.author.mention}, word cloud of #{location.name}:"
+            if source.permissions_for(server.get_member(bot.user.id)).read_messages:
+                await start.edit(content=f"Generating a word cloud of the messages in {source.mention}.")
+                context = f"{ctx.author.mention}, word cloud of {source.mention}:"
                 await fetch_messages(channel_messages, source)
-            except discord.Forbidden:
-                await start.edit(f"I don't have the permissions to see the messages in that channel.")
+            else:
+                await start.edit(content=f"I don't have the permissions to read messages in that channel.")
                 return
         elif type(location) == discord.TextChannel:
-            try:
-                location.history()
-                await start.edit(f"Generating a word cloud of {source.nick}'s messages in #{location.name}.")
-                context = f"{ctx.author.mention}, word cloud of {source.nick}'s messages in #{location.name}:"
+            if location.permissions_for(server.get_member(bot.user.id)).read_messages:
+                await start.edit(content=f"Generating a word cloud of {source}'s messages in {location.mention}.")
+                context = f"{ctx.author.mention}, word cloud of {source}'s messages in {location.mention}:"
                 await fetch_messages(user_cha_messages, location)
-            except discord.Forbidden:
-                await start.edit(f"I don't have the permissions to look at that channel.")
+            else:
+                await start.edit(content=f"I don't have the permissions to read messages in that channel.")
                 return
     else:
         if type(source) == int:
             for channel in server.text_channels:
-                await start.edit(f"Generating a word cloud of {server.name} discord server.")
+                await start.edit(content=f"Generating a word cloud of {server.name} discord server.")
                 context = f"{ctx.author.mention}, word cloud of {server.name} discord server:"
                 await fetch_messages(all_messages, channel)
         else:
             for channel in server.text_channels:
-                await start.edit(f"Generating word cloud of {source.nick}'s messages.")
-                context = f"{ctx.author.mention}, word cloud of {source.nick}'s messages:"
+                await start.edit(content=f"Generating word cloud of {source}'s messages.")
+                context = f"{ctx.author.mention}, word cloud of {source}'s messages:"
                 await fetch_messages(user_messages, channel)
-    
+
     wc_file = wc_sapmi.reindeer_wc(sample)
-    await ctx.send(context, file=wc_file)
     await start.delete()
+    await ctx.send(context, file=wc_file)
 
 
 @bot.event
