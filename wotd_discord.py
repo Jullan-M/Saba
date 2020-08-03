@@ -4,9 +4,10 @@ import datetime
 import random
 import json
 import discord
+import typing
 from tabulate import tabulate
 from discord.ext import tasks, commands
-from discord_server import sapmi_wc
+from discord_server import wc_sapmi
 from dotenv import load_dotenv
 from googletrans import Translator
 from Word import Word, Paradigm, Inflection, PREF_DEST
@@ -284,8 +285,8 @@ async def bahko(ctx, word: str):
 
 
 @bot.command(name='secret', help="No spoilers ;)")
-# @bot.command(name='wordcloud', help="Generates a wordcloud for a given user or channel in the server. <source>: user/channel, <location>: channel (entire server if not specified)")
-async def wordcloud(ctx, source: int = 0, location: int = 0):
+# @bot.command(name='wordcloud', help="Generates a word cloud for a given user or channel in the server. <source>: user/channel, <location>: channel (every channel if not specified)")
+async def wordcloud(ctx, source: typing.Union[discord.TextChannel, discord.Member, int] = 0, location: typing.Union[discord.TextChannel, int] = 0):
     ignore_words = ["]paradigm", "]sátni", "]baakoe", "]báhko",
                     "]word", "]examine", "]help", "!play", "!skip", "!p"]
     ignore_bots = [302050872383242240, 159985870458322944,
@@ -310,7 +311,7 @@ async def wordcloud(ctx, source: int = 0, location: int = 0):
     async def user_messages(cha_history):
         nonlocal sample
         async for msg in cha_history:
-            if (msg.content and msg.author.id == source):
+            if (msg.content and msg.author.id == source.id):
                 if await ignorable(msg.content, ignore_words):
                     continue
                 sample = sample + msg.content + "\n"
@@ -326,7 +327,7 @@ async def wordcloud(ctx, source: int = 0, location: int = 0):
     async def user_cha_messages(cha_history):
         nonlocal sample
         async for msg in cha_history:
-            if (msg.content and msg.author.id == source):
+            if (msg.content and msg.author.id == source.id):
                 if await ignorable(msg.content, ignore_words):
                     continue
                 sample = sample + msg.content + "\n"
@@ -338,27 +339,33 @@ async def wordcloud(ctx, source: int = 0, location: int = 0):
             print(f"Could not access channel #{channel}. Skipping.")
 
     server = ctx.guild
-    '''
-    if not (source in server.members):
-        # TODO: send message that member doesn't exist
-        return'''
 
-    if location != 0:
-        channel = bot.get_channel(location)
-
-        if source == 0:
-            await fetch_messages(channel_messages, channel)
-        else:
-            await fetch_messages(user_cha_messages, channel)
+    start = await ctx.send("Generating word cloud")
+    context = ""
+    if (type(source) == discord.TextChannel or type(location) == discord.TextChannel):
+        if type(source) == discord.TextChannel:
+            await start.edit(f"Generating a word cloud of the messages in #{location.name}.")
+            context = f"{ctx.author.mention}, word cloud of #{location.name}."
+            await fetch_messages(channel_messages, source)
+            start.delete()
+        elif type(location) == discord.TextChannel:
+            await start.edit(f"Generating a word cloud of {source.nick}'s messages in #{location.name}.")
+            context = f"{ctx.author.mention}, word cloud of {source.nick}'s messages in #{location.name}."
+            await fetch_messages(user_cha_messages, location)
     else:
-        if source == 0:
+        if type(source) == int:
             for channel in server.text_channels:
+                await start.edit(f"Generating a word cloud of {server.name} discord server.")
+                context = f"{ctx.author.mention}, word cloud of {server.name} discord server."
                 await fetch_messages(all_messages, channel)
         else:
             for channel in server.text_channels:
+                await start.edit(f"Generating word cloud of {source.nick}'s messages.")
+                context = f"{ctx.author.mention}, word cloud of {source.nick}'s messages."
                 await fetch_messages(user_messages, channel)
-
-    sapmi_wc.reindeer_wc(sample)
+    wc_file = wc_sapmi.reindeer_wc(sample)
+    await ctx.send(context, file=wc_file)
+    await start.delete()
 
 
 @bot.event

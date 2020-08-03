@@ -14,7 +14,9 @@ def reindeer_wc(text):
     reindeer_mask = np.array(Image.open(path.join(d, "reindeer.png")))
 
     stopwords = set(STOPWORDS)
-    stopwords.add("wordcloud")
+    with open("wc_ignore.txt", "r", encoding="utf-8") as f:
+        for w in f.read().split('\n'):
+            stopwords.add(w)
 
     wc = WordCloud(background_color="black", max_words=3000, mask=reindeer_mask,
                    stopwords=stopwords)
@@ -28,4 +30,4 @@ def reindeer_wc(text):
     wc.recolor(color_func=im_colors)
 
     # store to file
-    wc.to_file(path.join(d, "final_wc.png"))
+    return wc.to_file(path.join(d, "final_wc.png"))
