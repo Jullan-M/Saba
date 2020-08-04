@@ -3,12 +3,13 @@ from PIL import Image
 from discord import File
 from textgenrnn import textgenrnn
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
+import asyncio
 import numpy as np
 import matplotlib.pyplot as plt
 import os
 
 
-def reindeer_wc(text):
+async def reindeer_wc(text):
     # get data directory (using getcwd() is needed to support running example in generated IPython notebook)
     d = path.dirname(__file__)
 
@@ -37,7 +38,7 @@ def reindeer_wc(text):
     wc_file = File(path.join(d, "final_wc.png"), "wordcloud.png")
     return wc_file
 
-def imitation(text):
+async def imitation(text):
     rnn = textgenrnn()
     rnn.train_on_texts([text], num_epochs=3)
     imit = str(rnn.generate(return_as_list=True)[0])

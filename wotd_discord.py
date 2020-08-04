@@ -331,7 +331,7 @@ async def sample_messages(ctx, source: typing.Union[discord.TextChannel, discord
 
     async def fetch_messages(case_func, channel):
         try:
-            await case_func(channel.history())
+            await case_func(channel.history(oldest_first=True))
         except discord.Forbidden:
             print(f"Could not access channel #{channel}. Skipping.")
 
@@ -354,7 +354,7 @@ async def sample_messages(ctx, source: typing.Union[discord.TextChannel, discord
             return ""
     elif type(source) == discord.Member:
         for channel in server.text_channels:
-                await start.edit(content=f"Sampling {source}'s messages in {server.name} discord server..")
+                await start.edit(content=f"Sampling {source}'s messages in {server.name} discord server...")
                 await fetch_messages(user_messages, channel)
     elif type(source) == int:
         for channel in server.text_channels:
@@ -370,7 +370,7 @@ async def sample_messages(ctx, source: typing.Union[discord.TextChannel, discord
 async def wordcloud(ctx, source: typing.Union[discord.TextChannel, discord.Member, int] = 0, location: typing.Union[discord.TextChannel, int] = 0):
     sample = await sample_messages(ctx, source, location)
     if sample:
-        wc_file = wc_sapmi.reindeer_wc(sample)
+        wc_file = await wc_sapmi.reindeer_wc(sample)
         context = ""
         if type(source) == discord.TextChannel:
             context = f"{ctx.author.mention}, word cloud of {source.mention}:"
@@ -388,7 +388,7 @@ async def wordcloud(ctx, source: typing.Union[discord.TextChannel, discord.Membe
 async def imitate(ctx, source: typing.Union[discord.TextChannel, discord.Member, int] = 0, location: typing.Union[discord.TextChannel, int] = 0):
     sample = await sample_messages(ctx, source, location)
     if sample:
-        imit = wc_sapmi.imitation(sample)
+        imit = await wc_sapmi.imitation(sample)
         context = ""
         if type(source) == discord.TextChannel:
             context = f"{ctx.author.mention}, imitation of messages in {source.mention}:\n"
