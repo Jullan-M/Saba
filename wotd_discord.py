@@ -390,17 +390,17 @@ async def wordcloud(ctx, source: typing.Union[discord.TextChannel, discord.Membe
 async def imitate(ctx, source: typing.Union[discord.TextChannel, discord.Member, int] = 0, location: typing.Union[discord.TextChannel, int] = 0):
     sample = await sample_messages(ctx, source, location)
     if sample:
-        imit = await wc_sapmi.imitation(sample)
+        imits = await wc_sapmi.imitation(sample)
         context = ""
         if type(source) == discord.TextChannel:
             context = f"{ctx.author.mention}, imitation of messages in {source.mention}:\n"
         elif type(source) == discord.Member and type(location) == discord.TextChannel:
             context = f"{ctx.author.mention}, imitation of {source}'s messages in {location.mention}:\n"
         elif type(source) == discord.Member:
-            context = f"{ctx.author.mention}, imitation {source}:\n"
+            context = f"{ctx.author.mention}, imitation of {source}:\n"
         else:
             context = f"{ctx.author.mention}, imitation of {ctx.guild}:\n"
-        await ctx.send(context + imit)
+        await ctx.send(context + "\n\n".join(imits))
     else:
         return
 

@@ -40,6 +40,6 @@ async def reindeer_wc(text):
 
 async def imitation(text):
     rnn = textgenrnn()
-    rnn.train_on_texts([text], num_epochs=3)
-    imit = str(rnn.generate(return_as_list=True)[0])
-    return imit
+    rnn.train_on_texts([text], batch_size=256, num_epochs=3, max_gen_length=150)
+    imits = rnn.generate(n=3, return_as_list=True, max_gen_length=150)
+    return imits
