@@ -1,10 +1,11 @@
 from os import path
 from PIL import Image
 from discord import File
+from textgenrnn import textgenrnn
+from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 
 
 def reindeer_wc(text):
@@ -27,6 +28,7 @@ def reindeer_wc(text):
 
     # generate word cloud
     wc.generate(text)
+    
     wc.recolor(color_func=im_colors)
 
     # store to file
@@ -34,3 +36,9 @@ def reindeer_wc(text):
 
     wc_file = File(path.join(d, "final_wc.png"), "wordcloud.png")
     return wc_file
+
+def imitation(text):
+    rnn = textgenrnn()
+    rnn.train_on_texts([text])
+    imit = str(rnn.generate(return_as_list=True)[0])
+    return imit

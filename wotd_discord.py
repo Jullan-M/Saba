@@ -283,11 +283,9 @@ async def bahko(ctx, word: str):
     else:
         await ctx.send(f"<@{ctx.author.id}>, no dictonary entries were found.")
 
-
-@bot.command(name='wordcloud', help="Generates a word cloud for a given user or channel in the server. <source>: user/channel (everyone and every channel if not specified), <location>: channel (every channel if not specified)")
-async def wordcloud(ctx, source: typing.Union[discord.TextChannel, discord.Member, int] = 0, location: typing.Union[discord.TextChannel, int] = 0):
+async def sample_messages(ctx, source: typing.Union[discord.TextChannel, discord.Member, int], location: typing.Union[discord.TextChannel, int]):
     ignore_words = ["]paradigm", "]sátni", "]baakoe", "]báhko",
-                    "]word", "]examine", "]help", "!play", "!skip", "!p"]
+                    "]word", "]examine", "]help", "!play", "!skip", "!p", ".stats"]
     ignore_bots = [302050872383242240, 159985870458322944,
                    550613223733329920, 724693719013392456]
 
@@ -339,41 +337,70 @@ async def wordcloud(ctx, source: typing.Union[discord.TextChannel, discord.Membe
 
     server = ctx.guild
 
-    start = await ctx.send("Generating word cloud")
-    context = ""
-    if (type(source) == discord.TextChannel or type(location) == discord.TextChannel):
-        if type(source) == discord.TextChannel:
-            if source.permissions_for(server.get_member(bot.user.id)).read_messages:
-                await start.edit(content=f"Generating a word cloud of the messages in {source.mention}.")
-                context = f"{ctx.author.mention}, word cloud of {source.mention}:"
-                await fetch_messages(channel_messages, source)
-            else:
-                await start.edit(content=f"I don't have the permissions to read messages in that channel.")
-                return
-        elif type(location) == discord.TextChannel:
-            if location.permissions_for(server.get_member(bot.user.id)).read_messages:
-                await start.edit(content=f"Generating a word cloud of {source}'s messages in {location.mention}.")
-                context = f"{ctx.author.mention}, word cloud of {source}'s messages in {location.mention}:"
-                await fetch_messages(user_cha_messages, location)
-            else:
-                await start.edit(content=f"I don't have the permissions to read messages in that channel.")
-                return
-    else:
-        if type(source) == int:
-            for channel in server.text_channels:
-                await start.edit(content=f"Generating a word cloud of {server.name} discord server.")
-                context = f"{ctx.author.mention}, word cloud of {server.name} discord server:"
-                await fetch_messages(all_messages, channel)
+    start = await ctx.send("Beginning to sample messages...")
+    if type(source) == discord.TextChannel:
+        if source.permissions_for(server.get_member(bot.user.id)).read_messages:
+            await start.edit(content=f"Sampling all messages in {source.mention}...")
+            await fetch_messages(channel_messages, source)
         else:
-            for channel in server.text_channels:
-                await start.edit(content=f"Generating word cloud of {source}'s messages.")
-                context = f"{ctx.author.mention}, word cloud of {source}'s messages:"
+            await start.edit(content=f"I don't have the permissions to read messages in that channel.")
+            return ""
+    elif type(source) == discord.Member and type(location) == discord.TextChannel:
+        if location.permissions_for(server.get_member(bot.user.id)).read_messages:
+            await start.edit(content=f"Sampling {source}'s messages in {location.mention}...")
+            await fetch_messages(user_cha_messages, location)
+        else:
+            await start.edit(content=f"I don't have the permissions to read messages in that channel.")
+            return ""
+    elif type(source) == discord.Member:
+        for channel in server.text_channels:
+                await start.edit(content=f"Sampling {source}'s messages in {server.name} discord server..")
                 await fetch_messages(user_messages, channel)
-
-    wc_file = wc_sapmi.reindeer_wc(sample)
+    elif type(source) == int:
+        for channel in server.text_channels:
+            await start.edit(content=f"Sampling all messages of {server.name} discord server...")
+            await fetch_messages(all_messages, channel)
+    else:
+        await start.edit(content=f"Invalid command arguments. Use `@` and `#` to mention user/channel.")
+        return ""
     await start.delete()
-    await ctx.send(context, file=wc_file)
+    return sample
 
+@bot.command(name='wordcloud', help="Generates a word cloud for a given user or channel in the server. <source>: user/channel (everyone and every channel if not specified), <location>: channel (every channel if not specified)")
+async def wordcloud(ctx, source: typing.Union[discord.TextChannel, discord.Member, int] = 0, location: typing.Union[discord.TextChannel, int] = 0):
+    sample = await sample_messages(ctx, source, location)
+    if sample:
+        wc_file = wc_sapmi.reindeer_wc(sample)
+        context = ""
+        if type(source) == discord.TextChannel:
+            context = f"{ctx.author.mention}, word cloud of {source.mention}:"
+        elif type(source) == discord.Member and type(location) == discord.TextChannel:
+            context = f"{ctx.author.mention}, word cloud of {source}'s messages in {location.mention}:"
+        elif type(source) == discord.Member:
+            context = f"{ctx.author.mention}, word cloud of {source}'s messages:"
+        else:
+            context = f"{ctx.author.mention}, word cloud of {ctx.guild} discord server:"
+        await ctx.send(context, file=wc_file)
+    else:
+        return
+
+@bot.command(name='imitate', help="Imitates a user/channel with machine learning. <source>: user/channel (everyone and every channel if not specified), <location>: channel (every channel if not specified)")
+async def imitate(ctx, source: typing.Union[discord.TextChannel, discord.Member, int] = 0, location: typing.Union[discord.TextChannel, int] = 0):
+    sample = await sample_messages(ctx, source, location)
+    if sample:
+        imit = wc_sapmi.imitation(sample)
+        context = ""
+        if type(source) == discord.TextChannel:
+            context = f"{ctx.author.mention}, imitation of messages in {source.mention}:"
+        elif type(source) == discord.Member and type(location) == discord.TextChannel:
+            context = f"{ctx.author.mention}, imitation of {source}'s messages in {location.mention}:"
+        elif type(source) == discord.Member:
+            context = f"{ctx.author.mention}, imitation {source}:\n"
+        else:
+            context = f"{ctx.author.mention}, imitation of {ctx.guild}:\n"
+        await ctx.send(context + imit)
+    else:
+        return
 
 @bot.event
 async def on_message(msg):
