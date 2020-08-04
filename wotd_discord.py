@@ -5,6 +5,7 @@ import random
 import json
 import discord
 import typing
+import re
 from tabulate import tabulate
 from discord.ext import tasks, commands
 from discord_server import wc_sapmi
@@ -364,6 +365,7 @@ async def sample_messages(ctx, source: typing.Union[discord.TextChannel, discord
         await start.edit(content=f"Invalid command arguments. Use `@` and `#` to mention user/channel.")
         return ""
     await start.delete()
+    sample = re.sub('<[^>]+>', '', sample)
     return sample
 
 @bot.command(name='wordcloud', help="Generates a word cloud for a given user or channel in the server. <source>: user/channel (everyone and every channel if not specified), <location>: channel (every channel if not specified)")
