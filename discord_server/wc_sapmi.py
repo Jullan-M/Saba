@@ -39,6 +39,6 @@ def reindeer_wc(text):
 
 def imitation(text):
     rnn = textgenrnn()
-    rnn.train_on_texts([text])
+    rnn.train_on_texts([text], num_epochs=3)
     imit = str(rnn.generate(return_as_list=True)[0])
     return imit
