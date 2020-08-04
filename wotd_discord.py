@@ -393,13 +393,13 @@ async def imitate(ctx, source: typing.Union[discord.TextChannel, discord.Member,
         imits = await wc_sapmi.imitation(sample)
         context = ""
         if type(source) == discord.TextChannel:
-            context = f"{ctx.author.mention}, imitation of messages in {source.mention}:\n"
+            context = f"{ctx.author.mention}, imitation of messages in {source.mention}:\n> "
         elif type(source) == discord.Member and type(location) == discord.TextChannel:
-            context = f"{ctx.author.mention}, imitation of {source}'s messages in {location.mention}:\n"
+            context = f"{ctx.author.mention}, imitation of {source}'s messages in {location.mention}:\n> "
         elif type(source) == discord.Member:
-            context = f"{ctx.author.mention}, imitation of {source}:\n"
+            context = f"{ctx.author.mention}, imitation of {source}:\n> "
         else:
-            context = f"{ctx.author.mention}, imitation of {ctx.guild}:\n"
+            context = f"{ctx.author.mention}, imitation of {ctx.guild}:\n> "
         await ctx.send(context + "\n\n".join(imits))
     else:
         return
