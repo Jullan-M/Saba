@@ -22,7 +22,7 @@ async def reindeer_wc(text):
             stopwords.add(w)
 
     wc = WordCloud(background_color="black", max_words=3000, mask=reindeer_mask,
-                   stopwords=stopwords)
+                   stopwords=stopwords, collocations=False)
 
     # create coloring from image
     im_colors = ImageColorGenerator(reindeer_mask)
@@ -40,6 +40,6 @@ async def reindeer_wc(text):
 
 async def imitation(text):
     rnn = textgenrnn()
-    rnn.train_on_texts([text], batch_size=256, num_epochs=3, max_gen_length=150)
-    imits = rnn.generate(n=3, return_as_list=True, max_gen_length=150)
+    rnn.train_on_texts([text], num_epochs=3, max_gen_length=300)
+    imits = rnn.generate(n=3, return_as_list=True, max_gen_length=300)
     return imits

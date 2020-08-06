@@ -286,7 +286,7 @@ async def bahko(ctx, word: str):
 
 async def sample_messages(ctx, source: typing.Union[discord.TextChannel, discord.Member, int], location: typing.Union[discord.TextChannel, int]):
     ignore_words = ["]paradigm", "]sátni", "]baakoe", "]báhko",
-                    "]word", "]examine", "]help", "!play", "!skip", "!p", ".stats"]
+                    "]word", "]examine", "]help", "]imitate", "!play", "!skip", "!p", ".stats"]
     ignore_bots = [302050872383242240, 159985870458322944,
                    550613223733329920, 724693719013392456]
 
@@ -332,7 +332,7 @@ async def sample_messages(ctx, source: typing.Union[discord.TextChannel, discord
 
     async def fetch_messages(case_func, channel):
         try:
-            await case_func(channel.history(oldest_first=True))
+            await case_func(channel.history(oldest_first=False, limit=7500))
         except discord.Forbidden:
             print(f"Could not access channel #{channel}. Skipping.")
 
@@ -390,7 +390,9 @@ async def wordcloud(ctx, source: typing.Union[discord.TextChannel, discord.Membe
 async def imitate(ctx, source: typing.Union[discord.TextChannel, discord.Member, int] = 0, location: typing.Union[discord.TextChannel, int] = 0):
     sample = await sample_messages(ctx, source, location)
     if sample:
+        train = await ctx.send("Training neural networks with samples...")
         imits = await wc_sapmi.imitation(sample)
+        await train.delete()
         context = ""
         if type(source) == discord.TextChannel:
             context = f"{ctx.author.mention}, imitation of messages in {source.mention}:\n> "
@@ -400,7 +402,7 @@ async def imitate(ctx, source: typing.Union[discord.TextChannel, discord.Member,
             context = f"{ctx.author.mention}, imitation of {source}:\n> "
         else:
             context = f"{ctx.author.mention}, imitation of {ctx.guild}:\n> "
-        await ctx.send(context + "\n\n".join(imits))
+        await ctx.send(context + "\n\n> ".join(imits))
     else:
         return
 
