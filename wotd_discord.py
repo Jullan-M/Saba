@@ -424,18 +424,29 @@ async def on_message(msg):
 
     message = msg.content.lower()
     now = datetime.datetime.now().time()
-    for call in botres:
+    for call in botres["canned"]:
         if call in message:
-            from_hr = datetime.time(botres[call]["int"][0])
-            to_hr = datetime.time(botres[call]["int"][1])
+            from_hr = datetime.time(botres["canned"][call]["int"][0])
+            to_hr = datetime.time(botres["canned"][call]["int"][1])
             diff = to_hr.hour - from_hr.hour
 
             if ((diff > 0 and (now >= from_hr and now < to_hr)) or
                     (diff < 0 and (now >= from_hr or now < to_hr)) or
                     diff == 0):
-                await msg.channel.send(random.choice(botres[call]["res"]))
+                await msg.channel.send(random.choice(botres["canned"][call]["res"]))
                 return
+    
+    if ("Saba" in msg.content) or (msg.guild.get_member(bot.user.id) in msg.mentions):
+        response = random.choice(botres["mention"])
+        if response["file"]:
+            file = discord.File(f"media/{response['file']}")
+            await msg.channel.send(response["res"] ,file=file)
+        else:
+            await msg.channel.send(response["res"])
+        return
 
+            
+                
 
 @tasks.loop(hours=24)
 async def called_once_a_day():
