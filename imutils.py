@@ -11,12 +11,12 @@ def text_wrap(text, font, imgdraw, max_width, max_height):
         # try putting this word in last line then measure
         lines[-1].append(word)
         (w, h) = imgdraw.multiline_textsize(
-            '\n'.join([' '.join(line) for line in lines]), font=font, spacing=10)
+            '\n'.join([' '.join(line) for line in lines]), font=font, spacing=8)
         if w > max_width:  # too wide
             # take it back out, put it on the next line, then measure again
             lines.append([lines[-1].pop()])
             (w, h) = imgdraw.multiline_textsize(
-                '\n'.join([' '.join(line) for line in lines]), font=font, spacing=10)
+                '\n'.join([' '.join(line) for line in lines]), font=font, spacing=8)
             # too high now, cannot fit this word in, return empty string (False)
             if h > max_height:
                 return ''
@@ -32,8 +32,8 @@ TW_COLORS = [(29, 161, 242),
              (244, 93, 34),
              (23, 191, 99)]
 
-WIDTH = 1080
-HEIGHT = 710
+WIDTH = 900
+HEIGHT = 592
 
 FONT = "tahoma.ttf"
 FONT_IT = "Tahoma W01 Italic.ttf"
@@ -45,29 +45,45 @@ def examples_img(lang, word, examples):
     if not examples[0]:
         return False
 
-    img = Image.new('RGB', (WIDTH, HEIGHT), color=(21, 32, 43))
+    img = Image.new('RGBA', (WIDTH, HEIGHT), color=(0, 0, 0, 0))
     d = ImageDraw.Draw(img)
     rn_color = random.choice(TW_COLORS)
-    d.text((20, HEIGHT - 90), f"{word}", font=ImageFont.truetype(
+    d.text((10, HEIGHT - 110), f"{word}", font=ImageFont.truetype(
         FONT, size=72), fill=rn_color)
-    d.text((780, HEIGHT - 60), f"@WOTD_{lang}", font=ImageFont.truetype(
-        FONT, size=46), fill=rn_color)
+    d.text((645, HEIGHT - 55), f"@WOTD_{lang}", font=ImageFont.truetype(
+        FONT, size=40), fill=rn_color)
 
     for i, fl in enumerate(FLAG_IMGS):
         fl_img = Image.open(fl)
-        img.paste(fl_img, (20, 20 + 200 * i))
+        img.paste(fl_img, (10, 10 + 159 * i))
 
         font_size = MAX_FSIZE
         text_font = ImageFont.truetype(FONT_IT, size=font_size)
-        text_wrapped = text_wrap(examples[i], text_font, d, 778, 130)
+        text_wrapped = text_wrap(examples[i], text_font, d, 680, 160)
 
         while not text_wrapped:
             font_size -= 4
             text_font = ImageFont.truetype(FONT_IT, size=font_size)
-            text_wrapped = text_wrap(examples[i], text_font, d, 778, 130)
+            text_wrapped = text_wrap(examples[i], text_font, d, 680, 160)
 
-        d.text((282, 20 + 200 * i), text_wrapped,
-               font=text_font, fill=(255, 255, 255), spacing=10)
+        x = 220
+        y = 10 + 159 * i
+
+        d.text((x-1, y), text_wrapped, font=text_font, fill=(0,0,0), spacing=8)
+        d.text((x+1, y), text_wrapped, font=text_font, fill=(0,0,0), spacing=8)
+        d.text((x, y-1), text_wrapped, font=text_font, fill=(0,0,0), spacing=8)
+        d.text((x, y+1), text_wrapped, font=text_font, fill=(0,0,0), spacing=8)
+        d.text((x-1, y-1), text_wrapped, font=text_font, fill=(0,0,0), spacing=8)
+        d.text((x+1, y-1), text_wrapped, font=text_font, fill=(0,0,0), spacing=8)
+        d.text((x-1, y+1), text_wrapped, font=text_font, fill=(0,0,0), spacing=8)
+        d.text((x+1, y+1), text_wrapped, font=text_font, fill=(0,0,0), spacing=8)
+
+        d.text((x, y), text_wrapped,
+               font=text_font, fill=(255, 255, 255), spacing=8)
 
     img.save(f'media/examples_{lang}.png')
     return True
+
+examples_img("sme", "nuppát", [" - Dás lea nuppát olmmoš idjadan áiggi čađa.\n - Gussiid moalladuostu dustii nuppát geardde spáppa hui čábbát.\n - Dás lea nuppát olmmoš idjadan áiggi čađa.",
+                                " - Her har det gjennom tidene overnatta atskillige folk.\n - Bortelagets målvakt sto for atskillige pene redninger.\n - Her har det gjennom tidene overnatta atskillige folk.",
+                                " - Throughout the ages, several people have spent the night here.\n - The away team's goalkeeper made several nice saves.\n - Throughout the ages, several people have spent the night here."])
