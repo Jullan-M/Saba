@@ -440,9 +440,9 @@ async def on_message(msg):
         response = random.choice(botres["mention"])
         if response["file"]:
             file = discord.File(f"media/{response['file']}")
-            await msg.channel.send(response["res"] ,file=file)
+            await msg.channel.send(response["res"].replace("<author>", msg.author.mention) ,file=file)
         else:
-            await msg.channel.send(response["res"])
+            await msg.channel.send(response["res"].replace("<author>", msg.author.mention))
         return
 
             
