@@ -48,7 +48,7 @@ def examples_img(lang, word, examples):
     img = Image.new('RGBA', (WIDTH, HEIGHT), color=(0, 0, 0, 0))
     d = ImageDraw.Draw(img)
     rn_color = random.choice(TW_COLORS)
-    d.text((10, HEIGHT - 110), f"{word}", font=ImageFont.truetype(
+    d.text((10, HEIGHT - 100), f"{word}", font=ImageFont.truetype(
         FONT, size=72), fill=rn_color)
     d.text((645, HEIGHT - 55), f"@WOTD_{lang}", font=ImageFont.truetype(
         FONT, size=40), fill=rn_color)
@@ -69,23 +69,25 @@ def examples_img(lang, word, examples):
         x = 220
         y = 10 + 159 * i
 
-        d.text((x-1, y), text_wrapped, font=text_font, fill=(0,0,0), spacing=8)
-        d.text((x+1, y), text_wrapped, font=text_font, fill=(0,0,0), spacing=8)
-        d.text((x, y-1), text_wrapped, font=text_font, fill=(0,0,0), spacing=8)
-        d.text((x, y+1), text_wrapped, font=text_font, fill=(0,0,0), spacing=8)
-        d.text((x-1, y-1), text_wrapped, font=text_font, fill=(0,0,0), spacing=8)
-        d.text((x+1, y-1), text_wrapped, font=text_font, fill=(0,0,0), spacing=8)
-        d.text((x-1, y+1), text_wrapped, font=text_font, fill=(0,0,0), spacing=8)
-        d.text((x+1, y+1), text_wrapped, font=text_font, fill=(0,0,0), spacing=8)
+        d.text((x-1, y), text_wrapped, font=text_font,
+               fill=(0, 0, 0), spacing=8)
+        d.text((x+1, y), text_wrapped, font=text_font,
+               fill=(0, 0, 0), spacing=8)
+        d.text((x, y-1), text_wrapped, font=text_font,
+               fill=(0, 0, 0), spacing=8)
+        d.text((x, y+1), text_wrapped, font=text_font,
+               fill=(0, 0, 0), spacing=8)
+        d.text((x-1, y-1), text_wrapped, font=text_font,
+               fill=(0, 0, 0), spacing=8)
+        d.text((x+1, y-1), text_wrapped, font=text_font,
+               fill=(0, 0, 0), spacing=8)
+        d.text((x-1, y+1), text_wrapped, font=text_font,
+               fill=(0, 0, 0), spacing=8)
+        d.text((x+1, y+1), text_wrapped, font=text_font,
+               fill=(0, 0, 0), spacing=8)
 
         d.text((x, y), text_wrapped,
                font=text_font, fill=(255, 255, 255), spacing=8)
 
     img.save(f'media/examples_{lang}.png')
     return True
-'''
-examples_img("sme", "nuppát", [" - Dás lea nuppát olmmoš idjadan áiggi čađa.\n - Gussiid moalladuostu dustii nuppát geardde spáppa hui čábbát.\n - Dás lea nuppát olmmoš idjadan áiggi čađa.",
-                                " - Her har det gjennom tidene overnatta atskillige folk.\n - Bortelagets målvakt sto for atskillige pene redninger.\n - Her har det gjennom tidene overnatta atskillige folk.",
-                                " - Throughout the ages, several people have spent the night here.\n - The away team's goalkeeper made several nice saves.\n - Throughout the ages, several people have spent the night here."])
-                                
-'''
