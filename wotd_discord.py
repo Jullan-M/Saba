@@ -116,7 +116,7 @@ class WotdManagerDiscord(WotdManager):
                             "_SWE", ""), src='no', dest='sv').text
                         trs_text += f"\t\t{FLAG[tr.lang]} {fixed_tr}\n"
                 else:
-                    trs_text += f"\t\t{FLAG[tr.lang]} {tr}\n"
+                    trs_text += f"\t\t{FLAG[tr.lang]} {tr} {tr.desc}\n"
                     trs_text = trs_text.replace(
                         "<SFLAG>", f"<:samiflag:{SAMIFLAG_ID}>")
             if lastpos != m.pos and trs_text:
