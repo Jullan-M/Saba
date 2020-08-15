@@ -242,7 +242,12 @@ async def word(ctx, lang: str, word: str):
         main, i = wotd_nob.get_translation(w, en_wc)
     intro = f"{ctx.author.mention}, **{word}** has {i} "
     intro = intro + "meanings:\n" if i > 1 else intro + "meaning:\n"
-    await ctx.send(intro + main)
+    try:
+        await ctx.send(intro + main)
+    except Exception as err:
+        err_msg = await ctx.send(f"I encountered the following error:\n{err}")
+        await asyncio.sleep(60)
+        await err_msg.delete()
 
 
 @bot.command(name='sátni', help="An alias for ]word sme <word> (look-up in Northern Sami dictionaries).")
