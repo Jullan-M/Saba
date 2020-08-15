@@ -46,8 +46,10 @@ def underscore_word(string, word):
 class WotdManagerDiscord(WotdManager):
     def __init__(self, d, path='discord_server/'):
         super().__init__(d, path)
-        self.cha_id = int(os.getenv(f'{self.lang}_CHANNEL_ID'))
-        self.role_id = int(os.getenv(f'{self.lang}_ROLE_ID'))
+        cha = os.getenv(f'{self.lang}_CHANNEL_ID')
+        rol = os.getenv(f'{self.lang}_ROLE_ID')
+        self.cha_id = int(cha) if cha else 0
+        self.role_id = int(rol) if rol else 0
 
     def get_intro_message(self, word, count, spec=""):
         intro = spec.replace("<WORD>", f"**{word}**")
@@ -132,6 +134,7 @@ class WotdManagerDiscord(WotdManager):
 
 
 wotd_m = [WotdManagerDiscord(d) for d in ['smenob', 'smanob']]
+wotd_nob = WotdManagerDiscord('nobsme')
 bot = commands.Bot(command_prefix=commands.when_mentioned_or(']'))
 with open("language_conf.json", "r") as f:
     en_wc = json.load(f)["en"]["wordclass"]
@@ -219,8 +222,8 @@ async def word(ctx, lang: str, word: str):
     if not await correct_channel(ctx):
         return
 
-    if not (lang in ['sme', 'sma']):
-        supported = "```sme\tNorthern Saami\nsma\tSouthern Saami```"
+    if not (lang in ['sme', 'sma', 'nob']):
+        supported = "```sme\tNorthern Saami\nsma\tSouthern Saami\nnob\tNorwegian (bokmål)```"
         await ctx.send(f"<@{ctx.author.id}>, `{lang}` is not a supported language for word search. Currently, the following languages are supported:\n{supported}")
         return
 
@@ -235,7 +238,9 @@ async def word(ctx, lang: str, word: str):
         main, i = wotd_m[0].get_translation(w, en_wc)
     elif lang == 'sma':
         main, i = wotd_m[1].get_translation(w, en_wc)
-    intro = f"<@{ctx.author.id}>, **{word}** has {i} "
+    elif lang == 'nob':
+        main, i = wotd_nob.get_translation(w, en_wc)
+    intro = f"{ctx.author.mention}, **{word}** has {i} "
     intro = intro + "meanings:\n" if i > 1 else intro + "meaning:\n"
     await ctx.send(intro + main)
 
@@ -248,6 +253,10 @@ async def satni(ctx, term: str):
 @bot.command(name='baakoe', help="An alias for ]word sma <word> (look-up in Southern Sami dictionaries).")
 async def baakoe(ctx, term: str):
     await word(ctx, 'sma', term)
+
+@bot.command(name='ord', help="An alias for ]word nob <word> (look-up in Norwegian (bokmål) - Sami dictionaries).")
+async def ords(ctx, term: str):
+    await word(ctx, 'nob', term)
 
 
 @bot.command(name='báhko', help="Lule-Sami to Norwegian dictionary look-up.")

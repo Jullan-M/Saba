@@ -48,5 +48,21 @@
       "Pcle": "Particle",
       "mwe": "Mwe"
     }
+  },
+  "nob": {
+    "excl_lang": ["en", "fi", "nn", "lat"],
+    "wordclass": {
+      "N": "Substantiv",
+      "V": "Verb",
+      "Adv": "Adverb",
+      "A": "Adjektiv",
+      "Pron": "Pronomen",
+      "CC": "Konjunksjon",
+      "Po": "Postposisjon",
+      "Pr": "Preposisjon",
+      "Interj": "Interjeksjon",
+      "Pcle": "Partikkel",
+      "mwe": "Mwe"
+    }
   }
 }
