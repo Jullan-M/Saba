@@ -136,10 +136,13 @@ class WotdManagerDiscord(WotdManager):
 wotd_m = [WotdManagerDiscord(d) for d in ['smenob', 'smanob']]
 wotd_nob = WotdManagerDiscord('nobsme')
 bot = commands.Bot(command_prefix=commands.when_mentioned_or(']'))
+
 with open("language_conf.json", "r") as f:
     en_wc = json.load(f)["en"]["wordclass"]
 with open("discord_server/bot_responses.json", "r", encoding="utf-8") as f:
     botres = json.load(f)
+
+last_mention = datetime.datetime.now()
 
 
 async def correct_channel(ctx):
@@ -422,6 +425,7 @@ async def imitate(ctx, source: typing.Union[discord.TextChannel, discord.Member,
 
 @bot.event
 async def on_message(msg):
+    global last_mention
     await bot.process_commands(msg)
 
     if not msg.content:
@@ -437,20 +441,22 @@ async def on_message(msg):
         return
 
     message = msg.content.lower()
-    now = datetime.datetime.now().time()
+    now = datetime.datetime.now()
     for call in botres["canned"]:
         if call in message:
             from_hr = datetime.time(botres["canned"][call]["int"][0])
             to_hr = datetime.time(botres["canned"][call]["int"][1])
             diff = to_hr.hour - from_hr.hour
+            now_hr = now.time()
 
-            if ((diff > 0 and (now >= from_hr and now < to_hr)) or
-                    (diff < 0 and (now >= from_hr or now < to_hr)) or
+            if ((diff > 0 and (now_hr >= from_hr and now_hr < to_hr)) or
+                    (diff < 0 and (now_hr >= from_hr or now_hr < to_hr)) or
                     diff == 0):
                 await msg.channel.send(random.choice(botres["canned"][call]["res"]))
                 return
     
-    if ("Saba" in msg.content) or (msg.guild.get_member(bot.user.id) in msg.mentions):
+    if (("Saba" in msg.content) or (msg.guild.get_member(bot.user.id) in msg.mentions)) and (now - last_mention).total_seconds() > 7200:
+        last_mention = datetime.datetime.now()
         response = random.choice(botres["mention"])
         if response["file"]:
             file = discord.File(f"media/{response['file']}")
