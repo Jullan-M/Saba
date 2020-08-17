@@ -91,6 +91,6 @@ def examples_img(lang, word, examples):
 
     img.save(f'media/examples_{lang}.png')
     return True
-examples_img("sme", "nuppát", [" - Dás lea nuppát olmmoš idjadan áiggi čađa.\n - Gussiid moalladuostu dustii nuppát geardde spáppa hui čábbát.\n - Dás lea nuppát olmmoš idjadan áiggi čađa.",
-                                " - Her har det gjennom tidene overnatta atskillige folk.\n - Bortelagets målvakt sto for atskillige pene redninger.\n - Her har det gjennom tidene overnatta atskillige folk.",
-                                " - Throughout the ages, several people have spent the night here.\n - The away team's goalkeeper made several nice saves.\n - Throughout the ages, several people have spent the night here."]) 
+# examples_img("sme", "nuppát", [" - Dás lea nuppát olmmoš idjadan áiggi čađa.\n - Gussiid moalladuostu dustii nuppát geardde spáppa hui čábbát.\n - Dás lea nuppát olmmoš idjadan áiggi čađa.",
+#                                " - Her har det gjennom tidene overnatta atskillige folk.\n - Bortelagets målvakt sto for atskillige pene redninger.\n - Her har det gjennom tidene overnatta atskillige folk.",
+#                                " - Throughout the ages, several people have spent the night here.\n - The away team's goalkeeper made several nice saves.\n - Throughout the ages, several people have spent the night here."]) 
