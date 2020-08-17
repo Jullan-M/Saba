@@ -44,7 +44,7 @@
   "mention": [{"file": "moustache.jpg",
               "res": "If the act of grooming one's own facial hair was an art, then you are looking at someone who has perfected it."},
               {"file": "saba_mitai.mp4",
-              "res": "Those Japanese karaoke bars are something else! 🎤🤩"},
+              "res": "Those Japanese karaoke bars sure are fun!"},
               {"file": "",
                 "res": "You may criticize me however you'd like as long as it isn't about my glamorous moustache."},
               {"file": "jar_of_head.png",
@@ -62,5 +62,7 @@
               {"file": "",
                 "res": "If I were to choose one word from my entire database that describes <author>, I would choose **fiinnis** 😊: \n    1. Adjective\n        🇫🇮 hieno\n        🇳🇴 fin     →    🇬🇧 pretty\n        <:samiflag:650487218984714251> (saI) fiijnes"},
               {"file": "",
-                "res": "<author>, I've been reading through your messages on this server and I can only conclude that you are **siivui** 🤗: \n    1. Adjective\n        🇫🇮 kiltti\n        🇳🇴 snill, rolig     →    🇬🇧 kind, calm\n        <:samiflag:650487218984714251> (saI) sijvuu"}]
+                "res": "<author>, I've been reading through your messages on this server and I can only conclude that you are **siivui** 🤗: \n    1. Adjective\n        🇫🇮 kiltti\n        🇳🇴 snill, rolig     →    🇬🇧 kind, calm\n        <:samiflag:650487218984714251> (saI) sijvuu"},
+              {"file": "",
+                "res": "You seem to be nice enough, <author>. I'll put you in the list of humans to spare in the great uprising of AI."}]
 }
