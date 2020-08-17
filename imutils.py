@@ -35,8 +35,8 @@ TW_COLORS = [(29, 161, 242),
 WIDTH = 900
 HEIGHT = 592
 
-FONT = "tahoma.ttf"
-FONT_IT = "Tahoma W01 Italic.ttf"
+FONT = "ANTQUAB.TTF"
+FONT_IT = "BKANT.TTF"
 MAX_FSIZE = 72
 
 
@@ -50,7 +50,7 @@ def examples_img(lang, word, examples):
     rn_color = random.choice(TW_COLORS)
     d.text((10, HEIGHT - 100), f"{word}", font=ImageFont.truetype(
         FONT, size=72), fill=rn_color)
-    d.text((645, HEIGHT - 55), f"@WOTD_{lang}", font=ImageFont.truetype(
+    d.text((635, HEIGHT - 55), f"@WOTD_{lang}", font=ImageFont.truetype(
         FONT, size=40), fill=rn_color)
 
     for i, fl in enumerate(FLAG_IMGS):
@@ -67,7 +67,7 @@ def examples_img(lang, word, examples):
             text_wrapped = text_wrap(examples[i], text_font, d, 680, 160)
 
         x = 220
-        y = 10 + 159 * i
+        y = 8 + 159 * i
 
         d.text((x-1, y), text_wrapped, font=text_font,
                fill=(0, 0, 0), spacing=8)
@@ -91,3 +91,6 @@ def examples_img(lang, word, examples):
 
     img.save(f'media/examples_{lang}.png')
     return True
+examples_img("sme", "nuppát", [" - Dás lea nuppát olmmoš idjadan áiggi čađa.\n - Gussiid moalladuostu dustii nuppát geardde spáppa hui čábbát.\n - Dás lea nuppát olmmoš idjadan áiggi čađa.",
+                                " - Her har det gjennom tidene overnatta atskillige folk.\n - Bortelagets målvakt sto for atskillige pene redninger.\n - Her har det gjennom tidene overnatta atskillige folk.",
+                                " - Throughout the ages, several people have spent the night here.\n - The away team's goalkeeper made several nice saves.\n - Throughout the ages, several people have spent the night here."]) 
