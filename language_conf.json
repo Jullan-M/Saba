@@ -1,6 +1,12 @@
 {
   "sme": {
-    "excl_lang": ["sma", "smj", "sms", "se", "nb", "fi", "nn", "lat", "swe"],
+    "wantedDicts": [
+      "termwiki",
+      "gtsmenob",
+      "gtsmefin",
+      "gtsmesmn",
+      "sammallahtismefin"
+    ],
     "wordclass": {
       "N": "Substantiiva",
       "V": "Vearba",
@@ -17,7 +23,7 @@
     "tags": ["#NorthernSámi", "#WOTD"]
   },
   "sma": {
-    "excl_lang": ["smn", "sma", "smj", "sms", "nb", "fi", "nn", "lat"],
+    "wantedDicts": ["gtsmanob"],
     "wordclass": {
       "N": "Substantijve",
       "V": "Verbe",
@@ -34,7 +40,7 @@
     "tags": ["#SouthernSámi", "#WOTD"]
   },
   "en": {
-    "excl_lang": ["nb", "fi", "nn", "lat"],
+    "wantedDicts": ["termwiki"],
     "wordclass": {
       "N": "Noun",
       "V": "Verb",
@@ -50,7 +56,7 @@
     }
   },
   "nob": {
-    "excl_lang": ["en", "fi", "nn", "lat"],
+    "wantedDicts": ["gtnobsme", "gtnobsma"],
     "wordclass": {
       "N": "Substantiv",
       "V": "Verb",
