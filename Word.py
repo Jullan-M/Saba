@@ -66,7 +66,6 @@ class Word:
         if exclDicts:
             for excl in exclDicts:
                 data["variables"]["wantedDicts"].remove(excl)
-        print(data["variables"]["wantedDicts"])
 
         response = requests.post(
             'https://satni.uit.no/newsatni/', headers=headers, data=json.dumps(data))
