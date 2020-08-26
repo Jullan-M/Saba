@@ -6,7 +6,7 @@ import json
 from twython import Twython, TwythonError
 from dotenv import load_dotenv
 from googletrans import Translator
-from wotd import word_of_the_day, WotdManager, FLAG, WORDCLASS, EXCL_LANG
+from wotd import word_of_the_day, WotdManager, FLAG, WORDCLASS
 from Word import Word
 from utilities import waittime_between
 from imutils import examples_img
@@ -23,9 +23,6 @@ class WotdManagerTwitter(WotdManager):
         with open("language_conf.json", "r", encoding="utf-8") as f:
             lang_conf = json.load(f)[self.lang]
         self.tags = lang_conf["tags"]
-
-        self.excl_lang.append("smn")
-        self.excl_lang.append("swe")
 
         with open(f"{path}app_credentials.json", "r") as f:
             app_creds = json.load(f)[self.lang]
@@ -70,7 +67,7 @@ class WotdManagerTwitter(WotdManager):
         for m in word.meanings:
             trs_text = ""
             for tr in m.trs:
-                if tr.lang in self.excl_lang or (lastword == str(tr) and lastdesc == tr.desc):
+                if (lastword == str(tr) and lastdesc == tr.desc):
                     continue
                 lastword = str(tr)
                 lastdesc = tr.desc

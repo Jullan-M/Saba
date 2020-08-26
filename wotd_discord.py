@@ -85,7 +85,7 @@ class WotdManagerDiscord(WotdManager):
         for m in word.meanings:
             trs_text = ""
             for tr in m.trs:
-                if tr.lang in self.excl_lang or (lastword == str(tr) and lastdesc == tr.desc):
+                if (lastword == str(tr) and lastdesc == tr.desc):
                     continue
                 lastword = str(tr)
                 lastdesc = tr.desc

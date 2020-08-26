@@ -1,7 +1,7 @@
 import random
 import json
 from Word import Translation, Meaning, Word
-from utilities import UTF8_CHR, search
+from utilities import search
 
 
 FLAG = {'nb': '🇳🇴',
@@ -32,14 +32,11 @@ WORDCLASS = {'N': 'Substantiiva',
              'Pcle': 'Pcle',
              'mwe': 'Mwe'}
 
-EXCL_LANG = ['smn', 'sma', 'smj', 'sms', 'se', 'nb', 'fi', 'nn', 'lat', 'swe']
-
 
 def save_dict_words(d, abc):
     # Iterates through every letter of the sami alphabet
     # and finds every word in a given dictionary.
     # The words are saved to a txt file, separated by \n.
-    # abc = (list('abcdefghijklmnoprstuvz') +[UTF8_CHR[l] for l in UTF8_CHR])[:-2]
 
     words = []
     for l in abc:
@@ -153,7 +150,6 @@ class WotdManager:
         self.dict = d
         with open("language_conf.json", "r") as f:
             lang_conf = json.load(f)[self.lang]
-        self.excl_lang = lang_conf["excl_lang"]
         self.wordclass = lang_conf["wordclass"]
         self.path = path
 
@@ -165,18 +161,3 @@ class WotdManager:
 
     def wotd_message(self, word):
         return ""
-
-
-'''
-print(random_word("smenob"))
-
-word = Word('cakŋa', 'sme')
-print(word)
-
-for m in word.meanings:
-    if (m.dict == 'smenob'):
-        print(f"{word} ({m.pos}) = {m.trs[0]}")
-        for ex in m.trs[0].examples:
-            print(ex[0])
-            print(ex[1])
-            print()'''

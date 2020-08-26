@@ -1,12 +1,6 @@
 {
   "sme": {
-    "wantedDicts": [
-      "termwiki",
-      "gtsmenob",
-      "gtsmefin",
-      "gtsmesmn",
-      "sammallahtismefin"
-    ],
+    "wantedDicts": ["termwiki", "gtsmenob", "gtsmefin", "gtsmesmn"],
     "wordclass": {
       "N": "Substantiiva",
       "V": "Vearba",

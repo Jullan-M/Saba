@@ -1,5 +1,7 @@
 # Used for parsing word articles from UiT Divvun database
-from utilities import get_w_article, get_p_article, get_e_article
+import json
+import requests
+from utilities import get_p_article, get_e_article
 
 DICTNAMES = {"sme": "sanit",
              "sma": "baakoeh",
@@ -11,41 +13,24 @@ PREF_DEST = {"sme": "nob",
              "sms": "nob",
              "smn": "sme"}
 
+with open('language_conf.json', 'r') as f:
+    lang_conf = json.load(f)
 
 class Translation:
     def __init__(self, translation):
         self.tword = self.find_twords(translation)
-        self.pos = self.find_pos(translation)
-        self.lang = translation['xml:lang']
-        self.desc = f"({translation['re']})" if 're' in translation else ''
-        self.examples = self.find_examples(translation)
+        self.pos = translation["translationLemmas"]["edges"][0]["node"]["pos"]
+        self.lang = translation["translationLemmas"]["edges"][0]["node"]["language"]
+        self.desc = f'({translation["restriction"]["restriction"]})' if translation["restriction"] else ''
+        self.examples = [[ex["example"], ex["translation"]] for ex in translation["exampleGroups"]] if (translation["exampleGroups"]) else []
 
     def find_twords(self, translation):
         tword = ""
-        if isinstance(translation['t'], list):
-            for w in translation['t'][:-1]:
-                tword += f"{w['#text']}, "
-            tword += translation['t'][-1]['#text']
-        else:
-            tword = translation['t']['#text']
+        if translation["translationLemmas"]["edges"]:
+            for w in translation["translationLemmas"]["edges"][:-1]:
+                tword += f'{w["node"]["lemma"]}, '
+            tword += translation["translationLemmas"]["edges"][-1]["node"]["lemma"]
         return tword
-
-    def find_examples(self, translation):
-        if not ('xg' in translation):
-            return []
-
-        if isinstance(translation['xg'], list):
-            return [[ex['x'], ex['xt']] for ex in translation['xg']]
-        else:
-            return [[translation['xg']['x'], translation['xg']
-                     ['xt']]]
-
-    def find_pos(self, translation):
-        if isinstance(translation['t'], list):
-            return translation['t'][0]['pos']
-        elif ('pos' in translation['t']):
-            return translation['t']['pos']
-        return ''
 
     def __str__(self):
         return self.tword
@@ -53,24 +38,36 @@ class Translation:
 
 class Meaning:
     def __init__(self, meaning):
-        self.pos = meaning['pos']
-        self.dict = meaning['dict']
+        self.pos = meaning["lookupLemmas"]["edges"][0]["node"]["pos"]
+        self.dict = meaning["srcLang"] + meaning["targetLang"]
         self.trs = self.find_translations(meaning)
 
     def find_translations(self, meaning):
-        trs = meaning['tg']
-        translations = [Translation(tr) for tr in trs] if isinstance(
-            trs, list) else [Translation(trs)]
+        trs = meaning["translationGroups"]
+        translations = [Translation(tr) for tr in trs] # if isinstance(trs, list) else [Translation(trs)]
         return translations
-
-
-def isValidLanguage(lang, d):
-    return d[:3] == lang or (lang == 'sme' and d == 'termwiki')
-
 
 class Word:
     def __init__(self, word, lang):
-        w_article = get_w_article(word)
+        headers = {
+            'Content-Type': 'application/json',
+        }
+
+        data = {
+            "operationName": "AllArticles",
+            "variables": {
+                "lemma": word,
+                "wantedLangs": ["sme","smj","smn","sms","fin","nob","swe","lat","eng","nno","sma"],
+                "wantedDicts": lang_conf[lang]["wantedDicts"]
+            },
+            "query": "query AllArticles($lemma: String!, $wantedLangs: [String]!, $wantedDicts: [String]!) {\n dictEntryList(exact: $lemma, wanted: $wantedLangs, wantedDicts: $wantedDicts) {\n dictName\n srcLang\n targetLang\n lookupLemmas {\n edges {\n node {\n lemma\n language\n pos\n __typename\n }\n __typename\n }\n __typename\n }\n translationGroups {\n translationLemmas {\n edges {\n node {\n lemma\n language\n pos\n __typename\n }\n __typename\n }\n __typename\n }\n restriction {\n restriction\n attributes\n __typename\n }\n exampleGroups {\n example\n translation\n __typename\n }\n __typename\n }\n __typename\n }\n conceptList(exact: $lemma, wanted: $wantedLangs) {\n name\n collections\n definition\n explanation\n terms {\n note\n source\n status\n expression {\n lemma\n language\n pos\n __typename\n }\n __typename\n }\n __typename\n }\n}\n"
+        }
+        
+        response = requests.post(
+            'https://satni.uit.no/newsatni/', headers=headers, data=json.dumps(data))
+
+        w_article = response.json()["data"]["dictEntryList"]
+        
         self.word = word
         self.lang = lang
         self.meanings = self.find_meanings(w_article)
@@ -78,8 +75,7 @@ class Word:
     def find_meanings(self, w_article):
         meanings = []
         for el in w_article:
-            if isValidLanguage(self.lang, el['dict']):
-                meanings.append(Meaning(el))
+            meanings.append(Meaning(el))
         return meanings
 
     def __str__(self):
@@ -114,5 +110,3 @@ class Inflection:
             if entry not in inflections:
                 inflections.append(entry)
         return inflections
-
-
