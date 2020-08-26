@@ -48,7 +48,7 @@ class Meaning:
         return translations
 
 class Word:
-    def __init__(self, word, lang):
+    def __init__(self, word, lang, exclDicts=[]):
         headers = {
             'Content-Type': 'application/json',
         }
@@ -63,6 +63,11 @@ class Word:
             "query": "query AllArticles($lemma: String!, $wantedLangs: [String]!, $wantedDicts: [String]!) {\n dictEntryList(exact: $lemma, wanted: $wantedLangs, wantedDicts: $wantedDicts) {\n dictName\n srcLang\n targetLang\n lookupLemmas {\n edges {\n node {\n lemma\n language\n pos\n __typename\n }\n __typename\n }\n __typename\n }\n translationGroups {\n translationLemmas {\n edges {\n node {\n lemma\n language\n pos\n __typename\n }\n __typename\n }\n __typename\n }\n restriction {\n restriction\n attributes\n __typename\n }\n exampleGroups {\n example\n translation\n __typename\n }\n __typename\n }\n __typename\n }\n conceptList(exact: $lemma, wanted: $wantedLangs) {\n name\n collections\n definition\n explanation\n terms {\n note\n source\n status\n expression {\n lemma\n language\n pos\n __typename\n }\n __typename\n }\n __typename\n }\n}\n"
         }
         
+        if exclDicts:
+            for excl in exclDicts:
+                data["variables"]["wantedDicts"].remove(excl)
+        print(data["variables"]["wantedDicts"])
+
         response = requests.post(
             'https://satni.uit.no/newsatni/', headers=headers, data=json.dumps(data))
 

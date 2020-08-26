@@ -119,7 +119,7 @@ def check_special_wotd(date, lang):
     return {}
 
 
-def word_of_the_day(d, path):
+def word_of_the_day(d, path, exclDicts=[]):
     # Returns a Word object of WOTD found in a given dictionary.
     # If the word is in blacklist or the word doesn't exist in dictionary,
     # it will attempt to find a new word, and blacklist the word.
@@ -130,12 +130,7 @@ def word_of_the_day(d, path):
     while word in bl:
         word = next_wotd(d, path)
 
-    try:
-        wotd = Word(word, d[:3])
-    except TypeError:
-        print(f"No article was found for the word: {word}.")
-        blacklist(d, word)
-        return word_of_the_day(d, path)
+    wotd = Word(word, d[:3], exclDicts=exclDicts)
 
     if not wotd.meanings:
         print(f"No meanings were found for the word: {word}.")

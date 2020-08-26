@@ -230,11 +230,12 @@ async def word(ctx, lang: str, word: str):
         await ctx.send(f"<@{ctx.author.id}>, `{lang}` is not a supported language for word search. Currently, the following languages are supported:\n{supported}")
         return
 
-    try:
-        w = Word(word, lang)
-    except TypeError:
+    w = Word(word, lang)
+    
+    if not w.meanings:
         await ctx.send(f"<@{ctx.author.id}>, no article was found for `{word}` in the language `{lang}`. Are you sure that the word is spelled right (in the base form)?")
         return
+
     main = ""
     i = 0
     if lang == 'sme':
