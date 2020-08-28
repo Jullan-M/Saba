@@ -143,7 +143,7 @@ class WotdManager:
     def __init__(self, d, path):
         self.lang = d[:3]
         self.dict = d
-        with open("language_conf.json", "r") as f:
+        with open("language_conf.json", "r", encoding="utf-8") as f:
             lang_conf = json.load(f)[self.lang]
         self.wordclass = lang_conf["wordclass"]
         self.path = path
