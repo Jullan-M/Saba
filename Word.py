@@ -13,7 +13,7 @@ PREF_DEST = {"sme": "nob",
              "sms": "nob",
              "smn": "sme"}
 
-with open('language_conf.json', 'r') as f:
+with open('language_conf.json', 'r', encoding="utf-8") as f:
     lang_conf = json.load(f)
 
 class Translation:
