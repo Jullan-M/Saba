@@ -128,7 +128,7 @@ def run_twitter_bot(wotd_manager):
     while True:
         print("Generating WOTDs...")
         for w in wotd_manager:
-            word = word_of_the_day(w.dict, w.path)
+            word = word_of_the_day(w.dict, w.path, exclDicts=["gtsmesmn"])
             print(f"{w.lang}-WOTD: {word}")
             w.wotd, w.incExample = w.wotd_message(word)
 
