@@ -1,6 +1,7 @@
 from os import path
 from PIL import Image
 from discord import File
+from textgenrnn import textgenrnn
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 import asyncio
 import numpy as np
@@ -28,7 +29,7 @@ async def reindeer_wc(text):
 
     # generate word cloud
     wc.generate(text)
-
+    
     wc.recolor(color_func=im_colors)
 
     # store to file
@@ -36,3 +37,9 @@ async def reindeer_wc(text):
 
     wc_file = File(path.join(d, "final_wc.png"), "wordcloud.png")
     return wc_file
+
+async def imitation(text):
+    rnn = textgenrnn()
+    rnn.train_on_texts([text], num_epochs=3, max_gen_length=300)
+    imits = rnn.generate(n=3, return_as_list=True, max_gen_length=300)
+    return imits

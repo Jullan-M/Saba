@@ -262,6 +262,7 @@ async def satni(ctx, term: str):
 async def baakoe(ctx, term: str):
     await word(ctx, 'sma', term)
 
+
 @bot.command(name='ord', help="An alias for ]word nob <word> (look-up in Norwegian (bokmål) - Sami dictionaries).")
 async def ords(ctx, term: str):
     await word(ctx, 'nob', term)
@@ -300,6 +301,7 @@ async def bahko(ctx, word: str):
             await ctx.send(intro + main)
     else:
         await ctx.send(f"<@{ctx.author.id}>, no dictonary entries were found.")
+
 
 async def sample_messages(ctx, source: typing.Union[discord.TextChannel, discord.Member, int], location: typing.Union[discord.TextChannel, int]):
     ignore_words = ["]paradigm", "]sátni", "]baakoe", "]báhko",
@@ -372,8 +374,8 @@ async def sample_messages(ctx, source: typing.Union[discord.TextChannel, discord
             return ""
     elif type(source) == discord.Member:
         for channel in server.text_channels:
-                await start.edit(content=f"Sampling {source}'s messages in {server.name} discord server...")
-                await fetch_messages(user_messages, channel)
+            await start.edit(content=f"Sampling {source}'s messages in {server.name} discord server...")
+            await fetch_messages(user_messages, channel)
     elif type(source) == int:
         for channel in server.text_channels:
             await start.edit(content=f"Sampling all messages of {server.name} discord server...")
@@ -384,6 +386,7 @@ async def sample_messages(ctx, source: typing.Union[discord.TextChannel, discord
     await start.delete()
     sample = re.sub('<[^>]+>', '', sample)
     return sample
+
 
 @bot.command(name='wordcloud', help="Generates a word cloud for a given user or channel in the server. <source>: user/channel (everyone and every channel if not specified), <location>: channel (every channel if not specified)")
 async def wordcloud(ctx, source: typing.Union[discord.TextChannel, discord.Member, int] = 0, location: typing.Union[discord.TextChannel, int] = 0):
@@ -403,8 +406,14 @@ async def wordcloud(ctx, source: typing.Union[discord.TextChannel, discord.Membe
     else:
         return
 
+
 @bot.command(name='imitate', help="Imitates a user/channel with machine learning. <source>: user/channel (everyone and every channel if not specified), <location>: channel (every channel if not specified)")
 async def imitate(ctx, source: typing.Union[discord.TextChannel, discord.Member, int] = 0, location: typing.Union[discord.TextChannel, int] = 0):
+    # Deprecated function. Does not work without GPU.
+    await ctx.send(f"{ctx.author.mention}, this function is unavailabe right now – no GPU was found on the host machine.")
+    return
+
+    '''
     sample = await sample_messages(ctx, source, location)
     if sample:
         train = await ctx.send("Training neural networks with samples...")
@@ -422,6 +431,8 @@ async def imitate(ctx, source: typing.Union[discord.TextChannel, discord.Member,
         await ctx.send(context + "\n\n> ".join(imits))
     else:
         return
+    '''
+
 
 @bot.event
 async def on_message(msg):
@@ -454,19 +465,17 @@ async def on_message(msg):
                     diff == 0):
                 await msg.channel.send(random.choice(botres["canned"][call]["res"]))
                 return
-    
+
     if (("Saba" in msg.content) or (msg.guild.get_member(bot.user.id) in msg.mentions)) and (now - last_mention).total_seconds() > 7200:
         last_mention = datetime.datetime.now()
         response = random.choice(botres["mention"])
         if response["file"]:
             file = discord.File(f"media/{response['file']}")
-            await msg.channel.send(response["res"].replace("<author>", msg.author.mention) ,file=file)
+            await msg.channel.send(response["res"].replace("<author>", msg.author.mention), file=file)
         else:
             await msg.channel.send(response["res"].replace("<author>", msg.author.mention))
         return
 
-            
-                
 
 @tasks.loop(hours=24)
 async def called_once_a_day():
