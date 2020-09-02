@@ -21,7 +21,7 @@ async def reindeer_wc(text):
         for w in f.read().split('\n'):
             stopwords.add(w)
 
-    wc = WordCloud(background_color="black", max_words=3000, mask=reindeer_mask,
+    wc = WordCloud(background_color=None, mode="RGBA", max_words=3000, mask=reindeer_mask,
                    stopwords=stopwords, collocations=False)
 
     # create coloring from image
