@@ -46,8 +46,8 @@ def underscore_word(string, word):
 class WotdManagerDiscord(WotdManager):
     def __init__(self, d, path='discord_server/'):
         super().__init__(d, path)
-        cha = os.getenv(f'{self.lang}_CHANNEL_ID')
-        rol = os.getenv(f'{self.lang}_ROLE_ID')
+        cha = os.getenv(f'{self.lang.upper()}_CHANNEL_ID')
+        rol = os.getenv(f'{self.lang.upper()}_ROLE_ID')
         self.cha_id = int(cha) if cha else 0
         self.role_id = int(rol) if rol else 0
 
