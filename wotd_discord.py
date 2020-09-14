@@ -231,7 +231,7 @@ async def word(ctx, lang: str, word: str):
         return
 
     w = Word(word, lang)
-    
+
     if not w.meanings:
         await ctx.send(f"<@{ctx.author.id}>, no article was found for `{word}` in the language `{lang}`. Are you sure that the word is spelled right (in the base form)?")
         return
@@ -435,6 +435,25 @@ async def imitate(ctx, source: typing.Union[discord.TextChannel, discord.Member,
     '''
 
 
+@bot.command(name='force_wotd', help="Dev command")
+async def force_wotd(ctx, lang):
+    if int(ctx.author.id) != 252228069434195968:
+        return
+    lang_val = {"sme": 0, "sma": 1}
+    if not lang in lang_val:
+        return
+
+    i = lang_val[lang]
+    wotd = ""
+    word = wotd_m[i].get_wotd()
+    print(f"FORCED {wotd_m[i].lang}-wotd: {word}", end="\t")
+    wotd = wotd_m[i].wotd_message(word)
+
+    message_channel = bot.get_channel(wotd_m[i].cha_id)
+    await message_channel.send(wotd)
+    print(f"Sent to {message_channel}!")
+
+
 @bot.event
 async def on_message(msg):
     global last_mention
@@ -498,11 +517,11 @@ async def called_once_a_day():
             print(f"{m.lang}-wotd: {word}", end="\t")
             wotd = m.wotd_message(word)
 
+        message_channel = bot.get_channel(m.cha_id)
         if pic:
             pass
             print(f"Sent to {message_channel} with pic!")
         else:
-            message_channel = bot.get_channel(m.cha_id)
             await message_channel.send(wotd)
             print(f"Sent to {message_channel}!")
     print("Sleeping for 24h\n")
