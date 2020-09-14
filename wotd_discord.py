@@ -46,8 +46,8 @@ def underscore_word(string, word):
 class WotdManagerDiscord(WotdManager):
     def __init__(self, d, path='discord_server/'):
         super().__init__(d, path)
-        cha = os.getenv(f'{self.lang}_CHANNEL_ID')
-        rol = os.getenv(f'{self.lang}_ROLE_ID')
+        cha = os.getenv(f'{self.lang.upper()}_CHANNEL_ID')
+        rol = os.getenv(f'{self.lang.upper()}_ROLE_ID')
         self.cha_id = int(cha) if cha else 0
         self.role_id = int(rol) if rol else 0
 
@@ -486,7 +486,7 @@ async def on_message(msg):
                 await msg.channel.send(random.choice(botres["canned"][call]["res"]))
                 return
 
-    if (("Saba" in msg.content) or (msg.guild.get_member(bot.user.id) in msg.mentions)) and (now - last_mention).total_seconds() > 7200:
+    if (("Saba" in msg.content) or (msg.guild.get_member(bot.user.id) in msg.mentions)) and (now - last_mention).total_seconds() > 14400:
         last_mention = datetime.datetime.now()
         response = random.choice(botres["mention"])
         if response["file"]:

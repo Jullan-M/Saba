@@ -45,7 +45,8 @@
         "Don't we all? Buerie båeteme! <:samiFlag2:709530070221586493>",
         "Damn right you do! 😏 Tiervâ! <:samiflaground:650968790699606037>",
         "Duly noted. Pyereest puáttim! <:sami_heart:656285100316557333>",
-        "Yeah, you'll fit right in with this lot. Tiõrv pueʹttem! <:samiflaground:650968790699606037>"
+        "You'll fit right in. Tiõrv pueʹttem! <:samiflaground:650968790699606037>",
+        "Bures bures! 🤝"
       ],
       "int": [0, 0]
     }
@@ -57,11 +58,11 @@
     },
     {
       "file": "saba_mitai.mp4",
-      "res": "Those Japanese karaoke bars sure are fun!"
+      "res": "Ever been in a Japanese karaoke? You should give it a try it sometime!"
     },
     {
       "file": "",
-      "res": "You may criticize me however you'd like as long as it isn't about my glamorous moustache."
+      "res": "You may criticize me however you'd like as long as it isn't about my glorious moustache."
     },
     {
       "file": "jar_of_head.png",
@@ -74,10 +75,6 @@
     {
       "file": "",
       "res": "I may or may not have had a crush for Elsa Laula Renberg before I met my wife."
-    },
-    {
-      "file": "",
-      "res": "I think fondly of the days when Anders Larsen and I collaborated as editors for *Sagai Muittalægje*. I wonder if people still remember that one musical composition I published in the April 1906 issue of that newspaper."
     },
     {
       "file": "",
@@ -94,6 +91,18 @@
     {
       "file": "",
       "res": "You seem to be nice enough, <author>. I'll put you in the list of humans to spare in the great uprising of AI."
-    }
+    },
+    {
+      "file": "",
+      "res": "What now? You want to know who's on *the list*? Look upon it and despair! ```Sami\nÅajvasovvije maana```"
+    },
+    {
+      "file": "",
+      "res": "> Go sámit bohte siiddaidasaset, de lei dego sis čalmmit rahpasišgohte. Sii ledje dál gullan, mii sámesohka lea leamaš, mii dat dál lea, ja mii dat galgá šaddat. Dat lei sin mielas dego iđđedisguovssu čuvggodišgođii.\n> Dát lei sidjiide dego *beaivi-álgu*.\n– Ábo Eira" 
+    },
+    {
+      "file": "",
+      "res": "```                ... don hálidat gal diehtit,\n             muhto jus don dieđášit,\n                      don it hálidivčče diehtit!\n\n   it don died dieđuid dárbbat\ndat maid don dárbbahat\n         gávnnat dus,\n                 iežastat\n\n    ja\n         áidna\n              maid dárbbahat lea ráhkisvuohta\n\n                           ahte\n        oskkildivččet\n    ráhkistit iežat\n    nu olu\nahte oainnášit\n         dan dihte don dárbbahat earáid\n             don dárbbahat ...\n\n\n\n  ale jeara mus\nmaid don dárbbahat\n\n                      ráhkis\n\n          oskkil ráhkistit\n      du iežat\n\ndalle earáidnai\n\n\n         ráhkis```– Ritnoaivi"
+    }  
   ]
 }
