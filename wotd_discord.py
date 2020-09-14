@@ -143,6 +143,7 @@ with open("discord_server/bot_responses.json", "r", encoding="utf-8") as f:
     botres = json.load(f)
 
 last_mention = datetime.datetime.now()
+last_response = ""
 
 
 async def correct_channel(ctx):
@@ -457,6 +458,7 @@ async def force_wotd(ctx, lang):
 @bot.event
 async def on_message(msg):
     global last_mention
+    global last_response
     await bot.process_commands(msg)
 
     if not msg.content:
@@ -487,8 +489,13 @@ async def on_message(msg):
                 return
 
     if (("Saba" in msg.content) or (msg.guild.get_member(bot.user.id) in msg.mentions)) and (now - last_mention).total_seconds() > 14400:
-        last_mention = datetime.datetime.now()
+        
         response = random.choice(botres["mention"])
+        while response["res"] == last_response:
+            response = random.choice(botres["mention"])
+        
+        last_mention = datetime.datetime.now()
+        last_response = response["res"]
         if response["file"]:
             file = discord.File(f"media/{response['file']}")
             await msg.channel.send(response["res"].replace("<author>", msg.author.mention), file=file)
