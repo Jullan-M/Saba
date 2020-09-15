@@ -85,21 +85,23 @@ def test_words(d):
                 print()
 
 
-def next_wotd(d, path):
+def next_wotd(d, path, exclDicts=[]):
     # Read WOTD from randomized word file, removes WOTD from file.
     try:
         with open(f"{path}{d}_words.txt", "r", encoding="utf-8") as f:
             head, tail = f.read().split('\n', 1)
+        wotd = Word(head, d[:3], exclDicts=exclDicts)
         with open(f"{path}{d}_words.txt", "w", encoding="utf-8") as f:
             f.write(tail)
-        return head
+        return head, wotd
     except ValueError:
         with open(f"{path}{d}_words.txt", "r", encoding="utf-8") as f:
             word = f.read().split('\n')[0]
-        with open(f"{path}{d}_words.txt", "w", encoding="utf-8") as f:
-            f.write('')
         if word:
-            return word
+            wotd = Word(word, d[:3], exclDicts=exclDicts)
+            with open(f"{path}{d}_words.txt", "w", encoding="utf-8") as f:
+                f.write('')
+            return word, wotd
         raise Exception(f"{path}{d}_words.txt is empty!")
 
 
@@ -123,14 +125,12 @@ def word_of_the_day(d, path, exclDicts=[]):
     # Returns a Word object of WOTD found in a given dictionary.
     # If the word is in blacklist or the word doesn't exist in dictionary,
     # it will attempt to find a new word, and blacklist the word.
-    word = next_wotd(d, path)
+    word, wotd = next_wotd(d, path, exclDicts=exclDicts)
     with open(f"{d}_blacklist.txt", "r", encoding="utf-8") as f:
         bl = f.read().split('\n')
 
     while word in bl:
-        word = next_wotd(d, path)
-
-    wotd = Word(word, d[:3], exclDicts=exclDicts)
+        word, wotd = next_wotd(d, path)
 
     if not wotd.meanings:
         print(f"No meanings were found for the word: {word}.")

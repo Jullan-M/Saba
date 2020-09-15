@@ -1,5 +1,15 @@
 {
   "canned": {
+    "good morning": {
+      "res": [
+        "Ipmel atti! 😊<:beaivvi:675788626919161857>",
+        "Iđit! ☕",
+        "Morá! <:gaffeblob:675788626411651094>",
+        "Buerie aerede! 🍵",
+        "Pyeri iiđeed! <:deadjablob:675788627111837716>"
+      ],
+      "int": [6, 11]
+    },
     "buorre iđit": {
       "res": [
         "Ipmel atti! 😊<:beaivvi:675788626919161857>",
@@ -7,7 +17,8 @@
         "Morá! <:gaffeblob:675788626411651094>",
         "Buerie aerede! 🍵",
         "Pyeri iiđeed! <:deadjablob:675788627111837716>",
-        "Ipmel atti! Miison otne galgá leat iđitborramuššan? 😋🍴🥞"
+        "Ipmel atti! Miison otne galgá leat iđitborramuššan? 😋🍴🥞",
+        "Ipmel atti! Dál juo leat lihkan? 🥱"
       ],
       "int": [6, 11]
     },
@@ -94,7 +105,7 @@
     },
     {
       "file": "",
-      "res": "What now? You want to know who's on *the list*? Look upon it and despair! ```Sami\nÅajvasovvije maana```"
+      "res": "What now? You want to know who's on *the list*? Look upon it and despair! ```\nSami\nÅajvasovvije maana```"
     },
     {
       "file": "",
