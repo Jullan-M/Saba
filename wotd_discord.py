@@ -221,55 +221,6 @@ async def paradigm(ctx, lang: str, word: str, pos=""):
         await ctx.send(f"<@{ctx.author.id}>, I couldn't find any paradigm for `{word}`{end}")
 
 
-@bot.command(name='word', help="Finds all possible translations for the given word and provides examples (if any).")
-async def word(ctx, lang: str, word: str):
-    if not await correct_channel(ctx):
-        return
-
-    if not (lang in ['sme', 'sma', 'nob']):
-        supported = "```sme\tNorthern Saami\nsma\tSouthern Saami\nnob\tNorwegian (bokmål)```"
-        await ctx.send(f"<@{ctx.author.id}>, `{lang}` is not a supported language for word search. Currently, the following languages are supported:\n{supported}")
-        return
-
-    w = Word(word, lang)
-
-    if not w.meanings:
-        await ctx.send(f"<@{ctx.author.id}>, no article was found for `{word}` in the language `{lang}`. Are you sure that the word is spelled right (in the base form)?")
-        return
-
-    main = ""
-    i = 0
-    if lang == 'sme':
-        main, i = wotd_m[0].get_translation(w, en_wc)
-    elif lang == 'sma':
-        main, i = wotd_m[1].get_translation(w, en_wc)
-    elif lang == 'nob':
-        main, i = wotd_nob.get_translation(w, en_wc)
-    intro = f"{ctx.author.mention}, **{word}** has {i} "
-    intro = intro + "meanings:\n" if i > 1 else intro + "meaning:\n"
-    try:
-        await ctx.send(intro + main)
-    except Exception as err:
-        err_msg = await ctx.send(f"I encountered the following error:\n{err}")
-        await asyncio.sleep(60)
-        await err_msg.delete()
-
-
-@bot.command(name='sátni', help="An alias for ]word sme <word> (look-up in Northern Sami dictionaries).")
-async def satni(ctx, term: str):
-    await word(ctx, 'sme', term)
-
-
-@bot.command(name='baakoe', help="An alias for ]word sma <word> (look-up in Southern Sami dictionaries).")
-async def baakoe(ctx, term: str):
-    await word(ctx, 'sma', term)
-
-
-@bot.command(name='ord', help="An alias for ]word nob <word> (look-up in Norwegian (bokmål) - Sami dictionaries).")
-async def ords(ctx, term: str):
-    await word(ctx, 'nob', term)
-
-
 @bot.command(name='báhko', help="Lule-Sami to Norwegian dictionary look-up.")
 async def bahko(ctx, word: str):
     if not await correct_channel(ctx):
@@ -303,6 +254,58 @@ async def bahko(ctx, word: str):
             await ctx.send(intro + main)
     else:
         await ctx.send(f"<@{ctx.author.id}>, no dictonary entries were found.")
+
+
+@bot.command(name='word', help="Finds all possible translations for the given word and provides examples (if any).")
+async def word(ctx, lang: str, word: str):
+    if not await correct_channel(ctx):
+        return
+
+    if not (lang in ['sme', 'sma', 'nob']):
+        supported = "```sme\tNorthern Saami\nsma\tSouthern Saami\nnob\tNorwegian (bokmål)```"
+        await ctx.send(f"<@{ctx.author.id}>, `{lang}` is not a supported language for word search. Currently, the following languages are supported:\n{supported}")
+        return
+
+    w = Word(word, lang)
+
+    if not w.meanings:
+        await ctx.send(f"<@{ctx.author.id}>, no article was found for `{word}` in the language `{lang}`. Are you sure that the word is spelled right (in the base form)?")
+        return
+
+    main = ""
+    i = 0
+    if lang == 'sme':
+        main, i = wotd_m[0].get_translation(w, en_wc)
+    elif lang == 'sma':
+        main, i = wotd_m[1].get_translation(w, en_wc)
+    elif lang == 'nob':
+        main, i = wotd_nob.get_translation(w, en_wc)
+    elif lang == 'smj':
+        return await bahko(ctx, word)
+
+    intro = f"{ctx.author.mention}, **{word}** (`{lang}`) has {i} "
+    intro = intro + "meanings:\n" if i > 1 else intro + "meaning:\n"
+    try:
+        await ctx.send(intro + main)
+    except Exception as err:
+        err_msg = await ctx.send(f"I encountered the following error:\n{err}")
+        await asyncio.sleep(60)
+        await err_msg.delete()
+
+
+@bot.command(name='sátni', help="An alias for ]word sme <word> (look-up in Northern Sami dictionaries).")
+async def satni(ctx, term: str):
+    await word(ctx, 'sme', term)
+
+
+@bot.command(name='baakoe', help="An alias for ]word sma <word> (look-up in Southern Sami dictionaries).")
+async def baakoe(ctx, term: str):
+    await word(ctx, 'sma', term)
+
+
+@bot.command(name='ord', help="An alias for ]word nob <word> (look-up in Norwegian (bokmål) - Sami dictionaries).")
+async def ords(ctx, term: str):
+    await word(ctx, 'nob', term)
 
 
 async def sample_messages(ctx, source: typing.Union[discord.TextChannel, discord.Member, int], location: typing.Union[discord.TextChannel, int]):
@@ -489,11 +492,11 @@ async def on_message(msg):
                 return
 
     if (("Saba" in msg.content) or (msg.guild.get_member(bot.user.id) in msg.mentions)) and (now - last_mention).total_seconds() > 14400:
-        
+
         response = random.choice(botres["mention"])
         while response["res"] == last_response:
             response = random.choice(botres["mention"])
-        
+
         last_mention = datetime.datetime.now()
         last_response = response["res"]
         if response["file"]:
