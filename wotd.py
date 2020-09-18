@@ -1,7 +1,6 @@
 import random
 import json
 from Word import Translation, Meaning, Word
-from utilities import search
 
 
 FLAG = {'nb': '🇳🇴',
@@ -41,7 +40,7 @@ def save_dict_words(d, abc):
     words = []
     for l in abc:
         print(l)
-        res = search(l)
+        res = 0 # search(l) TODO: FIND ALTERNATIVE WAY TO SEARCH DATABASE
         if res == None:
             continue
         lastword = ''
