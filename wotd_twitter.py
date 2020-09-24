@@ -131,6 +131,9 @@ def run_twitter_bot(wotd_manager):
             word = word_of_the_day(w.dict, w.path, exclDicts=["gtsmesmn"])
             print(f"{w.lang}-WOTD: {word}")
             w.wotd, w.incExample = w.wotd_message(word)
+            while len(w.wotd) > 280: # Do not exceed Twitter max character length
+                w.wotd = w.wotd[:(w.wotd.rfind('\n'))]
+
 
         now = datetime.datetime.now()
         print(f"Finished generating WOTDs at {now}")
