@@ -1,0 +1,9 @@
+discord.py
+tensorflow
+Pillow
+googletrans
+requests
+twython
+python-dotenv
+wordcloud
+textgenrnn
