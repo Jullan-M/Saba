@@ -79,7 +79,7 @@ class WotdManagerTwitter(WotdManager):
                             str(tr).split(", "), src='no', dest='en')])
                     else:
                         # Add "å" prefix to verbs in order to enhance translation
-                        tr_en = ", ".join([w.text[3:] for w in trns.translate(
+                        tr_en = ", ".join([w.text.replace("to ", "") for w in trns.translate(
                             ["å " + v for v in str(tr).split(", ")], src='no', dest='en')])
                     desc_en = trns.translate(
                         tr.desc, src='no', dest='en').text if tr.desc else ''

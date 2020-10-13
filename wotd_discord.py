@@ -97,7 +97,7 @@ class WotdManagerDiscord(WotdManager):
                             str(tr).split(", "), src='no', dest='en')])
                     else:
                         # Add "å" prefix to verbs in order to enhance translation
-                        tr_en = ", ".join([w.text[3:] for w in trns.translate(
+                        tr_en = ", ".join([w.text.replace("to ", "") for w in trns.translate(
                             ["å " + v for v in str(tr).split(", ")], src='no', dest='en')])
                     desc_en = trns.translate(
                         tr.desc, src='no', dest='en').text if tr.desc else ''
@@ -414,11 +414,11 @@ async def wordcloud(ctx, source: typing.Union[discord.TextChannel, discord.Membe
 
 @bot.command(name='imitate', help="Imitates a user/channel with machine learning. <source>: user/channel (everyone and every channel if not specified), <location>: channel (every channel if not specified)")
 async def imitate(ctx, source: typing.Union[discord.TextChannel, discord.Member, int] = 0, location: typing.Union[discord.TextChannel, int] = 0):
-    # Deprecated function. Does not work without GPU.
+    
     await ctx.send(f"{ctx.author.mention}, this function is unavailabe right now – no GPU was found on the host machine.")
     return
-
     '''
+
     sample = await sample_messages(ctx, source, location)
     if sample:
         train = await ctx.send("Training neural networks with samples...")
@@ -435,6 +435,7 @@ async def imitate(ctx, source: typing.Union[discord.TextChannel, discord.Member,
             context = f"{ctx.author.mention}, imitation of {ctx.guild}:\n> "
         await ctx.send(context + "\n\n> ".join(imits))
     else:
+        await ctx.send(f"No messages found from user in channel/server.")
         return
     '''
 
