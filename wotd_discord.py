@@ -109,12 +109,19 @@ class WotdManagerDiscord(WotdManager):
                         trs_text += f"> {FLAG['en']} *{underscore_word(ex_en, tr_en)}*\n"
                         if (n != len(tr.examples)-1):
                             trs_text += "\n"
-                elif tr.lang == 'swe':
-                    if "_SWE" in str(tr):
-                        # This is a workaround for the {NOR word}_SWE word bug in sma dictionaries
-                        fixed_tr = trns.translate(str(tr).replace(
-                            "_SWE", ""), src='no', dest='sv').text
-                        trs_text += f"\t\t{FLAG[tr.lang]} {fixed_tr}\n"
+                elif tr.lang == 'fin' or tr.lang == 'fi':
+                    tr_en = ", ".join([w.text for w in trns.translate(
+                        str(tr).split(", "), src='fi', dest='en')])
+                    desc_en = trns.translate(
+                        tr.desc, src='fi', dest='en').text if tr.desc else ''
+                    trs_text += f"\t\t{FLAG[tr.lang]} {tr} {tr.desc}\t→\t{FLAG['en']} {tr_en} {desc_en}\n"
+                    for n, ex in enumerate(tr.examples):
+                        ex_en = trns.translate(ex[1], src='fi', dest='en').text
+                        trs_text += f"> <:samiflag:{SAMIFLAG_ID}> *{underscore_word(ex[0], str(word))}*\n"
+                        trs_text += f"> {FLAG[tr.lang]} *{underscore_word(ex[1], str(tr))}*\n"
+                        trs_text += f"> {FLAG['en']} *{underscore_word(ex_en, tr_en)}*\n"
+                        if (n != len(tr.examples)-1):
+                            trs_text += "\n"
                 else:
                     trs_text += f"\t\t{FLAG[tr.lang]} {tr} {tr.desc}\n"
                     trs_text = trs_text.replace(
