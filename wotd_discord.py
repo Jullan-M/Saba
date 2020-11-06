@@ -492,7 +492,7 @@ async def on_message(msg):
                 await msg.channel.send(random.choice(botres["canned"][call]["res"]))
                 return
 
-    if (("Saba" in msg.content) or (msg.guild.get_member(bot.user.id) in msg.mentions)) and (now - last_mention).total_seconds() > 14400:
+    if (("Saba" in msg.content) or (msg.guild.get_member(bot.user.id) in msg.mentions)) and (now - last_mention).total_seconds() > 86400:
 
         response = random.choice(botres["mention"])
         while response["res"] == last_response:
