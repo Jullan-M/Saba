@@ -57,68 +57,73 @@ class WotdManagerTwitter(WotdManager):
             return intro
 
     def wotd_message(self, word):
-        trns = Translator()
-        trns.translate("")
-        main = ""
-        lastpos = ""
-        lastword = ""
-        lastdesc = ""
-        examples = ["", "", ""]
-        i = 0
-        for m in word.meanings:
-            trs_text = ""
-            for tr in m.trs:
-                if (lastword == str(tr) and lastdesc == tr.desc):
-                    continue
-                lastword = str(tr)
-                lastdesc = tr.desc
+        try:
+            trns = Translator()
+            main = ""
+            lastpos = ""
+            lastword = ""
+            lastdesc = ""
+            examples = ["", "", ""]
+            i = 0
+            for m in word.meanings:
+                trs_text = ""
+                for tr in m.trs:
+                    if (lastword == str(tr) and lastdesc == tr.desc):
+                        continue
+                    lastword = str(tr)
+                    lastdesc = tr.desc
 
-                if tr.lang == 'nob':
-                    tr_en = ""
-                    if m.pos != "V":
+                    if tr.lang == 'nob':
+                        tr_en = ""
+                        if m.pos != "V":
+                            tr_en = ", ".join([w.text for w in trns.translate(
+                                str(tr).split(", "), src='no', dest='en')])
+                        else:
+                            # Add "å" prefix to verbs in order to enhance translation
+                            tr_en = ", ".join([w.text.replace("to ", "") for w in trns.translate(
+                                ["å " + v for v in str(tr).split(", ")], src='no', dest='en')])
+                        desc_en = trns.translate(
+                            tr.desc, src='no', dest='en').text if tr.desc else ''
+                        trs_text += f" {FLAG[tr.lang]} {tr} {tr.desc}  →  {FLAG['en']} {tr_en} {desc_en}\n"
+                        for ex in tr.examples:
+                            ex_en = trns.translate(ex[1], src='no', dest='en').text
+                            examples[0] += f"– {ex[0]}\n"
+                            examples[1] += f"– {ex[1]}\n"
+                            examples[2] += f"– {ex_en}\n"
+                    elif tr.lang == 'fin' or tr.lang == 'fi':
                         tr_en = ", ".join([w.text for w in trns.translate(
-                            str(tr).split(", "), src='no', dest='en')])
+                            str(tr).split(", "), src='fi', dest='en')])
+                        desc_en = trns.translate(
+                            tr.desc, src='no', dest='en').text if tr.desc else ''
+                        trs_text += f" {FLAG[tr.lang]} {tr} {tr.desc}  →  {FLAG['en']} {tr_en} {desc_en}\n"
                     else:
-                        # Add "å" prefix to verbs in order to enhance translation
-                        tr_en = ", ".join([w.text.replace("to ", "") for w in trns.translate(
-                            ["å " + v for v in str(tr).split(", ")], src='no', dest='en')])
-                    desc_en = trns.translate(
-                        tr.desc, src='no', dest='en').text if tr.desc else ''
-                    trs_text += f" {FLAG[tr.lang]} {tr} {tr.desc}  →  {FLAG['en']} {tr_en} {desc_en}\n"
-                    for ex in tr.examples:
-                        ex_en = trns.translate(ex[1], src='no', dest='en').text
-                        examples[0] += f"– {ex[0]}\n"
-                        examples[1] += f"– {ex[1]}\n"
-                        examples[2] += f"– {ex_en}\n"
-                elif tr.lang == 'fin' or tr.lang == 'fi':
-                    tr_en = ", ".join([w.text for w in trns.translate(
-                        str(tr).split(", "), src='fi', dest='en')])
-                    desc_en = trns.translate(
-                        tr.desc, src='no', dest='en').text if tr.desc else ''
-                    trs_text += f" {FLAG[tr.lang]} {tr} {tr.desc}  →  {FLAG['en']} {tr_en} {desc_en}\n"
-                else:
-                    trs_text += f" {FLAG[tr.lang]} {tr}\n"
-            if lastpos != m.pos and trs_text:
-                i += 1
-                main += f"{i}. {self.wordclass[m.pos]}\n"
-                lastpos = m.pos
-            main += trs_text
+                        trs_text += f" {FLAG[tr.lang]} {tr}\n"
+                if lastpos != m.pos and trs_text:
+                    i += 1
+                    main += f"{i}. {self.wordclass[m.pos]}\n"
+                    lastpos = m.pos
+                main += trs_text
 
-        if examples[0]:
-            for n, ex in enumerate(examples):
-                if ex[-1] == "\n":
-                    examples[n] = ex[:-1]
+            if examples[0]:
+                for n, ex in enumerate(examples):
+                    if ex[-1] == "\n":
+                        examples[n] = ex[:-1]
 
-        if main[-1] == "\n":
-            main = main[:-1]
+            if main[-1] == "\n":
+                main = main[:-1]
 
-        intro = self.get_intro_message(word, i)
+            intro = self.get_intro_message(word, i)
 
-        tgs = "\n" + " ".join(self.tags)
-        if len(main) + len(tgs) < 280:
-            main += tgs
+            tgs = "\n" + " ".join(self.tags)
+            if len(main) + len(tgs) < 280:
+                main += tgs
 
-        return intro + main, examples_img(self.lang, str(word), examples)
+            return intro + main, examples_img(self.lang, str(word), examples)
+        except AttributeError:
+            print("AttributeError. Trying again in 0.5 seconds...")
+            time.sleep(0.5)
+            return self.wotd_message(word)
+
 
 
 def run_twitter_bot(wotd_manager):
