@@ -136,9 +136,9 @@ class WotdManagerDiscord(WotdManager):
         except AttributeError:
             print("AttributeError. Trying again in 0.5 seconds...")
             await asyncio.sleep(0.5)
-            return self.get_translation(word, wordclass)
+            return await self.get_translation(word, wordclass)
 
-    def wotd_message(self, word, spec=""):
+    async def wotd_message(self, word, spec=""):
         main, i = await self.get_translation(word, self.wordclass)
 
         intro = self.get_intro_message(word, i, spec=spec)
@@ -464,7 +464,7 @@ async def force_wotd(ctx, lang):
     wotd = ""
     word = wotd_m[i].get_wotd()
     print(f"FORCED {wotd_m[i].lang}-wotd: {word}", end="\t")
-    wotd = wotd_m[i].wotd_message(word)
+    wotd = await wotd_m[i].wotd_message(word)
 
     message_channel = bot.get_channel(wotd_m[i].cha_id)
     await message_channel.send(wotd)
@@ -532,13 +532,13 @@ async def called_once_a_day():
         if spec_day:
             spec_word = random.choice(spec_day["w"])
             pic = spec_day["pic"]
-            wotd = m.wotd_message(
+            wotd = await m.wotd_message(
                 Word(spec_word, m.lang), spec=spec_day["intro"])
             print(f"{m.lang}-wotd (SPECIAL): {spec_word}", end="\t")
         else:
             word = m.get_wotd()
             print(f"{m.lang}-wotd: {word}", end="\t")
-            wotd = m.wotd_message(word)
+            wotd = await m.wotd_message(word)
 
         message_channel = bot.get_channel(m.cha_id)
         if pic:
