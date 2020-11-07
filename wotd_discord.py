@@ -75,7 +75,7 @@ class WotdManagerDiscord(WotdManager):
                     count > 1) else intro + f" akte goerkesimmie:\n"
             return intro
 
-    def get_translation(self, word, wordclass):
+    async def get_translation(self, word, wordclass):
         try:
             trns = Translator()
             main = ""
