@@ -58,6 +58,7 @@ class WotdManagerTwitter(WotdManager):
 
     def wotd_message(self, word):
         trns = Translator()
+        trns.translate("")
         main = ""
         lastpos = ""
         lastword = ""
@@ -89,6 +90,12 @@ class WotdManagerTwitter(WotdManager):
                         examples[0] += f"– {ex[0]}\n"
                         examples[1] += f"– {ex[1]}\n"
                         examples[2] += f"– {ex_en}\n"
+                elif tr.lang == 'fin' or tr.lang == 'fi':
+                    tr_en = ", ".join([w.text for w in trns.translate(
+                        str(tr).split(", "), src='fi', dest='en')])
+                    desc_en = trns.translate(
+                        tr.desc, src='no', dest='en').text if tr.desc else ''
+                    trs_text += f" {FLAG[tr.lang]} {tr} {tr.desc}  →  {FLAG['en']} {tr_en} {desc_en}\n"
                 else:
                     trs_text += f" {FLAG[tr.lang]} {tr}\n"
             if lastpos != m.pos and trs_text:
