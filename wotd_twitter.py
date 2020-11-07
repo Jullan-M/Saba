@@ -37,10 +37,11 @@ class WotdManagerTwitter(WotdManager):
     def get_intro_message(self, word, count, spec=""):
 
         intro = spec.replace("<WORD>", f"#{word}")
+        hashtagged = ["#" + w for w in str(word).split(" ")]
 
         if self.lang == 'sme':
             if not intro:
-                intro = f"Otná sátni lea #{word}!"
+                intro = f"Otná sátni lea {hashtagged}!"
             intro += "\nSánis lea"
             intro = intro + \
                 f"t {count} mearkkašumit:\n" if (
@@ -49,7 +50,7 @@ class WotdManagerTwitter(WotdManager):
 
         elif self.lang == 'sma':
             if not intro:
-                intro = f"Daen biejjien baakoe lea #{word}!"
+                intro = f"Daen biejjien baakoe lea {hashtagged}!"
             intro += "\nBaakoen lea"
             intro = intro + \
                 f"h {count} goerkesimmieh:\n" if (
