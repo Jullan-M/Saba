@@ -139,7 +139,7 @@ class WotdManagerDiscord(WotdManager):
             return self.get_translation(word, wordclass)
 
     def wotd_message(self, word, spec=""):
-        main, i = self.get_translation(word, self.wordclass)
+        main, i = await self.get_translation(word, self.wordclass)
 
         intro = self.get_intro_message(word, i, spec=spec)
         return intro + main
@@ -287,11 +287,11 @@ async def word(ctx, lang: str, word: str):
     main = ""
     i = 0
     if lang == 'sme':
-        main, i = wotd_m[0].get_translation(w, en_wc)
+        main, i = await wotd_m[0].get_translation(w, en_wc)
     elif lang == 'sma':
-        main, i = wotd_m[1].get_translation(w, en_wc)
+        main, i = await wotd_m[1].get_translation(w, en_wc)
     elif lang == 'nob':
-        main, i = wotd_nob.get_translation(w, en_wc)
+        main, i = await wotd_nob.get_translation(w, en_wc)
     elif lang == 'smj':
         return await bahko(ctx, word)
 
