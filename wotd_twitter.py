@@ -37,7 +37,7 @@ class WotdManagerTwitter(WotdManager):
     def get_intro_message(self, word, count, spec=""):
 
         intro = spec.replace("<WORD>", f"#{word}")
-        hashtagged = ["#" + w for w in str(word).split(" ")]
+        hashtagged = " ".join(["#" + w for w in str(word).split(" ")])
 
         if self.lang == 'sme':
             if not intro:
