@@ -76,63 +76,67 @@ class WotdManagerDiscord(WotdManager):
             return intro
 
     def get_translation(self, word, wordclass):
-        trns = Translator()
-        trns.translate("")
-        main = ""
-        lastpos = ""
-        lastword = ""
-        lastdesc = ""
-        i = 0
-        for m in word.meanings:
-            trs_text = ""
-            for tr in m.trs:
-                if (lastword == str(tr) and lastdesc == tr.desc):
-                    continue
-                lastword = str(tr)
-                lastdesc = tr.desc
+        try:
+            trns = Translator()
+            main = ""
+            lastpos = ""
+            lastword = ""
+            lastdesc = ""
+            i = 0
+            for m in word.meanings:
+                trs_text = ""
+                for tr in m.trs:
+                    if (lastword == str(tr) and lastdesc == tr.desc):
+                        continue
+                    lastword = str(tr)
+                    lastdesc = tr.desc
 
-                if tr.lang == 'nob':
-                    tr_en = ""
-                    if m.pos != "V":
+                    if tr.lang == 'nob':
+                        tr_en = ""
+                        if m.pos != "V":
+                            tr_en = ", ".join([w.text for w in trns.translate(
+                                str(tr).split(", "), src='no', dest='en')])
+                        else:
+                            # Add "å" prefix to verbs in order to enhance translation
+                            tr_en = ", ".join([w.text.replace("to ", "") for w in trns.translate(
+                                ["å " + v for v in str(tr).split(", ")], src='no', dest='en')])
+                        desc_en = trns.translate(
+                            tr.desc, src='no', dest='en').text if tr.desc else ''
+                        trs_text += f"\t\t{FLAG[tr.lang]} {tr} {tr.desc}\t→\t{FLAG['en']} {tr_en} {desc_en}\n"
+                        for n, ex in enumerate(tr.examples):
+                            ex_en = trns.translate(ex[1], src='no', dest='en').text
+                            trs_text += f"> <:samiflag:{SAMIFLAG_ID}> *{underscore_word(ex[0], str(word))}*\n"
+                            trs_text += f"> {FLAG[tr.lang]} *{underscore_word(ex[1], str(tr))}*\n"
+                            trs_text += f"> {FLAG['en']} *{underscore_word(ex_en, tr_en)}*\n"
+                            if (n != len(tr.examples)-1):
+                                trs_text += "\n"
+                    elif tr.lang == 'fin' or tr.lang == 'fi':
                         tr_en = ", ".join([w.text for w in trns.translate(
-                            str(tr).split(", "), src='no', dest='en')])
+                            str(tr).split(", "), src='fi', dest='en')])
+                        desc_en = trns.translate(
+                            tr.desc, src='fi', dest='en').text if tr.desc else ''
+                        trs_text += f"\t\t{FLAG[tr.lang]} {tr} {tr.desc}\t→\t{FLAG['en']} {tr_en} {desc_en}\n"
+                        for n, ex in enumerate(tr.examples):
+                            ex_en = trns.translate(ex[1], src='fi', dest='en').text
+                            trs_text += f"> <:samiflag:{SAMIFLAG_ID}> *{underscore_word(ex[0], str(word))}*\n"
+                            trs_text += f"> {FLAG[tr.lang]} *{underscore_word(ex[1], str(tr))}*\n"
+                            trs_text += f"> {FLAG['en']} *{underscore_word(ex_en, tr_en)}*\n"
+                            if (n != len(tr.examples)-1):
+                                trs_text += "\n"
                     else:
-                        # Add "å" prefix to verbs in order to enhance translation
-                        tr_en = ", ".join([w.text.replace("to ", "") for w in trns.translate(
-                            ["å " + v for v in str(tr).split(", ")], src='no', dest='en')])
-                    desc_en = trns.translate(
-                        tr.desc, src='no', dest='en').text if tr.desc else ''
-                    trs_text += f"\t\t{FLAG[tr.lang]} {tr} {tr.desc}\t→\t{FLAG['en']} {tr_en} {desc_en}\n"
-                    for n, ex in enumerate(tr.examples):
-                        ex_en = trns.translate(ex[1], src='no', dest='en').text
-                        trs_text += f"> <:samiflag:{SAMIFLAG_ID}> *{underscore_word(ex[0], str(word))}*\n"
-                        trs_text += f"> {FLAG[tr.lang]} *{underscore_word(ex[1], str(tr))}*\n"
-                        trs_text += f"> {FLAG['en']} *{underscore_word(ex_en, tr_en)}*\n"
-                        if (n != len(tr.examples)-1):
-                            trs_text += "\n"
-                elif tr.lang == 'fin' or tr.lang == 'fi':
-                    tr_en = ", ".join([w.text for w in trns.translate(
-                        str(tr).split(", "), src='fi', dest='en')])
-                    desc_en = trns.translate(
-                        tr.desc, src='fi', dest='en').text if tr.desc else ''
-                    trs_text += f"\t\t{FLAG[tr.lang]} {tr} {tr.desc}\t→\t{FLAG['en']} {tr_en} {desc_en}\n"
-                    for n, ex in enumerate(tr.examples):
-                        ex_en = trns.translate(ex[1], src='fi', dest='en').text
-                        trs_text += f"> <:samiflag:{SAMIFLAG_ID}> *{underscore_word(ex[0], str(word))}*\n"
-                        trs_text += f"> {FLAG[tr.lang]} *{underscore_word(ex[1], str(tr))}*\n"
-                        trs_text += f"> {FLAG['en']} *{underscore_word(ex_en, tr_en)}*\n"
-                        if (n != len(tr.examples)-1):
-                            trs_text += "\n"
-                else:
-                    trs_text += f"\t\t{FLAG[tr.lang]} {tr} {tr.desc}\n"
-                    trs_text = trs_text.replace(
-                        "<SFLAG>", f"<:samiflag:{SAMIFLAG_ID}>")
-            if lastpos != m.pos and trs_text:
-                i += 1
-                main += f"\t{i}. {wordclass[m.pos]}\n"
-                lastpos = m.pos
-            main += trs_text
-        return main, i
+                        trs_text += f"\t\t{FLAG[tr.lang]} {tr} {tr.desc}\n"
+                        trs_text = trs_text.replace(
+                            "<SFLAG>", f"<:samiflag:{SAMIFLAG_ID}>")
+                if lastpos != m.pos and trs_text:
+                    i += 1
+                    main += f"\t{i}. {wordclass[m.pos]}\n"
+                    lastpos = m.pos
+                main += trs_text
+            return main, i
+        except AttributeError:
+            print("AttributeError. Trying again in 0.5 seconds...")
+            await asyncio.sleep(0.5)
+            return self.get_translation(word, wordclass)
 
     def wotd_message(self, word, spec=""):
         main, i = self.get_translation(word, self.wordclass)
