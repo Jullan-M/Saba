@@ -77,6 +77,7 @@ class WotdManagerDiscord(WotdManager):
 
     def get_translation(self, word, wordclass):
         trns = Translator()
+        trns.translate("")
         main = ""
         lastpos = ""
         lastword = ""
