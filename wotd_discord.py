@@ -462,7 +462,7 @@ async def force_wotd(ctx, lang):
         return
 
     wotd = ""
-    spec_day = check_special_wotd(datetime.datetime.now().strftime("%d%m"), m.lang)
+    spec_day = check_special_wotd(datetime.datetime.now().strftime("%d%m"), wotd_m[i].lang)
     pic = False
 
     if spec_day:
