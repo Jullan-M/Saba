@@ -59,9 +59,24 @@
       "intro": "Don vávjját ahte beaivváš illá veadjá albmeravdda badjel čuoččastit ja ijat šaddet dušše guhkibut ja guhkibut. Dál han lea gusto <WORD>."
     }
   },
+  "1511": {
+    "sme": {
+      "w": ["riegádanbeaidearvuohta", "riegádanbeaiskeaŋka", "riegádanbeaivedearvvuođat"],
+      "pic": false,
+      "intro": "Mus lea riegádanbeaivi otne ja dasto lea otná sátni <WORD>!! 🤩🥳"
+    },
+    "sma": {
+      "w": ["reakadimmiebiejjie", "reakedsbiejjie"],
+      "pic": false
+    }
+  },
   "2011": {
     "sme": {
-      "w": ["riegádanbeaivi", "riegádanbeaivedearvvuođat"],
+      "w": ["jahkásaš", "ávvudeapmi", "šaddanbeaivi", "riegádanbeaivi"],
+      "pic": false
+    },
+    "sma": {
+      "w": ["heevehtimmie", "aavoedimmie", "heevehtidh", "aavoedidh"],
       "pic": false
     }
   },
