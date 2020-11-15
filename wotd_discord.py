@@ -457,18 +457,32 @@ async def force_wotd(ctx, lang):
     if int(ctx.author.id) != 252228069434195968:
         return
     lang_val = {"sme": 0, "sma": 1}
+    i = lang_val[lang]
     if not lang in lang_val:
         return
 
-    i = lang_val[lang]
     wotd = ""
-    word = wotd_m[i].get_wotd()
-    print(f"FORCED {wotd_m[i].lang}-wotd: {word}", end="\t")
-    wotd = await wotd_m[i].wotd_message(word)
+    spec_day = check_special_wotd(datetime.datetime.now().strftime("%d%m"), m.lang)
+    pic = False
+
+    if spec_day:
+        spec_word = random.choice(spec_day["w"])
+        pic = spec_day["pic"]
+        wotd = await wotd_m[i].wotd_message(
+            Word(spec_word, wotd_m[i].lang), spec=spec_day["intro"] if "intro" in spec_day else "")
+        print(f"FORCED {wotd_m[i].lang}-wotd (SPECIAL): {spec_word}", end="\t")
+    else:
+        word = wotd_m[i].get_wotd()
+        print(f"FORCED {wotd_m[i].lang}-wotd: {word}", end="\t")
+        wotd = await wotd_m[i].wotd_message(word)
 
     message_channel = bot.get_channel(wotd_m[i].cha_id)
-    await message_channel.send(wotd)
-    print(f"Sent to {message_channel}!")
+    if pic:
+        pass
+        print(f"Sent to {message_channel} with pic!")
+    else:
+        await message_channel.send(wotd)
+        print(f"Sent to {message_channel}!")
 
 
 @bot.event
@@ -533,7 +547,7 @@ async def called_once_a_day():
             spec_word = random.choice(spec_day["w"])
             pic = spec_day["pic"]
             wotd = await m.wotd_message(
-                Word(spec_word, m.lang), spec=spec_day["intro"])
+                Word(spec_word, m.lang), spec=spec_day["intro"] if "intro" in spec_day else "")
             print(f"{m.lang}-wotd (SPECIAL): {spec_word}", end="\t")
         else:
             word = m.get_wotd()
