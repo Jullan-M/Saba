@@ -134,8 +134,8 @@ class WotdManagerDiscord(WotdManager):
                 main += trs_text
             return main, i
         except AttributeError:
-            print("AttributeError. Trying again in 0.5 seconds...")
-            await asyncio.sleep(0.5)
+            print("AttributeError. Trying again in 0.1 seconds...")
+            await asyncio.sleep(0.1)
             return await self.get_translation(word, wordclass)
 
     async def wotd_message(self, word, spec=""):

@@ -121,8 +121,8 @@ class WotdManagerTwitter(WotdManager):
 
             return intro + main, examples_img(self.lang, str(word), examples)
         except AttributeError:
-            print("AttributeError. Trying again in 0.5 seconds...")
-            time.sleep(0.5)
+            print("AttributeError. Trying again in 0.1 seconds...")
+            time.sleep(0.1)
             return self.wotd_message(word)
 
 
