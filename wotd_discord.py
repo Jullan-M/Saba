@@ -451,6 +451,12 @@ async def imitate(ctx, source: typing.Union[discord.TextChannel, discord.Member,
         return
     '''
 
+@bot.command(name='del_msg', help="Dev command")
+async def del_msg(ctx, cha_id, msg_id):
+    if int(ctx.author.id) != 252228069434195968:
+        return
+     await bot.http.delete_message(cha_id, msg_id)
+
 
 @bot.command(name='force_wotd', help="Dev command")
 async def force_wotd(ctx, lang):
