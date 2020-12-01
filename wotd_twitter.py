@@ -59,7 +59,7 @@ class WotdManagerTwitter(WotdManager):
 
     def wotd_message(self, word):
         try:
-            trns = Translator()
+            trns = Translator(service_urls=['translate.googleapis.com'])
             main = ""
             lastpos = ""
             lastword = ""

@@ -77,7 +77,7 @@ class WotdManagerDiscord(WotdManager):
 
     async def get_translation(self, word, wordclass):
         try:
-            trns = Translator()
+            trns = Translator(service_urls=['translate.googleapis.com'])
             main = ""
             lastpos = ""
             lastword = ""
