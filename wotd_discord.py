@@ -574,7 +574,8 @@ async def called_once_a_day():
 @called_once_a_day.before_loop
 async def before():
     await bot.wait_until_ready()
-    await bot.change_presence(activity=discord.Game(name=f"with {random.choice(['nouns. 🖊️', 'verbs. ✎', 'adjectives. 🖋️', 'possessive suffixes. ✍️', 'Finno-Ugric languages. 📝'])}"))
+    await bot.change_presence(activity=discord.Game(name=f"{random.choice(
+        ['with nouns. 🖊️', 'with verbs. ✎', 'with adjectives. 🖋️', 'with possessive suffixes. ✍️', 'with Finno-Ugric languages. 📝', 'with the fate of those on The List.', 'Daabloe ♟️', 'Sáhkku ♙', 'Tablut 🎲'])}"))
     print(f'Finished waiting bot. {bot.user} has connected to Discord!')
     now = datetime.datetime.now()
     print(f"Time is currently \t{now}.")
