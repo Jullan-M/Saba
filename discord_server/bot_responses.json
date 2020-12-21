@@ -52,22 +52,6 @@
   },
   "mention": [
     {
-      "file": "moustache.jpg",
-      "res": "If the act of grooming one's own facial hair was an art, then you are looking at someone who has perfected it."
-    },
-    {
-      "file": "saba_mitai.mp4",
-      "res": "Ever been in a Japanese karaoke? You should give it a try it sometime!"
-    },
-    {
-      "file": "",
-      "res": "You may criticize me however you'd like as long as it isn't about my glorious moustache."
-    },
-    {
-      "file": "jar_of_head.png",
-      "res": "You know they say that I died in 1921, but actually <@252228069434195968> keeps me alive in a jar of formaldehyde in his server basement like this:"
-    },
-    {
       "file": "",
       "res": "Here's my favourite drink, usually the crowning touch on my intoxication. Thread carefully with it: ```fix\n_____ Minttu Kakáo _____\n- 3 cl Minttu (Peppermint or Black Mint)\n- 2 cl Disaronno Amaretto (this makes the drink fancier than it has any right to be)\n- 1 bag of Rett i Koppen Sjokoladedrikk\n- 2 dl boiling water\n- 0.5 tsp cinnamon\n- 0.25 tsp cardamom\nPut everything in a large Moomins™ cup in the given order and mix continuously with a teaspoon. Drink it while it's hot!```"
     },
@@ -94,14 +78,17 @@
     {
       "file": "",
       "res": "What now? You want to know who's on *the list*? Look upon it and despair! ```\nSami\nÅajvasovvije maana\nOvla\nAspien maana\nSandal\nMaks Hamburgare\nAahkan maana\nEadni Guovža```"
-    },
-    {
-      "file": "",
-      "res": "> Go sámit bohte siiddaidasaset, de lei dego sis čalmmit rahpasišgohte. Sii ledje dál gullan, mii sámesohka lea leamaš, mii dat dál lea, ja mii dat galgá šaddat. Dat lei sin mielas dego iđđedisguovssu čuvggodišgođii.\n> Dát lei sidjiide dego *beaivi-álgu*.\n– Ábo Eira" 
-    },
-    {
-      "file": "",
-      "res": "```                ... don hálidat gal diehtit,\n             muhto jus don dieđášit,\n                      don it hálidivčče diehtit!\n\n   it don died dieđuid dárbbat\ndat maid don dárbbahat\n         gávnnat dus,\n                 iežastat\n\n    ja\n         áidna\n              maid dárbbahat lea ráhkisvuohta\n\n                           ahte\n        oskkildivččet\n    ráhkistit iežat\n    nu olu\nahte oainnášit\n         dan dihte don dárbbahat earáid\n             don dárbbahat ...\n\n\n\n  ale jeara mus\nmaid don dárbbahat\n\n                      ráhkis\n\n          oskkil ráhkistit\n      du iežat\n\ndalle earáidnai\n\n\n         ráhkis```– Ritnoaivi"
-    }  
+    }
+  ],
+  "reactions": [
+    "😇", "🙃", "😎", "😳", "🤔", "🤫", "😶", "👀", "🤖", "🤨", "🧐", "🤠",
+    "<:peepoSaber:767079389669228574>",
+    "<:wellhowdy:696422280674410588>",
+    "<:saba:740649762826747996>",
+    "<:saberpepe:678740301543768066>",
+    "<:pingblob:696425409222410240>",
+    "<:gaffeblob:675788626411651094>",
+    "<:engry:715500654860304424>",
+    "<:buresblob:675788626545868801>"
   ]
 }
