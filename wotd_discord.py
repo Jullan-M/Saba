@@ -8,7 +8,7 @@ import typing
 import re
 from tabulate import tabulate
 from discord.ext import tasks, commands
-from discord_server import wc_sapmi
+from discord_server import saba_utilities as sbut
 from dotenv import load_dotenv
 from googletrans import Translator
 from Word import Word, Paradigm, Inflection, PREF_DEST
@@ -22,25 +22,6 @@ SPAM_CHANNEL_ID = int(os.getenv('SPAM_CHANNEL_ID'))
 WOTD_H = int(os.getenv('WOTD_H'))
 WOTD_M = int(os.getenv('WOTD_M'))
 WOTD_S = int(os.getenv('WOTD_S'))
-
-
-def underscore_word(string, word):
-    if ', ' in word:
-        words = word.split(', ')
-        sentence = string
-        for w in words:
-            sentence = sentence.replace(
-                w.capitalize(), f'__{w.capitalize()}__').replace(w, f'__{w}__')
-        return sentence
-    elif ' ' in word:
-        words = word.split(' ')
-        sentence = string
-        for w in words:
-            sentence = sentence.replace(
-                w.capitalize(), f'__{w.capitalize()}__').replace(w, f'__{w}__')
-        return sentence
-
-    return string.replace(word.capitalize(), f'__{word.capitalize()}__').replace(word, f'__{word}__')
 
 
 class WotdManagerDiscord(WotdManager):
@@ -104,10 +85,11 @@ class WotdManagerDiscord(WotdManager):
                             tr.desc, src='no', dest='en').text if tr.desc else ''
                         trs_text += f"\t\t{FLAG[tr.lang]} {tr} {tr.desc}\t→\t{FLAG['en']} {tr_en} {desc_en}\n"
                         for n, ex in enumerate(tr.examples):
-                            ex_en = trns.translate(ex[1], src='no', dest='en').text
-                            trs_text += f"> <:samiflag:{SAMIFLAG_ID}> *{underscore_word(ex[0], str(word))}*\n"
-                            trs_text += f"> {FLAG[tr.lang]} *{underscore_word(ex[1], str(tr))}*\n"
-                            trs_text += f"> {FLAG['en']} *{underscore_word(ex_en, tr_en)}*\n"
+                            ex_en = trns.translate(
+                                ex[1], src='no', dest='en').text
+                            trs_text += f"> <:samiflag:{SAMIFLAG_ID}> *{sbut.underscore_word(ex[0], str(word))}*\n"
+                            trs_text += f"> {FLAG[tr.lang]} *{sbut.underscore_word(ex[1], str(tr))}*\n"
+                            trs_text += f"> {FLAG['en']} *{sbut.underscore_word(ex_en, tr_en)}*\n"
                             if (n != len(tr.examples)-1):
                                 trs_text += "\n"
                     elif tr.lang == 'fin' or tr.lang == 'fi':
@@ -117,10 +99,11 @@ class WotdManagerDiscord(WotdManager):
                             tr.desc, src='fi', dest='en').text if tr.desc else ''
                         trs_text += f"\t\t{FLAG[tr.lang]} {tr} {tr.desc}\t→\t{FLAG['en']} {tr_en} {desc_en}\n"
                         for n, ex in enumerate(tr.examples):
-                            ex_en = trns.translate(ex[1], src='fi', dest='en').text
-                            trs_text += f"> <:samiflag:{SAMIFLAG_ID}> *{underscore_word(ex[0], str(word))}*\n"
-                            trs_text += f"> {FLAG[tr.lang]} *{underscore_word(ex[1], str(tr))}*\n"
-                            trs_text += f"> {FLAG['en']} *{underscore_word(ex_en, tr_en)}*\n"
+                            ex_en = trns.translate(
+                                ex[1], src='fi', dest='en').text
+                            trs_text += f"> <:samiflag:{SAMIFLAG_ID}> *{sbut.underscore_word(ex[0], str(word))}*\n"
+                            trs_text += f"> {FLAG[tr.lang]} *{sbut.underscore_word(ex[1], str(tr))}*\n"
+                            trs_text += f"> {FLAG['en']} *{sbut.underscore_word(ex_en, tr_en)}*\n"
                             if (n != len(tr.examples)-1):
                                 trs_text += "\n"
                     else:
@@ -158,27 +141,12 @@ last_mention = datetime.datetime.now()
 last_response = ""
 
 
-async def correct_channel(ctx):
-    if ctx.channel.id != SPAM_CHANNEL_ID:
-        await ctx.author.send(f"❌ You can only use that command in <#{SPAM_CHANNEL_ID}>.")
-        return False
-    return True
-
-
-async def supported_lang(ctx, lang):
-    if not (lang in PREF_DEST):
-        supported = "```sme\tNorthern Saami\nsma\tSouthern Saami\nsms\tSkolt Saami\nsmn\tInari Saami```"
-        await ctx.send(f"<@{ctx.author.id}>, `{lang}` is not a supported language for this command. Currently, the following languages are supported:\n{supported}")
-        return False
-    return True
-
-
 @bot.command(name='examine', help="Shows recursively the morphological tags and lemma for a given word. Explanation for the tags can be found here: https://giellalt.uit.no/lang/sme/docu-mini-smi-grammartags.html")
 async def examine(ctx, lang: str, word: str):
-    if not await correct_channel(ctx):
+    if not await sbut.correct_channel(ctx, SPAM_CHANNEL_ID):
         return
 
-    if not await supported_lang(ctx, lang):
+    if not await sbut.supported_lang(ctx, lang, PREF_DEST):
         return
 
     inf = Inflection(word, lang)
@@ -192,10 +160,10 @@ async def examine(ctx, lang: str, word: str):
 
 @bot.command(name='paradigm', help="Shows the paradigm of a given word.")
 async def paradigm(ctx, lang: str, word: str, pos=""):
-    if not await correct_channel(ctx):
+    if not await sbut.correct_channel(ctx, SPAM_CHANNEL_ID):
         return
 
-    if not await supported_lang(ctx, lang):
+    if not await sbut.supported_lang(ctx, lang, PREF_DEST):
         return
 
     ps = Paradigm(word, lang)
@@ -235,7 +203,7 @@ async def paradigm(ctx, lang: str, word: str, pos=""):
 
 @bot.command(name='báhko', help="Lule-Sami to Norwegian dictionary look-up.")
 async def bahko(ctx, word: str):
-    if not await correct_channel(ctx):
+    if not await sbut.correct_channel(ctx, SPAM_CHANNEL_ID):
         return
 
     rslts = []
@@ -270,7 +238,7 @@ async def bahko(ctx, word: str):
 
 @bot.command(name='word', help="Finds all possible translations for the given word and provides examples (if any).")
 async def word(ctx, lang: str, word: str):
-    if not await correct_channel(ctx):
+    if not await sbut.correct_channel(ctx, SPAM_CHANNEL_ID):
         return
 
     if not (lang in ['sme', 'sma', 'nob']):
@@ -409,7 +377,7 @@ async def sample_messages(ctx, source: typing.Union[discord.TextChannel, discord
 async def wordcloud(ctx, source: typing.Union[discord.TextChannel, discord.Member, int] = 0, location: typing.Union[discord.TextChannel, int] = 0):
     sample = await sample_messages(ctx, source, location)
     if sample:
-        wc_file = await wc_sapmi.reindeer_wc(sample)
+        wc_file = await sbut.reindeer_wc(sample)
         context = ""
         if type(source) == discord.TextChannel:
             context = f"{ctx.author.mention}, word cloud of {source.mention}:"
@@ -426,7 +394,7 @@ async def wordcloud(ctx, source: typing.Union[discord.TextChannel, discord.Membe
 
 @bot.command(name='imitate', help="Imitates a user/channel with machine learning. <source>: user/channel (everyone and every channel if not specified), <location>: channel (every channel if not specified)")
 async def imitate(ctx, source: typing.Union[discord.TextChannel, discord.Member, int] = 0, location: typing.Union[discord.TextChannel, int] = 0):
-    
+
     await ctx.send(f"{ctx.author.mention}, this function is unavailabe right now – no GPU was found on the host machine.")
     return
     '''
@@ -434,7 +402,7 @@ async def imitate(ctx, source: typing.Union[discord.TextChannel, discord.Member,
     sample = await sample_messages(ctx, source, location)
     if sample:
         train = await ctx.send("Training neural networks with samples...")
-        imits = await wc_sapmi.imitation(sample)
+        imits = await sbut.imitation(sample)
         await train.delete()
         context = ""
         if type(source) == discord.TextChannel:
@@ -450,6 +418,7 @@ async def imitate(ctx, source: typing.Union[discord.TextChannel, discord.Member,
         await ctx.send(f"No messages found from user in channel/server.")
         return
     '''
+
 
 @bot.command(name='del_msg', help="Dev command")
 async def del_msg(ctx, cha_id, msg_id):
@@ -469,7 +438,8 @@ async def force_wotd(ctx, lang):
         return
 
     wotd = ""
-    spec_day = check_special_wotd(datetime.datetime.now().strftime("%d%m"), wotd_m[i].lang)
+    spec_day = check_special_wotd(
+        datetime.datetime.now().strftime("%d%m"), wotd_m[i].lang)
     pic = False
 
     if spec_day:
@@ -498,16 +468,8 @@ async def on_message(msg):
     global last_response
     await bot.process_commands(msg)
 
-    if not msg.content:
-        return
-
-    if msg.content[0] == bot.command_prefix:
-        return
-
-    if len(msg.content) > 200:
-        return
-
-    if msg.author == bot.user:
+    if (not msg.content or msg.content[0] == bot.command_prefix or
+            len(msg.content) > 200 or msg.author == bot.user):
         return
 
     message = msg.content.lower()
@@ -525,20 +487,21 @@ async def on_message(msg):
                 await msg.channel.send(random.choice(botres["canned"][call]["res"]))
                 return
 
-    if (("Saba" in msg.content) or (msg.guild.get_member(bot.user.id) in msg.mentions)) and (now - last_mention).total_seconds() > 86400:
-
-        response = random.choice(botres["mention"])
-        while response["res"] == last_response:
+    if (("Saba" in msg.content) or sbut.is_mentioned(bot.user.id, msg)):
+        if (now - last_mention).total_seconds() > 86400:
             response = random.choice(botres["mention"])
+            while response["res"] == last_response:
+                response = random.choice(botres["mention"])
 
-        last_mention = datetime.datetime.now()
-        last_response = response["res"]
-        if response["file"]:
-            file = discord.File(f"media/{response['file']}")
-            await msg.channel.send(response["res"].replace("<author>", msg.author.mention), file=file)
+            last_mention = datetime.datetime.now()
+            last_response = response["res"]
+            if response["file"]:
+                file = discord.File(f"media/{response['file']}")
+                await msg.channel.send(response["res"].replace("<author>", msg.author.mention), file=file)
+            else:
+                await msg.channel.send(response["res"].replace("<author>", msg.author.mention))
         else:
-            await msg.channel.send(response["res"].replace("<author>", msg.author.mention))
-        return
+            await msg.add_reaction(random.choice(botres["reactions"]))
 
 
 @tasks.loop(hours=24)
@@ -574,7 +537,7 @@ async def called_once_a_day():
 @called_once_a_day.before_loop
 async def before():
     await bot.wait_until_ready()
-    await bot.change_presence(activity=discord.Game(name=f"with {random.choice(['nouns. 🖊️', 'verbs. ✎', 'adjectives. 🖋️', 'possessive suffixes. ✍️', 'Finno-Ugric languages. 📝'])}"))
+    await bot.change_presence(activity=discord.Game(name=f"{random.choice(['with nouns. 🖊️', 'with verbs. ✎', 'with adjectives. 🖋️', 'with possessive suffixes. ✍️', 'with Finno-Ugric languages. 📝', 'with the fate of those on The List.', 'Daabloe ♟️', 'Sáhkku ♙', 'Tablut 🎲'])}"))
     print(f'Finished waiting bot. {bot.user} has connected to Discord!')
     now = datetime.datetime.now()
     print(f"Time is currently \t{now}.")
