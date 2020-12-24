@@ -484,7 +484,7 @@ async def on_message(msg):
             if ((diff > 0 and (now_hr >= from_hr and now_hr < to_hr)) or
                     (diff < 0 and (now_hr >= from_hr or now_hr < to_hr)) or
                     diff == 0):
-                await msg.channel.send(random.choice(botres["canned"][call]["res"].replace("<author>", msg.author.mention)))
+                await msg.channel.send(random.choice(botres["canned"][call]["res"]).replace("<author>", msg.author.mention))
                 return
 
     if (("Saba" in msg.content) or sbut.is_mentioned(bot.user.id, msg)):
