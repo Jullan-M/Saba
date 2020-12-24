@@ -522,7 +522,7 @@ async def on_message(msg):
             if ((diff > 0 and (now_hr >= from_hr and now_hr < to_hr)) or
                     (diff < 0 and (now_hr >= from_hr or now_hr < to_hr)) or
                     diff == 0):
-                await msg.channel.send(random.choice(botres["canned"][call]["res"]))
+                await msg.channel.send(random.choice(botres["canned"][call]["res"].replace("<author>", msg.author.mention)))
                 return
 
     if (("Saba" in msg.content) or (msg.guild.get_member(bot.user.id) in msg.mentions)) and (now - last_mention).total_seconds() > 86400:
