@@ -99,7 +99,11 @@
   "2412": {
     "sme": {
       "w": ["juovlaskeaŋka", "juovlanigá", "juovlastállu"],
-      "pic": true
+      "pic": false
+    },
+    "sma": {
+      "w": ["stroehte", "jåvlevadtese", "jåvlemoere"],
+      "pic": false
     }
   },
   "3112": {
