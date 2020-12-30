@@ -294,7 +294,10 @@ async def sample_messages(ctx, source: typing.Union[discord.TextChannel, discord
     ignore_bots = [302050872383242240, 159985870458322944,
                    550613223733329920, 724693719013392456]
 
+    start = await ctx.send("Beginning to sample messages...")
+    cnt_msg = await ctx.send("`0 messages sampled`")
     sample = ""
+    count = 0
 
     async def ignorable(message, ignores):
         for excl in ignores:
@@ -304,35 +307,51 @@ async def sample_messages(ctx, source: typing.Union[discord.TextChannel, discord
 
     async def all_messages(cha_history):
         nonlocal sample
+        nonlocal count
         async for msg in cha_history:
             if (msg.content and not (msg.author.id in ignore_bots)):
                 if await ignorable(msg.content, ignore_words):
                     continue
                 sample = sample + msg.content + "\n"
+                count += 1
+                if count % 100 == 0:
+                    await cnt_msg.edit(content=f"`{count} messages sampled`")
 
     async def user_messages(cha_history):
         nonlocal sample
+        nonlocal count
         async for msg in cha_history:
             if (msg.content and msg.author.id == source.id):
                 if await ignorable(msg.content, ignore_words):
                     continue
                 sample = sample + msg.content + "\n"
+                count += 1
+                if count % 100 == 0:
+                    await cnt_msg.edit(content=f"`{count} messages sampled`")
 
     async def channel_messages(cha_history):
         nonlocal sample
+        nonlocal count
         async for msg in cha_history:
             if (msg.content and not (msg.author.id in ignore_bots)):
                 if await ignorable(msg.content, ignore_words):
                     continue
                 sample = sample + msg.content + "\n"
+                count += 1
+                if count % 100 == 0:
+                    await cnt_msg.edit(content=f"`{count} messages sampled`")
 
     async def user_cha_messages(cha_history):
         nonlocal sample
+        nonlocal count
         async for msg in cha_history:
             if (msg.content and msg.author.id == source.id):
                 if await ignorable(msg.content, ignore_words):
                     continue
                 sample = sample + msg.content + "\n"
+                count += 1
+                if count % 100 == 0:
+                    await cnt_msg.edit(content=f"`{count} messages sampled`")
 
     async def fetch_messages(case_func, channel):
         try:
@@ -342,7 +361,6 @@ async def sample_messages(ctx, source: typing.Union[discord.TextChannel, discord
 
     server = ctx.guild
 
-    start = await ctx.send("Beginning to sample messages...")
     if type(source) == discord.TextChannel:
         if source.permissions_for(server.get_member(bot.user.id)).read_messages:
             await start.edit(content=f"Sampling all messages in {source.mention}...")
@@ -366,27 +384,28 @@ async def sample_messages(ctx, source: typing.Union[discord.TextChannel, discord
             await start.edit(content=f"Sampling all messages of {server.name} discord server...")
             await fetch_messages(all_messages, channel)
     else:
-        await start.edit(content=f"Invalid command arguments. Use `@` and `#` to mention user/channel.")
+        await start.edit(content=f"Invalid command arguments. Use `@`/`#` to mention user/channel.")
         return ""
+    await cnt_msg.delete()
     await start.delete()
     sample = re.sub('<[^>]+>', '', sample)
-    return sample
+    return sample, count
 
 
 @bot.command(name='wordcloud', help="Generates a word cloud for a given user or channel in the server. <source>: user/channel (everyone and every channel if not specified), <location>: channel (every channel if not specified)")
 async def wordcloud(ctx, source: typing.Union[discord.TextChannel, discord.Member, int] = 0, location: typing.Union[discord.TextChannel, int] = 0):
-    sample = await sample_messages(ctx, source, location)
+    sample, count = await sample_messages(ctx, source, location)
     if sample:
         wc_file = await sbut.reindeer_wc(sample)
         context = ""
         if type(source) == discord.TextChannel:
-            context = f"{ctx.author.mention}, word cloud of {source.mention}:"
+            context = f"{ctx.author.mention}, word cloud of {source.mention} (`{count}` messages sampled):"
         elif type(source) == discord.Member and type(location) == discord.TextChannel:
-            context = f"{ctx.author.mention}, word cloud of {source}'s messages in {location.mention}:"
+            context = f"{ctx.author.mention}, word cloud of {source}'s messages in {location.mention} (`{count}` messages sampled):"
         elif type(source) == discord.Member:
-            context = f"{ctx.author.mention}, word cloud of {source}'s messages:"
+            context = f"{ctx.author.mention}, word cloud of {source}'s messages (`{count}` messages sampled):"
         else:
-            context = f"{ctx.author.mention}, word cloud of {ctx.guild} discord server:"
+            context = f"{ctx.author.mention}, word cloud of {ctx.guild} discord server (`{count}` messages sampled):"
         await ctx.send(context, file=wc_file)
     else:
         return
