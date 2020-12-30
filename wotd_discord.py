@@ -507,18 +507,23 @@ async def on_message(msg):
                 return
 
     if (("Saba" in msg.content) or sbut.is_mentioned(bot.user.id, msg)):
-        if (now - last_mention).total_seconds() > 86400:
-            response = random.choice(botres["mention"])
-            while response["res"] == last_response:
+        if (now - last_mention).total_seconds() > 5400:
+            if random.random() > 0.8:
                 response = random.choice(botres["mention"])
+                while response["res"] == last_response:
+                    response = random.choice(botres["mention"])
 
-            last_mention = datetime.datetime.now()
-            last_response = response["res"]
-            if response["file"]:
-                file = discord.File(f"media/{response['file']}")
-                await msg.channel.send(response["res"].replace("<author>", msg.author.mention), file=file)
+                last_mention = datetime.datetime.now()
+                last_response = response["res"]
+                if response["file"]:
+                    file = discord.File(f"media/{response['file']}")
+                    await msg.channel.send(response["res"].replace("<author>", msg.author.mention), file=file)
+                else:
+                    await msg.channel.send(response["res"].replace("<author>", msg.author.mention))
             else:
-                await msg.channel.send(response["res"].replace("<author>", msg.author.mention))
+                summary = await sbut.random_wiki_summary()
+                intro = random.choice(["Dihtetgo don <author> ahte ", "<author>, leatgo goassege gullan ahte ", "Leango mun goassege muitalan dutnje, <author>, ahte ", "<author>, dongal berret diehtit ahte ", "Leago dutnje goassege časkán jurdagii ahte "])
+                await msg.channel.send(intro.replace("<author>", msg.author.mention) + summary)
         else:
             await msg.add_reaction(random.choice(botres["reactions"]))
 
