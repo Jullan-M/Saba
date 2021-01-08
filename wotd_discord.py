@@ -508,12 +508,12 @@ async def on_message(msg):
 
     if (("Saba" in msg.content) or sbut.is_mentioned(bot.user.id, msg)):
         if (now - last_mention).total_seconds() > 5400:
+            last_mention = datetime.datetime.now()
             if random.random() > 0.8:
                 response = random.choice(botres["mention"])
                 while response["res"] == last_response:
                     response = random.choice(botres["mention"])
 
-                last_mention = datetime.datetime.now()
                 last_response = response["res"]
                 if response["file"]:
                     file = discord.File(f"media/{response['file']}")

@@ -10,14 +10,6 @@
       ],
       "int": [6, 11]
     },
-    "buorit juovllat": {
-      "res": ["Buorit juovllat, <author>! 😊", "Buerie jåvleh, <author>! 🤗", "Buorre jåvvlå, <author>! ☺️", "Buorre javla, <author>! 😄", "Pyereh juovlah, <author>! 🎅", "Buörrie juvlla, <author>! 🎁"],
-      "int": [0,0]
-    },
-    "merry christmas": {
-      "res": ["Buorit juovllat, <author>! 😊", "Buerie jåvleh, <author>! 🤗", "Buorre jåvvlå, <author>! ☺️", "Buorre javla, <author>! 😄", "Pyereh juovlah, <author>! 🎅", "Buörrie juvlla, <author>! 🎁"],
-      "int": [0,0]
-    },
     "buorre iđit": {
       "res": [
         "Ipmel atti! 😊<:beaivvi:675788626919161857>",

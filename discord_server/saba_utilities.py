@@ -81,7 +81,12 @@ async def random_wiki_summary():
     r = requests.get(f"https://se.wikipedia.org/api/rest_v1/page/summary/{r.url.split('/')[-1]}")
     page = r.json()
     
-    if page["extract"]:
+    # Find another if the article is empty or an article about a date.
+    if page["extract"] and not any(month in page["title"] for month in 
+    ["Ođđajagimánu", "Guovvamánu", "Njukčamánu", "Cuoŋománu", 
+    "Miessemánu", "Geassemánu", "Suoidnemánu", "Borgemánu", 
+    "Čakčamánu", "Golggotmánu", "Skábmamánu", "Juovlamánu"]):
         return page["extract"]
     else:
         return await random_wiki_summary()
+
