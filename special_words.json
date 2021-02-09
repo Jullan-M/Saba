@@ -2,11 +2,12 @@
   "0602": {
     "sme": {
       "w": ["álbmotbeaivi"],
-      "pic": true
+      "pic": false,
+      "intro": "Otne lea sámi <WORD>. Lihkku beivviin buohkat!"
     },
     "sma": {
       "w": ["åålmegebiejjie"],
-      "pic": true
+      "pic": false
     }
   },
   "0104": {
