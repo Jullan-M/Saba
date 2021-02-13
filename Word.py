@@ -20,12 +20,64 @@ headers = {
     'Content-Type': 'application/json',
 }
 
+query = """
+query AllArticles($lemma: String!, $wantedLangs: [String]!, $wantedDicts: [String]!) {
+    dictEntryList(exact: $lemma, wanted: $wantedLangs, wantedDicts: $wantedDicts) {
+        dictName
+        targetLang
+        lookupLemmas {
+            edges {
+                node {
+                    lemma
+                    language
+                    pos
+                }
+            }
+        }
+        translationGroups {
+            translationLemmas {
+                edges {
+                    node {
+                        lemma
+                        language
+                        pos
+                    }
+                }
+            }
+            exampleGroups {
+                example
+                translation
+            }
+            restriction {
+                restriction
+            }
+        }
+    }
+    conceptList(exact: $lemma, wanted: $wantedLangs) {
+        name
+        collections
+        definition
+        explanation
+        terms {
+            note
+            source
+            status
+            expression {
+                lemma
+                language
+                pos
+            }
+        }
+    }
+}
+"""
+
 word_query = {
     "operationName": "AllArticles",
     "variables": {
         "wantedLangs": ["sme", "smj", "smn", "sms", "fin", "nob", "swe", "lat", "eng", "nno", "sma"],
     },
-    "query": "query AllArticles($lemma: String!, $wantedLangs: [String]!, $wantedDicts: [String]!) {\n dictEntryList(exact: $lemma, wanted: $wantedLangs, wantedDicts: $wantedDicts) {\n dictName\n srcLang\n targetLang\n lookupLemmas {\n edges {\n node {\n lemma\n language\n pos\n __typename\n }\n __typename\n }\n __typename\n }\n translationGroups {\n translationLemmas {\n edges {\n node {\n lemma\n language\n pos\n __typename\n }\n __typename\n }\n __typename\n }\n restriction {\n restriction\n attributes\n __typename\n }\n exampleGroups {\n example\n translation\n __typename\n }\n __typename\n }\n __typename\n }\n conceptList(exact: $lemma, wanted: $wantedLangs) {\n name\n collections\n definition\n explanation\n terms {\n note\n source\n status\n expression {\n lemma\n language\n pos\n __typename\n }\n __typename\n }\n __typename\n }\n}\n"
+    "query": query
 }
 
 
@@ -53,7 +105,7 @@ class Translation:
 class Meaning:
     def __init__(self, meaning):
         self.pos = meaning["lookupLemmas"]["edges"][0]["node"]["pos"]
-        self.dict = meaning["srcLang"] + meaning["targetLang"]
+        self.dict = meaning["dictName"]
         self.trs = self.find_translations(meaning)
 
     def find_translations(self, meaning):
