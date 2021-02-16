@@ -89,6 +89,9 @@ class Translation:
         self.desc = f'({translation["restriction"]["restriction"]})' if translation["restriction"] else ''
         self.examples = [[ex["example"], ex["translation"]]
                          for ex in translation["exampleGroups"]] if (translation["exampleGroups"]) else []
+        # Do a sanity check on examples, in case they are empty
+        if not all( [(True if el1 and el2 else False) for el1, el2 in self.examples] ):
+            self.examples = []
 
     def find_twords(self, translation):
         tword = ""
