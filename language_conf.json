@@ -12,7 +12,8 @@
       "Pr": "Preposišuvdna",
       "Interj": "Interjekšuvdna",
       "Pcle": "Partihkal",
-      "mwe": "Máŋga-sátnásaš dajahus"
+      "mwe": "Máŋga-sátnásaš dajahus",
+      "CS": "Subkonjunkšuvdna"
     },
     "tags": ["#NorthernSámi", "#WOTD"]
   },
@@ -29,7 +30,8 @@
       "Pr": "Preposisjovne",
       "Interj": "Interjeksjovne",
       "Pcle": "Partikkel",
-      "mwe": "Dïejvese"
+      "mwe": "Dïejvese",
+      "CS": "Subkonjunksjovne"
     },
     "tags": ["#SouthernSámi", "#WOTD"]
   },
@@ -46,7 +48,8 @@
       "Pr": "Preposition",
       "Interj": "Interjection",
       "Pcle": "Particle",
-      "mwe": "Multiple word expression"
+      "mwe": "Multiple word expression",
+      "CS": "Subordinating conjunction"
     }
   },
   "nob": {
@@ -62,7 +65,8 @@
       "Pr": "Preposisjon",
       "Interj": "Interjeksjon",
       "Pcle": "Partikkel",
-      "mwe": "Fast ordforbindelse"
+      "mwe": "Fast ordforbindelse",
+      "CS": "Subjunksjon"
     }
   }
 }
