@@ -6,6 +6,7 @@ import asyncio
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+import requests
 
 
 def underscore_word(string, word):
@@ -74,3 +75,18 @@ async def reindeer_wc(text):
 
     wc_file = File(path.join(d, "final_wc.png"), "wordcloud.png")
     return wc_file
+
+async def random_wiki_summary():
+    r = requests.get("https://se.wikipedia.org/wiki/Erenoam%C3%A1%C5%A1:Summal")
+    r = requests.get(f"https://se.wikipedia.org/api/rest_v1/page/summary/{r.url.split('/')[-1]}")
+    page = r.json()
+    
+    # Find another if the article is empty or an article about a date.
+    if page["extract"] and not any(month in page["title"] for month in 
+    ["Ođđajagimánu", "Guovvamánu", "Njukčamánu", "Cuoŋománu", 
+    "Miessemánu", "Geassemánu", "Suoidnemánu", "Borgemánu", 
+    "Čakčamánu", "Golggotmánu", "Skábmamánu", "Juovlamánu"]):
+        return page["extract"]
+    else:
+        return await random_wiki_summary()
+

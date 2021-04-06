@@ -47,6 +47,7 @@ vuosttaš
 goalmmát
 njeallját
 viđát
+viđat
 guđát
 guđat
 čihččet
@@ -122,3 +123,19 @@ somáhtalaš
 gráfalaš
 diagnostalaš
 suksessiivvalaš
+davvisámegielat
+empiralaš
+psykihkalaš
+máttasámegielat
+eksperimentála
+demokráhtalaš
+priváhtarievttálaš
+greiká
+greikalaš
+regionálalaš
+dárogielat
+primitiivvalaš
+alternatiiva
+katolihkalaš
+liberálalaš
+industriála
