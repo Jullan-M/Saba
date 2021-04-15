@@ -1,4 +1,5 @@
 from PIL import Image, ImageDraw, ImageFont
+from utilities import TW_COLORS
 import random
 
 
@@ -24,13 +25,6 @@ def text_wrap(text, font, imgdraw, max_width, max_height):
 
 
 FLAG_IMGS = ['media/sme.png', 'media/no.png', 'media/en.png']
-
-TW_COLORS = [(29, 161, 242),
-             (255, 173, 31),
-             (244, 36, 94),
-             (121, 75, 196),
-             (244, 93, 34),
-             (23, 191, 99)]
 
 WIDTH = 900
 HEIGHT = 592
@@ -91,6 +85,7 @@ def examples_img(lang, word, examples):
 
     img.save(f'media/examples_{lang}.png')
     return True
+
 # examples_img("sme", "nuppát", [" - Dás lea nuppát olmmoš idjadan áiggi čađa.\n - Gussiid moalladuostu dustii nuppát geardde spáppa hui čábbát.\n - Dás lea nuppát olmmoš idjadan áiggi čađa.",
 #                                " - Her har det gjennom tidene overnatta atskillige folk.\n - Bortelagets målvakt sto for atskillige pene redninger.\n - Her har det gjennom tidene overnatta atskillige folk.",
 #                                " - Throughout the ages, several people have spent the night here.\n - The away team's goalkeeper made several nice saves.\n - Throughout the ages, several people have spent the night here."]) 

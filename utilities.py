@@ -1,5 +1,12 @@
 import requests
 
+TW_COLORS = [(29, 161, 242),
+             (255, 173, 31),
+             (244, 36, 94),
+             (121, 75, 196),
+             (244, 93, 34),
+             (23, 191, 99)]
+
 def get_p_article(term, dictname, src_lang, dest_lang, pos=""):
     postxt = "" if pos else f"?pos={pos}"
     data = requests.get(f"https://{dictname}.oahpa.no/paradigm/{src_lang}/{dest_lang}/{term}/{postxt}", verify=False)
