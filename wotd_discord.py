@@ -72,35 +72,21 @@ class WotdManagerDiscord(WotdManager):
                     lastword = str(tr)
                     lastdesc = tr.desc
 
-                    if tr.lang == 'nob':
+                    if tr.lang == 'nob' or tr.lang == 'fin' or tr.lang == 'fi':
                         tr_en = ""
-                        if m.pos != "V":
-                            tr_en = ", ".join([w.text for w in trns.translate(
-                                str(tr).split(", "), src='no', dest='en')])
-                        else:
+                        if m.pos == "V" and tr.lang == 'nob':
                             # Add "å" prefix to verbs in order to enhance translation
                             tr_en = ", ".join([w.text.replace("to ", "") for w in trns.translate(
                                 ["å " + v for v in str(tr).split(", ")], src='no', dest='en')])
+                        else:
+                            tr_en = ", ".join([w.text for w in trns.translate(
+                                str(tr).split(", "), src=tr.lang[:2], dest='en')])
                         desc_en = trns.translate(
-                            tr.desc, src='no', dest='en').text if tr.desc else ''
+                            tr.desc, src=tr.lang[:2], dest='en').text if tr.desc else ''
                         trs_text += f"\t\t{FLAG[tr.lang]} {tr} {tr.desc}\t→\t{FLAG['en']} {tr_en} {desc_en}\n"
                         for n, ex in enumerate(tr.examples):
                             ex_en = trns.translate(
-                                ex[1], src='no', dest='en').text
-                            trs_text += f"> <:samiflag:{SAMIFLAG_ID}> *{sbut.underscore_word(ex[0], str(word))}*\n"
-                            trs_text += f"> {FLAG[tr.lang]} *{sbut.underscore_word(ex[1], str(tr))}*\n"
-                            trs_text += f"> {FLAG['en']} *{sbut.underscore_word(ex_en, tr_en)}*\n"
-                            if (n != len(tr.examples)-1):
-                                trs_text += "\n"
-                    elif tr.lang == 'fin' or tr.lang == 'fi':
-                        tr_en = ", ".join([w.text for w in trns.translate(
-                            str(tr).split(", "), src='fi', dest='en')])
-                        desc_en = trns.translate(
-                            tr.desc, src='fi', dest='en').text if tr.desc else ''
-                        trs_text += f"\t\t{FLAG[tr.lang]} {tr} {tr.desc}\t→\t{FLAG['en']} {tr_en} {desc_en}\n"
-                        for n, ex in enumerate(tr.examples):
-                            ex_en = trns.translate(
-                                ex[1], src='fi', dest='en').text
+                                ex[1], src=tr.lang[:2], dest='en').text
                             trs_text += f"> <:samiflag:{SAMIFLAG_ID}> *{sbut.underscore_word(ex[0], str(word))}*\n"
                             trs_text += f"> {FLAG[tr.lang]} *{sbut.underscore_word(ex[1], str(tr))}*\n"
                             trs_text += f"> {FLAG['en']} *{sbut.underscore_word(ex_en, tr_en)}*\n"
