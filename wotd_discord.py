@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 from googletrans import Translator
 from Word import Word, Paradigm, Inflection, PREF_DEST
 from wotd import word_of_the_day, check_special_wotd, WotdManager, FLAG
-from utilities import waittime_between, TW_COLORS
+from utilities import waittime_between, TW_COLORS, rgb2hex, rgb2int
 
 load_dotenv(dotenv_path='discord_server/.env')
 TOKEN = os.getenv('DISCORD_TOKEN')

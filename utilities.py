@@ -7,6 +7,9 @@ TW_COLORS = [(29, 161, 242),
              (244, 93, 34),
              (23, 191, 99)]
 
+rgb2hex = lambda r,g,b: f"#{r:02x}{g:02x}{b:02x}"
+rgb2int = lambda r,g,b: r*256**2 + g*256 + b
+
 def get_p_article(term, dictname, src_lang, dest_lang, pos=""):
     postxt = "" if pos else f"?pos={pos}"
     data = requests.get(f"https://{dictname}.oahpa.no/paradigm/{src_lang}/{dest_lang}/{term}/{postxt}", verify=False)
