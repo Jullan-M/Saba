@@ -86,7 +86,7 @@ class Translation:
         self.tword = self.find_twords(translation)
         self.pos = translation["translationLemmas"]["edges"][0]["node"]["pos"]
         self.lang = translation["translationLemmas"]["edges"][0]["node"]["language"]
-        self.desc = f'({translation["restriction"]["restriction"]})' if translation["restriction"] else ''
+        self.desc = f'({translation["restriction"]["restriction"]})' if (translation["restriction"] and translation["restriction"]["restriction"]) else ''
         self.examples = [[ex["example"], ex["translation"]]
                          for ex in translation["exampleGroups"]] if (translation["exampleGroups"]) else []
         # Do a sanity check on examples, in case they are empty
