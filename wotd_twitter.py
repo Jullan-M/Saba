@@ -44,7 +44,7 @@ class WotdManagerTwitter(WotdManager):
                 intro = f"Otná sátni lea {hashtagged}!"
             intro += "\nSánis lea"
             intro = intro + \
-                f"t {count} mearkkašumit:\n" if (
+                f"t {count} mearkkašumi:\n" if (
                     count > 1) else intro + f" okta mearkkašupmi:\n"
             return intro
 

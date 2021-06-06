@@ -13,12 +13,21 @@
     "buorre iđit": {
       "res": [
         "Ipmel atti! 😊<:beaivvi:675788626919161857>",
-        "Iđit. Jo lea oktage gáfe vuoššan? ☕",
-        "Morá! <:gaffeblob:675788626411651094>",
+        "Buorre iđit fal! <:gaffeblob:675788626411651094>",
+        "Morá! ☕",
         "Buerie aerede! 🍵",
         "Pyeri iiđeed! <:deadjablob:675788627111837716>",
-        "Ipmel atti! Miison otne galgá leat iđitborramuššan? 😋🍴🥞",
-        "Ipmel atti! Dál juo leat lihkan? 🥱"
+        "Ipmel atti! Mo don ná árrat nagodat lihkat? <:MorphineMan:836965765616893952>",
+        "Ipmel atti! Dálban juo leat lihkan? 🥱"
+      ],
+      "int": [6, 11]
+    },
+    "buerie aerede": {
+      "res": [
+        "Buerie buerie! 😊<:beaivvi:675788626919161857>",
+        "Buerie aerede! <:gaffeblob:675788626411651094>",
+        "Buerie aerede! ☕",
+        "Buerie aerede! <:deadjablob:675788627111837716>"
       ],
       "int": [6, 11]
     },
@@ -39,6 +48,16 @@
         "Buerie jïjje! <:aurora:675788627044990990>"
       ],
       "int": [21, 4]
+    },
+    "buerie aerede": {
+      "res": [
+        "Ipmel atti! 😊<:beaivvi:675788626919161857>",
+        "Iđit! ☕",
+        "Morá! <:gaffeblob:675788626411651094>",
+        "Buerie aerede! 🍵",
+        "Pyeri iiđeed! <:deadjablob:675788627111837716>"
+      ],
+      "int": [6, 11]
     },
     "buerie jïjje": {
       "res": [
