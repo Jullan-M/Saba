@@ -35,6 +35,10 @@
       "res": ["Ipmel atti! 😎", "Buoris! 🤝", "Buerie biejjie! 🌞"],
       "int": [11, 17]
     },
+    "buerie biejjie": {
+      "res": ["Buerie biejjie <author>. 😎", "Buerie biejjie!", "Buerie biejjie! 🌞"],
+      "int": [11, 17]
+    },
     "buorre eahket": {
       "res": ["Ipmel atti! 🍻", "Buoris! 🍺", "Buerie iehkede! 🌟"],
       "int": [17, 23]
