@@ -41,7 +41,7 @@ async def correct_channel(ctx, spam_cha):
 
 async def supported_lang(ctx, lang, pref_dest):
     if not (lang in pref_dest):
-        supported = "```sme\tNorthern Saami\nsma\tSouthern Saami\nsms\tSkolt Saami\nsmn\tInari Saami```"
+        supported = "```sme\tNorthern Saami\nsma\tSouthern Saami\nsms\tSkolt Saami\nsmn\tInari Saami\nnob\tNorwegian```"
         await ctx.send(f"<@{ctx.author.id}>, `{lang}` is not a supported language for this command. Currently, the following languages are supported:\n{supported}")
         return False
     return True

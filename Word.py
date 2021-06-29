@@ -4,11 +4,13 @@ import requests
 from utilities import get_p_article, get_e_article
 
 DICTNAMES = {"sme": "sanit",
+             "nob": "sanit",
              "sma": "baakoeh",
              "sms": "saan",
              "smn": "saanih"}
 
 PREF_DEST = {"sme": "nob",
+             "nob": "sme",
              "sma": "nob",
              "sms": "nob",
              "smn": "sme"}
@@ -50,22 +52,6 @@ query AllArticles($lemma: String!, $wantedLangs: [String]!, $wantedDicts: [Strin
             }
             restriction {
                 restriction
-            }
-        }
-    }
-    conceptList(exact: $lemma, wanted: $wantedLangs) {
-        name
-        collections
-        definition
-        explanation
-        terms {
-            note
-            source
-            status
-            expression {
-                lemma
-                language
-                pos
             }
         }
     }
