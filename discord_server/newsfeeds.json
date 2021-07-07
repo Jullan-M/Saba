@@ -1,0 +1,38 @@
+{
+	"sme": {
+		"name": "Ođđasat - Davvisámegillii",
+		"rss": "https://www.nrk.no/sapmi/oddasat.rss",
+		"url": "https://www.nrk.no/sapmi/davvisamegillii/",
+		"icon_url": "https://upload.wikimedia.org/wikipedia/commons/8/87/NRK_Nyheter.png",
+		"color": 43991
+	},
+	"smj": {
+		"name": "Ådåsa - Julevsábmáj",
+		"rss": "https://www.nrk.no/sapmi/oddasat.rss",
+		"url": "https://www.nrk.no/sapmi/julevsabmaj/",
+		"icon_url": "https://upload.wikimedia.org/wikipedia/commons/8/87/NRK_Nyheter.png",
+		"color": 15818027
+	},
+	"sma": {
+		"name": "Ođđasat - Åarjelsaemien",
+		"rss": "https://www.nrk.no/sapmi/oddasat.rss",
+		"url": "https://www.nrk.no/sapmi/aaarjelsaemiengielesne/",
+		"icon_url": "https://upload.wikimedia.org/wikipedia/commons/8/87/NRK_Nyheter.png",
+		"color": 5942849
+	},
+	"smn": {
+		"name": "Säämi",
+		"rss": "https://feeds.yle.fi/uutiset/v1/recent.rss?publisherIds=YLE_SAPMI",
+		"url": "https://yle.fi/uutiset/osasto/sapmi/saami/",
+		"icon_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Ylen_logo.svg/1024px-Ylen_logo.svg.png",
+		"color": 8388736
+	},
+	"sms": {
+		"name": "Sää´mjânnam",
+		"rss": "https://feeds.yle.fi/uutiset/v1/recent.rss?publisherIds=YLE_SAPMI",
+		"url": "https://yle.fi/uutiset/osasto/sapmi/saamjannam/",
+		"icon_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Ylen_logo.svg/1024px-Ylen_logo.svg.png",
+		"color": 16776960
+	},
+	"last_time": 1625651703.0
+}

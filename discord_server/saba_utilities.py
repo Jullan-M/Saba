@@ -1,6 +1,8 @@
 from os import path
 from PIL import Image
-from discord import File
+from time import mktime
+from datetime import datetime
+from discord import File, Embed
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 import asyncio
 import numpy as np
@@ -90,3 +92,72 @@ async def random_wiki_summary():
     else:
         return await random_wiki_summary()
 
+import feedparser
+def parse_feed(url: str, cat: str = "") -> list:
+    fd = feedparser.parse(url)
+    entries = fd.entries
+    if cat:
+        valid_entries = []
+        for e in entries:
+            if "tags" in e:
+                cats = [t.term for t in e.tags]
+                if (cat in cats):
+                    valid_entries.append(e)
+            elif cat == "Ođđasat - Davvisámegillii":
+                # If entry has no tags the article is sme.
+                valid_entries.append(e)
+        return valid_entries
+    return entries
+
+def filter_new_entries(entries: list, last_time: int) -> list:
+    # GUIDs of the entries are always assumed to be sorted (high -> low = newest -> oldest)
+    new_entries = []
+    for e in entries:
+        e_time = mktime(e.published_parsed)
+        if e_time > last_time:
+            new_entries.append(e)
+        else:
+            break
+    return new_entries
+
+def create_embed(entry, category: dict) -> Embed:
+    # Creates an embed object that can be sent in discord
+    try:
+        timestamp = datetime.fromtimestamp(mktime(entry.published_parsed))
+        embed = Embed(title=entry.title, url=entry.link, description=entry.summary, color=category["color"], timestamp=timestamp)
+        
+        embed.set_author(name=category["name"], url=category["url"], icon_url=category["icon_url"])
+        #embed.set_thumbnail(url=category["thumbnail"])
+        if "media_content" in entry:
+            embed.set_image(url=entry.media_content[0]["url"])
+        elif len(entry.links) > 1:
+            for link in entry.links:
+                if link["type"] == "image/jpeg":
+                    # The thumbnails of Yle's newsfeed are found here
+                    # Remove "//w_205,h_115,q_70" in url to find a higher res thumbnail
+                    embed.set_image(url=link["href"].replace(r"//w_205,h_115,q_70", ""))
+        # send with await ctx.send(embed=embed)
+        return embed
+    except Exception as err:
+        print(err)
+        exit(1)
+    
+    
+def update_feed_and_create_embeds(last_time: int, category: dict):
+    entries = parse_feed(category["rss"], cat=category["name"])
+    new_entries = filter_new_entries(entries, last_time)
+    embed_pairs = [(create_embed(e, category), int(mktime(e.published_parsed)) ) for e in new_entries]
+    embed_pairs.reverse() # Reverse embeds in the order to be sent (oldest to newest)
+    return embed_pairs
+'''
+oddasat = {
+    "name": "Ođđasat - Davvisámegillii",
+    "rss": "https://www.nrk.no/sapmi/oddasat.rss",
+    "url": "https://www.nrk.no/sapmi/davvisamegillii/",
+    "icon_url": "https://gfx.nrk.no/1IC-Q4_HFRVuBYc842UQJwEH-mCfzezjzziUZClFOf-g"
+}
+
+entries = parse_feed("https://www.nrk.no/sapmi/oddasat.rss")
+new_entries = filter_new_entries(entries, 15563162)
+print(new_entries[5])
+'''

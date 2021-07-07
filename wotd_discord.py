@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 from googletrans import Translator
 from Word import Word, Paradigm, Inflection, PREF_DEST
 from wotd import word_of_the_day, check_special_wotd, WotdManager, FLAG
-from utilities import waittime_between, TW_COLORS, rgb2hex, rgb2int
+from utilities import waittime_between
 
 load_dotenv(dotenv_path='discord_server/.env')
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -118,10 +118,12 @@ wotd_m = [WotdManagerDiscord(d) for d in ['smenob', 'smanob']]
 wotd_nob = WotdManagerDiscord('nobsme')
 bot = commands.Bot(command_prefix=commands.when_mentioned_or(']'))
 
-with open("language_conf.json", "r") as f:
+with open("language_conf.json", "r", encoding="utf-8") as f:
     en_wc = json.load(f)["en"]["wordclass"]
 with open("discord_server/bot_responses.json", "r", encoding="utf-8") as f:
     botres = json.load(f)
+with open("discord_server/newsfeeds.json", "r", encoding="utf-8") as f:
+    newsfeeds = json.load(f)
 
 last_mention = datetime.datetime.now()
 last_response = ""
@@ -141,7 +143,7 @@ async def examine(ctx, lang: str, word: str):
         return
 
     message = f"```{tabulate(inf.inflections, headers=['Lemma', 'Morph. Tags'])}```"
-    await ctx.send(f"<@{ctx.author.id}>, morphological analysis for the word **{word}**:\n{message}")
+    await ctx.send(f"<@{ctx.author.id}>, morphological analysis for the `{lang}` word **{word}**:\n{message}")
 
 
 @bot.command(name='paradigm', help="Shows the paradigm of a given word.")
@@ -259,7 +261,7 @@ async def word(ctx, lang: str, word: str):
         await err_msg.delete()
 
 
-@bot.command(name='sátni', help="An alias for ]word sme <word> (look-up in Northern Sami dictionaries).")
+@bot.command(name='sátni', help="An alias for ]word sme <word> (look-up in Northern Sami dictionaries).", aliases=["satni"])
 async def satni(ctx, term: str):
     await word(ctx, 'sme', term)
 
@@ -466,6 +468,16 @@ async def force_wotd(ctx, lang):
         await message_channel.send(wotd)
         print(f"Sent to {message_channel}!")
 
+@bot.command(name='test_rss', help="Dev command")
+async def test_rss(ctx, category: str, index: int, only_sami: bool = True):
+    if int(ctx.author.id) != 252228069434195968:
+        return
+    feed = newsfeeds[category]
+    entries = sbut.parse_feed(feed["rss"], cat=feed["name"] if only_sami else "")
+    embed = sbut.create_embed(entries[index], feed)
+    message_channel = bot.get_channel(451040297074294796)
+    await message_channel.send(embed=embed)
+
 
 @bot.event
 async def on_message(msg):
@@ -513,6 +525,33 @@ async def on_message(msg):
         else:
             await msg.add_reaction(random.choice(botres["reactions"]))
 
+@tasks.loop(minutes=5)
+async def called_every_minute():
+    try:
+        to_send = []
+        for lang in ["sme", "smj", "sma", "smn", "sms"]:
+            e_pairs = sbut.update_feed_and_create_embeds(newsfeeds["last_time"], newsfeeds[lang])
+            to_send.extend(e_pairs)
+
+        to_send.sort(key=lambda pair: pair[1])
+        
+        if to_send:
+            newsfeeds["last_time"] = to_send[-1][1]
+
+            with open("discord_server/newsfeeds.json", "w", encoding="utf-8") as f:
+                f.write(json.dumps(newsfeeds, indent="\t", ensure_ascii=False))
+        
+            message_channel = bot.get_channel(451040297074294796)
+            for embed, t in to_send:
+                await message_channel.send(embed=embed)
+    except Exception as err:
+        print(err)
+        exit(1)
+
+@called_every_minute.before_loop
+async def before_feeds():
+    print("Feeds are active.")
+
 
 @tasks.loop(hours=24)
 async def called_once_a_day():
@@ -557,7 +596,9 @@ async def before():
     for w in wotd_m:
         print(w.lang, bot.get_channel(w.cha_id))
     print(f"Sleeptime: \t\t{datetime.timedelta(seconds=sleeptime)}")
+    called_every_minute.start()
     await asyncio.sleep(sleeptime)
+
 
 called_once_a_day.start()
 bot.run(TOKEN)
