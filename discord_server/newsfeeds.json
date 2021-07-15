@@ -4,6 +4,7 @@
 		"rss": "https://www.nrk.no/sapmi/oddasat.rss",
 		"url": "https://www.nrk.no/sapmi/davvisamegillii/",
 		"icon_url": "https://upload.wikimedia.org/wikipedia/commons/8/87/NRK_Nyheter.png",
+		"thumbnail": "https://gfx.nrk.no/gZwThpgdL-Qz2d2vi4gmRgYbOu3JSsf5irb14IWJSTSA.jpg",
 		"color": 43991
 	},
 	"smj": {
@@ -11,6 +12,7 @@
 		"rss": "https://www.nrk.no/sapmi/oddasat.rss",
 		"url": "https://www.nrk.no/sapmi/julevsabmaj/",
 		"icon_url": "https://upload.wikimedia.org/wikipedia/commons/8/87/NRK_Nyheter.png",
+		"thumbnail": "https://gfx.nrk.no/Wez_ogUZn5w0ix-ZADnK4wbXIGKL5NSaXYCt6o-6NIuQ.jpg",
 		"color": 15818027
 	},
 	"sma": {
@@ -18,6 +20,7 @@
 		"rss": "https://www.nrk.no/sapmi/oddasat.rss",
 		"url": "https://www.nrk.no/sapmi/aaarjelsaemiengielesne/",
 		"icon_url": "https://upload.wikimedia.org/wikipedia/commons/8/87/NRK_Nyheter.png",
+		"thumbnail": "https://gfx.nrk.no/fTfaoOzwoqyfCbKOJ1ZvmwVlo1IUMYNxb5znLgi_g3EQ.jpg",
 		"color": 5942849
 	},
 	"smn": {
@@ -25,6 +28,7 @@
 		"rss": "https://feeds.yle.fi/uutiset/v1/recent.rss?publisherIds=YLE_SAPMI",
 		"url": "https://yle.fi/uutiset/osasto/sapmi/saami/",
 		"icon_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Ylen_logo.svg/1024px-Ylen_logo.svg.png",
+		"thumbnail": "https://img.yle.fi/uutiset/osasto/sapmi/article6790166.ece/ALTERNATES/w320h180/yle%20s%C3%A1pmi%20logo",
 		"color": 8388736
 	},
 	"sms": {
@@ -32,7 +36,8 @@
 		"rss": "https://feeds.yle.fi/uutiset/v1/recent.rss?publisherIds=YLE_SAPMI",
 		"url": "https://yle.fi/uutiset/osasto/sapmi/saamjannam/",
 		"icon_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Ylen_logo.svg/1024px-Ylen_logo.svg.png",
+		"thumbnail": "https://img.yle.fi/uutiset/osasto/sapmi/article6790166.ece/ALTERNATES/w320h180/yle%20s%C3%A1pmi%20logo",
 		"color": 16776960
 	},
-	"last_time": 1625651703.0
+	"last_time": 1626343098
 }

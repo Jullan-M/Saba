@@ -19,6 +19,7 @@ load_dotenv(dotenv_path='discord_server/.env')
 TOKEN = os.getenv('DISCORD_TOKEN')
 SAMIFLAG_ID = int(os.getenv('SAMIFLAG_ID'))
 SPAM_CHANNEL_ID = int(os.getenv('SPAM_CHANNEL_ID'))
+NEWS_CHANNEL_ID = int(os.getenv('NEWS_CHANNEL_ID'))
 WOTD_H = int(os.getenv('WOTD_H'))
 WOTD_M = int(os.getenv('WOTD_M'))
 WOTD_S = int(os.getenv('WOTD_S'))
@@ -474,9 +475,10 @@ async def test_rss(ctx, category: str, index: int, only_sami: bool = True):
         return
     feed = newsfeeds[category]
     entries = sbut.parse_feed(feed["rss"], cat=feed["name"] if only_sami else "")
-    embed = sbut.create_embed(entries[index], feed)
-    message_channel = bot.get_channel(451040297074294796)
-    await message_channel.send(embed=embed)
+    if (index >= 0 and index < len(entries)):
+        embed = sbut.create_embed(entries[index], feed)
+        message_channel = bot.get_channel(NEWS_CHANNEL_ID)
+        await message_channel.send(embed=embed)
 
 
 @bot.event
@@ -507,7 +509,7 @@ async def on_message(msg):
     if (("Saba" in msg.content) or sbut.is_mentioned(bot.user.id, msg)):
         if (now - last_mention).total_seconds() > 5400:
             last_mention = datetime.datetime.now()
-            if random.random() > 0.8:
+            if random.random() > 0.7:
                 response = random.choice(botres["mention"])
                 while response["res"] == last_response:
                     response = random.choice(botres["mention"])
@@ -526,7 +528,7 @@ async def on_message(msg):
             await msg.add_reaction(random.choice(botres["reactions"]))
 
 @tasks.loop(minutes=5)
-async def called_every_minute():
+async def called_every_5min():
     try:
         to_send = []
         for lang in ["sme", "smj", "sma", "smn", "sms"]:
@@ -541,16 +543,17 @@ async def called_every_minute():
             with open("discord_server/newsfeeds.json", "w", encoding="utf-8") as f:
                 f.write(json.dumps(newsfeeds, indent="\t", ensure_ascii=False))
         
-            message_channel = bot.get_channel(451040297074294796)
+            message_channel = bot.get_channel(NEWS_CHANNEL_ID)
             for embed, t in to_send:
                 await message_channel.send(embed=embed)
     except Exception as err:
         print(err)
         exit(1)
 
-@called_every_minute.before_loop
+@called_every_5min.before_loop
 async def before_feeds():
-    print("Feeds are active.")
+    print(f"Feeds are targeting channel: {bot.get_channel(NEWS_CHANNEL_ID)}")
+
 
 
 @tasks.loop(hours=24)
@@ -596,7 +599,7 @@ async def before():
     for w in wotd_m:
         print(w.lang, bot.get_channel(w.cha_id))
     print(f"Sleeptime: \t\t{datetime.timedelta(seconds=sleeptime)}")
-    called_every_minute.start()
+    called_every_5min.start()
     await asyncio.sleep(sleeptime)
 
 
